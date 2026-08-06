@@ -1,0 +1,63 @@
+═══════════════════════════════════════════════════════════════
+OS COMMAND INJECTION SCAN
+Target: https://www.kmu.ac.zm
+Generated: Wed 24 Jun 16:31:08 CAT 2026
+═══════════════════════════════════════════════════════════════
+
+🔎 Testing for Command Injection...
+────────────────────────────────────────────────────────────────
+
+[*] Command Separators to Test:
+    • ; command
+    • | command
+    • || command
+    • && command
+    • ` command `
+    • $( command )
+
+[*] Testing common parameters: host ip target domain ping cmd exec
+[*] Parameter 'host' returned response
+[*] Parameter 'ip' returned response
+[*] Parameter 'target' returned response
+[*] Parameter 'domain' returned response
+[*] Parameter 'ping' returned response
+[*] Parameter 'cmd' returned response
+[*] Parameter 'exec' returned response
+
+🔎 Time-Based Command Injection Detection:
+────────────────────────────────────────────────────────────────
+[*] Testing with sleep command (5 second delay)...
+    Time-based detection requires manual testing
+    Payload: ; sleep 5
+
+🔎 Automated Testing:
+────────────────────────────────────────────────────────────────
+[*] commix found. Running automated scan...
+
+                                      __
+   ___   ___     ___ ___     ___ ___ /\_\   __  _
+ /`___\ / __`\ /' __` __`\ /' __` __`\/\ \ /\ \/'\  [1m[4m[37mv4.1[0m
+/\ \__//\ \/\ \/\ \/\ \/\ \/\ \/\ \/\ \ \ \\/>  </
+\ \____\ \____/\ \_\ \_\ \_\ \_\ \_\ \_\ \_\/\_/\_\ [90m[4mhttps://commixproject.com[0m
+ \/____/\/___/  \/_/\/_/\/_/\/_/\/_/\/_/\/_/\//\/_/ ([91m@commixproject[0m)
+
++--
+[1mAutomated All-in-One OS Command Injection Exploitation Tool[0m
+Copyright © 2014-2025 Anastasios Stasinopoulos[0m ([91m@ancst[0m)
++--
+
+([1m[31m![0m) Legal disclaimer: Usage of commix for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program.
+[0m
+[[94m16:31:16[0m] [[32m[1minfo[0m] [1mTesting connection to the target URL. [0m
+[[94m16:31:19[0m] [[93mwarning[0m] The web server responded with an HTTP error code '403' which could interfere with the results of the tests.[0m
+[[94m16:31:19[0m] [0m[[32minfo[0m] Checking whether the target is protected by some kind of WAF/IPS.[0m
+[[94m16:31:21[0m] [[93mwarning[0m] It seems the target is protected by some kind of WAF/IPS.[0m
+[1mDo you want to ignore HTTP response code '403' and proceed with testing? [y/N] > N[0m
+[[94m16:31:21[0m] [0m[[32minfo[0m] Skipping further testing on the target URL.[0m
+
+📋 Remediation Indicators:
+────────────────────────────────────────────────────────────────
+    → Avoid shell execution (use APIs instead)
+    → Whitelist allowed commands/arguments
+    → Input validation and regex matching
+    → Run with minimal privileges

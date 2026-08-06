@@ -1,0 +1,4 @@
+[15:42:59] 🎯 Web Vulnerability Scanner initialized for: kmu.ac.zm
+[15:43:02] 🔍 Starting SQL Injection (SQLi) tests on kmu.ac.zm...
+[15:43:05] ✅ SQL Injection scan complete
+[15:43:05] 🏁 All scans complete. Results in output/web_vulns_20260624_154259/
