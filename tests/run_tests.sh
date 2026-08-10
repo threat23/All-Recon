@@ -78,7 +78,7 @@ script_files=(
     "modules/web_vulnerabilities.sh"
     "modules/reporting.sh"
     "modules/batch_runner.sh"
-    "modules/whois_reverse_lookup.sh"
+    "modules/whois_recon.sh"
     "CLEANER_GUIDE.sh"
     "QUICKSTART.sh"
     "START_HERE.sh"
@@ -228,20 +228,20 @@ echo ""
 echo -e "${YELLOW}▶ TEST SUITE 6: WHOIS & Reverse Lookup Module Integration Tests${NC}"
 
 # Test missing parameters
-bash modules/whois_reverse_lookup.sh &>/dev/null
-assert_exit_code 1 $? "whois_reverse_lookup: Rejects missing arguments"
+bash modules/whois_recon.sh &>/dev/null
+assert_exit_code 1 $? "whois_recon: Rejects missing arguments"
 
 # Test invalid target rejection
-bash modules/whois_reverse_lookup.sh "not_a_valid_target" whois &>/dev/null
-assert_exit_code 1 $? "whois_reverse_lookup: Rejects invalid target format"
+bash modules/whois_recon.sh "not_a_valid_target" all &>/dev/null
+assert_exit_code 1 $? "whois_recon: Rejects invalid target format"
 
-# Test valid domain WHOIS mode (non-interactive)
-bash modules/whois_reverse_lookup.sh "example.com" whois &>/dev/null
-assert_exit_code 0 $? "whois_reverse_lookup: WHOIS mode succeeds for valid domain"
+# Test domain WHOIS mode
+bash modules/whois_recon.sh "example.com" domain &>/dev/null
+assert_exit_code 0 $? "whois_recon: Domain WHOIS mode succeeds"
 
-# Test valid IP netrange mode
-bash modules/whois_reverse_lookup.sh "8.8.8.8" netrange &>/dev/null
-assert_exit_code 0 $? "whois_reverse_lookup: Netrange mode succeeds for valid IP"
+# Test IP netrange mode
+bash modules/whois_recon.sh "8.8.8.8" ranges &>/dev/null
+assert_exit_code 0 $? "whois_recon: IP range extraction mode succeeds"
 
 echo ""
 

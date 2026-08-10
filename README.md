@@ -70,19 +70,19 @@ Deep reconnaissance on a single target:
 # Enter target IP or domain
 ```
 
-### WHOIS & Reverse Lookup (Main Menu Option 8)
+### WHOIS & Reverse Lookup (Main Menu Option 6)
 Discover net ranges, organization details, and co-hosted domains for a target:
 ```bash
 ./all_recon.sh
-# Select option: 8
+# Select option: 6
 # Enter target domain or IP
-# Choose mode: WHOIS, Reverse DNS + Co-hosted Domains, Netrange, or All
+# Choose mode: Domain WHOIS, IP WHOIS, Reverse DNS, IP Ranges, Related Domains, or All
 ```
 
 **Direct Module Usage:**
 ```bash
-./modules/whois_reverse_lookup.sh example.com all
-./modules/whois_reverse_lookup.sh 8.8.8.8 whois
+./modules/whois_recon.sh example.com all
+./modules/whois_recon.sh 8.8.8.8 ranges
 ```
 
 **Findings include:**
