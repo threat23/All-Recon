@@ -78,6 +78,7 @@ script_files=(
     "modules/web_vulnerabilities.sh"
     "modules/reporting.sh"
     "modules/batch_runner.sh"
+    "modules/whois_recon.sh"
     "CLEANER_GUIDE.sh"
     "QUICKSTART.sh"
     "START_HERE.sh"
