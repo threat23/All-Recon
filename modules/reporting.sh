@@ -6,11 +6,22 @@
 # Philosophy: Beautiful output = faster analysis = better decisions
 # ═══════════════════════════════════════════════════════════════════
 
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
+    source "$SCRIPT_DIR/validation.sh"
+    setup_signal_traps
+fi
+
 REPORT_DIR="output/reports"
 mkdir -p "$REPORT_DIR"
 
 generate_report() {
-    local scan_dir=${1:-.}
+    local scan_dir=${1:-output}
+    if [[ ! -d "$scan_dir" ]]; then
+        echo "❌ Scan directory does not exist: $scan_dir"
+        exit 1
+    fi
     local report_file="$REPORT_DIR/report_$(date +%Y%m%d_%H%M%S).txt"
     
     {
@@ -27,7 +38,8 @@ generate_report() {
         echo "───────────────────────────────────────────────────────────────────"
         
         # Count hosts scanned
-        host_count=$(find "$scan_dir" -name "*.txt" -type f | wc -l)
+        local host_count
+        host_count=$(find "$scan_dir" -name "*.txt" -type f 2>/dev/null | wc -l)
         echo "Total Hosts Scanned: $host_count"
         echo ""
         
@@ -36,15 +48,22 @@ generate_report() {
         echo "───────────────────────────────────────────────────────────────────"
         echo ""
         
-        # Extract key findings from scan results
+        # Safely loop over scan files
+        local found_scans=0
         for scanfile in "$scan_dir"/host_*.txt; do
             if [[ -f "$scanfile" ]]; then
+                found_scans=1
                 echo "📊 $(basename "$scanfile")"
                 echo "---"
                 grep -E "^[0-9]+/.*open" "$scanfile" 2>/dev/null | head -10
                 echo ""
             fi
         done
+
+        if [[ $found_scans -eq 0 ]]; then
+            echo "No host scan results found in $scan_dir"
+            echo ""
+        fi
         
         echo "───────────────────────────────────────────────────────────────────"
         echo "HIGH-RISK FINDINGS"
@@ -83,3 +102,4 @@ elif [[ "$1" == "list" ]]; then
 else
     generate_report "$1"
 fi
+

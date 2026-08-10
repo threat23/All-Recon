@@ -6,6 +6,13 @@
 # Remove duplicates, invalid entries, and unnecessary data
 # ═══════════════════════════════════════════════════════════════════
 
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
+    source "$SCRIPT_DIR/validation.sh"
+    setup_signal_traps
+fi
+
 CLEAN_LOG="logs/subdomain_clean_$(date +%Y%m%d_%H%M%S).log"
 CLEAN_OUTPUT="output/clean_subdomains_$(date +%Y%m%d_%H%M%S)"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

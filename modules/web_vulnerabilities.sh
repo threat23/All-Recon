@@ -54,10 +54,25 @@ prompt_install() {
     fi
 }
 
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
+    source "$SCRIPT_DIR/validation.sh"
+    setup_signal_traps
+fi
+
 TARGET_URL="${1:-}"
 if [[ -z "$TARGET_URL" ]]; then
     echo "❌ No target URL provided"
     exit 1
+fi
+
+if type is_valid_url &>/dev/null; then
+    if ! is_valid_url "$TARGET_URL"; then
+        echo "❌ Invalid URL format: '$TARGET_URL' (must start with http:// or https://)"
+        log_vuln "❌ Invalid URL provided: $TARGET_URL"
+        exit 1
+    fi
 fi
 
 log_vuln "🎯 Web Vulnerability Scanner initialized for: $TARGET_URL"
@@ -778,21 +793,25 @@ bola_scan() {
 # MAIN SCAN MENU
 # ═══════════════════════════════════════════════════════════════════
 
-echo ""
-echo "🎯 Web Vulnerability Scan Options:"
-echo "1. SQL Injection (SQLi)"
-echo "2. Cross-Site Scripting (XSS)"
-echo "3. OS Command Injection"
-echo "4. Cross-Site Request Forgery (CSRF)"
-echo "5. Authentication & Authorization"
-echo "6. Broken Access Control (IDOR)"
-echo "7. Sensitive Data Exposure"
-echo "8. XML External Entities (XXE)"
-echo "9. Broken Object Level Authorization (BOLA)"
-echo "10. Run All Scans"
-echo ""
+scan_choice="${2:-}"
 
-read -p "Select vulnerability type [1-10]: " scan_choice
+if [[ -z "$scan_choice" ]]; then
+    echo ""
+    echo "🎯 Web Vulnerability Scan Options:"
+    echo "1. SQL Injection (SQLi)"
+    echo "2. Cross-Site Scripting (XSS)"
+    echo "3. OS Command Injection"
+    echo "4. Cross-Site Request Forgery (CSRF)"
+    echo "5. Authentication & Authorization"
+    echo "6. Broken Access Control (IDOR)"
+    echo "7. Sensitive Data Exposure"
+    echo "8. XML External Entities (XXE)"
+    echo "9. Broken Object Level Authorization (BOLA)"
+    echo "10. Run All Scans"
+    echo ""
+
+    read -p "Select vulnerability type [1-10]: " scan_choice
+fi
 
 case $scan_choice in
     1) sqli_scan "$TARGET_URL" ;;

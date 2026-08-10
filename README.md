@@ -104,8 +104,24 @@ Option: Clean results (Y/N)
 
 **Direct Module Usage:**
 ```bash
-./modules/subdomain_finder.sh example.com all
+./modules/subdomain_finder.sh example.com osint
 ./modules/subdomain_cleaner.sh output/subdomains_*/ all
+```
+
+### 4. Multi-Target Batch Scanner
+Scan multiple targets in parallel from a target list file:
+```bash
+./all_recon.sh
+# Select option: 5
+# Enter target list file (e.g., targets.txt)
+# Select scan mode (recon, subdomain, web, all)
+# Specify max worker concurrency (e.g., 5)
+```
+
+**Direct Batch Module Usage:**
+```bash
+./modules/batch_runner.sh targets.txt recon 5
+./modules/batch_runner.sh targets.txt osint 4
 ```
 
 ### 4. View Results & Generate Reports
@@ -302,6 +318,24 @@ chmod +x all_recon.sh all_recon_alt.sh
 - Check your network bandwidth
 - Reduce parallel processes in `config/automation_rules.conf`
 - Use faster scan templates (`-T4` or higher)
+
+---
+
+## Automated Test Suite & Hardening
+
+ALL-RECON includes an automated test framework for input validation, script syntax, and module integration testing.
+
+```bash
+chmod +x tests/run_tests.sh
+bash tests/run_tests.sh
+```
+
+**Features Verified by Test Suite:**
+- Bash syntax correctness across all scripts (`bash -n`)
+- Input validation unit tests (IPv4, FQDN domains, URLs, path traversal sanitization)
+- Module error handling and exit codes
+- Non-interactive scan option execution
+- Report generation & subdomain cleaning pipeline integrity
 
 ---
 

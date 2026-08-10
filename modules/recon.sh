@@ -1,15 +1,16 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
-# ALL-RECON - RECONNAISSANCE MODULE
-# Automates common recon tasks in the pentesting workflow
-# Philosophy: Set it. Forget it. Analyze results.
-# ═══════════════════════════════════════════════════════════════════
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
+    source "$SCRIPT_DIR/validation.sh"
+    setup_signal_traps
+fi
 
 RECON_LOG="logs/recon_$(date +%Y%m%d_%H%M%S).log"
 RECON_OUTPUT="output/recon_$(date +%Y%m%d_%H%M%S)"
 
-mkdir -p logs output
+mkdir -p logs output "$RECON_OUTPUT"
 
 log_recon() {
     echo "[$(date +%H:%M:%S)] $1" | tee -a "$RECON_LOG"
@@ -20,6 +21,7 @@ dns_recon() {
     local target=$1
     log_recon "🔍 Starting DNS reconnaissance on $target..."
     
+    mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/dns.txt"
     echo "DNS RECONNAISSANCE: $target" | tee -a "$RECON_OUTPUT/dns.txt"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/dns.txt"
@@ -50,6 +52,7 @@ whois_recon() {
     local target=$1
     log_recon "🔍 Gathering WHOIS information for $target..."
     
+    mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/whois.txt"
     echo "WHOIS INFORMATION: $target" | tee -a "$RECON_OUTPUT/whois.txt"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/whois.txt"
@@ -64,6 +67,7 @@ service_mapping() {
     local target=$1
     log_recon "🔍 Mapping services on $target..."
     
+    mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
     echo "SERVICE MAPPING: $target" | tee -a "$RECON_OUTPUT/services.txt"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
@@ -82,6 +86,14 @@ fi
 
 TARGET=$1
 RECON_TYPE=$2
+
+if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
+    if ! is_valid_ip "$TARGET" && ! is_valid_domain "$TARGET"; then
+        echo "❌ Invalid target format (must be valid IP or Domain): '$TARGET'"
+        log_recon "❌ Invalid target provided: $TARGET"
+        exit 1
+    fi
+fi
 
 mkdir -p "$RECON_OUTPUT"
 
@@ -110,3 +122,4 @@ echo ""
 echo "✅ Reconnaissance complete!"
 echo "📁 Results saved to: $RECON_OUTPUT/"
 echo "📋 Log file: $RECON_LOG"
+

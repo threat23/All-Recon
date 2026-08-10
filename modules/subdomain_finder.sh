@@ -6,6 +6,13 @@
 # Philosophy: Find all the hidden doors before you start knocking
 # ═══════════════════════════════════════════════════════════════════
 
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
+    source "$SCRIPT_DIR/validation.sh"
+    setup_signal_traps
+fi
+
 SUBDOMAIN_LOG="logs/subdomain_$(date +%Y%m%d_%H%M%S).log"
 SUBDOMAIN_OUTPUT="output/subdomains_$(date +%Y%m%d_%H%M%S)"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -42,7 +49,7 @@ dns_subdomain_enum() {
         echo ""
         echo "🔎 Reverse DNS Lookup..."
         echo "────────────────────────────────────────────────────────────────"
-        dig "$domain" +nocmd +noall +answer | while read line; do
+        dig "$domain" +nocmd +noall +answer | while read -r line; do
             ip=$(echo "$line" | awk '{print $NF}')
             if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
                 echo "IP: $ip"
@@ -69,6 +76,7 @@ common_subdomains_bruteforce() {
     local domain=$1
     log_subdomain "🔍 Brute-forcing common subdomains on $domain..."
     
+    mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/common_subdomains_$TIMESTAMP.txt"
     
     # Common subdomain list
@@ -80,7 +88,7 @@ common_subdomains_bruteforce() {
         "blog" "shop" "app" "apps" "db" "database" "sql" "server"
         "mail2" "mail3" "secure" "secure2" "pop3" "imap4" "outlook"
         "web" "srv" "svc" "git" "repo" "svn" "monitor" "monitoring"
-        "dns" "dns1" "dns2" "internal" "intranet" "portal" "proxy"
+        "dns" "dns1" "dns2" "internal" "intranet" "proxy"
         "cache" "search" "download" "downloads" "support" "help"
         "kb" "knowledge" "wiki" "forum" "community" "chat" "slack"
         "status" "health" "metrics" "prometheus" "grafana" "logs"
@@ -93,7 +101,7 @@ common_subdomains_bruteforce() {
         echo "Generated: $(date)"
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
-        echo "Testing $(${#subdomains[@]}) common subdomains..."
+        echo "Testing ${#subdomains[@]} common subdomains..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
         
@@ -124,6 +132,7 @@ reverse_ip_lookup() {
     local domain=$1
     log_subdomain "🔍 Performing reverse IP lookup for $domain..."
     
+    mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/reverse_ip_$TIMESTAMP.txt"
     
     {
@@ -160,6 +169,7 @@ public_dns_scan() {
     local domain=$1
     log_subdomain "🔍 Scanning public DNS records for $domain..."
     
+    mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/dns_records_$TIMESTAMP.txt"
     
     {
@@ -218,6 +228,7 @@ cert_transparency_scan() {
     local domain=$1
     log_subdomain "🔍 Scanning certificate transparency logs for $domain..."
     
+    mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/cert_transparency_$TIMESTAMP.txt"
     
     {
@@ -241,6 +252,115 @@ cert_transparency_scan() {
     } | tee "$output_file"
     
     log_subdomain "✅ Certificate transparency scan complete"
+}
+
+# Function: HackerTarget OSINT lookup
+hackertarget_osint_scan() {
+    local domain=$1
+    log_subdomain "🔍 Querying HackerTarget API for $domain..."
+    
+    mkdir -p "$SUBDOMAIN_OUTPUT"
+    output_file="$SUBDOMAIN_OUTPUT/hackertarget_$TIMESTAMP.txt"
+    
+    {
+        echo "═══════════════════════════════════════════════════════════════"
+        echo "HACKERTARGET OSINT DISCOVERY: $domain"
+        echo "Generated: $(date)"
+        echo "═══════════════════════════════════════════════════════════════"
+        echo ""
+        
+        resp=$(curl -s --max-time 15 "https://api.hackertarget.com/hostsearch/?q=$domain" 2>/dev/null)
+        if [[ -n "$resp" && ! "$resp" =~ "error" && ! "$resp" =~ "API count exceeded" ]]; then
+            echo "$resp" | cut -d',' -f1 | sort -u | grep -v "^$"
+        else
+            echo "HackerTarget API unavailable or rate limited"
+        fi
+    } | tee "$output_file"
+    
+    log_subdomain "✅ HackerTarget OSINT scan complete"
+}
+
+# Function: AlienVault OTX Passive DNS lookup
+alienvault_osint_scan() {
+    local domain=$1
+    log_subdomain "🔍 Querying AlienVault OTX Passive DNS for $domain..."
+    
+    mkdir -p "$SUBDOMAIN_OUTPUT"
+    output_file="$SUBDOMAIN_OUTPUT/alienvault_otx_$TIMESTAMP.txt"
+    
+    {
+        echo "═══════════════════════════════════════════════════════════════"
+        echo "ALIENVULT OTX OSINT DISCOVERY: $domain"
+        echo "Generated: $(date)"
+        echo "═══════════════════════════════════════════════════════════════"
+        echo ""
+        
+        resp=$(curl -s --max-time 15 "https://otx.alienvault.com/api/v1/indicators/domain/$domain/passive_dns" 2>/dev/null)
+        if [[ -n "$resp" ]]; then
+            echo "$resp" | grep -oP '"hostname":"[^"]+"' | cut -d'"' -f4 | grep "\.$domain$" | sort -u | grep -v "^$" || echo "No AlienVault records found"
+        else
+            echo "AlienVault OTX API unavailable"
+        fi
+    } | tee "$output_file"
+    
+    log_subdomain "✅ AlienVault OTX OSINT scan complete"
+}
+
+# Function: RapidDNS lookup
+rapiddns_osint_scan() {
+    local domain=$1
+    log_subdomain "🔍 Querying RapidDNS for $domain..."
+    
+    mkdir -p "$SUBDOMAIN_OUTPUT"
+    output_file="$SUBDOMAIN_OUTPUT/rapiddns_$TIMESTAMP.txt"
+    
+    {
+        echo "═══════════════════════════════════════════════════════════════"
+        echo "RAPIDDNS OSINT DISCOVERY: $domain"
+        echo "Generated: $(date)"
+        echo "═══════════════════════════════════════════════════════════════"
+        echo ""
+        
+        resp=$(curl -s --max-time 15 "https://rapiddns.io/subdomain/$domain?full=1" 2>/dev/null)
+        if [[ -n "$resp" ]]; then
+            echo "$resp" | grep -oP '(?<=<td>)[a-zA-Z0-9.-]+\.'"$domain"'(?=</td>)' | sort -u | grep -v "^$" || \
+            echo "$resp" | grep -oP '[a-zA-Z0-9.-]+\.'"$domain" | sort -u | grep -v "^$" || \
+            echo "No RapidDNS records found"
+        else
+            echo "RapidDNS unavailable"
+        fi
+    } | tee "$output_file"
+    
+    log_subdomain "✅ RapidDNS OSINT scan complete"
+}
+
+# Function: Aggregated Passive OSINT scan
+passive_osint_scan() {
+    local domain=$1
+    log_subdomain "🔍 Starting Aggregated Passive OSINT discovery on $domain..."
+    
+    mkdir -p "$SUBDOMAIN_OUTPUT"
+    output_file="$SUBDOMAIN_OUTPUT/passive_osint_$TIMESTAMP.txt"
+    
+    cert_transparency_scan "$domain"
+    hackertarget_osint_scan "$domain"
+    alienvault_osint_scan "$domain"
+    rapiddns_osint_scan "$domain"
+    
+    {
+        echo "═══════════════════════════════════════════════════════════════"
+        echo "AGGREGATED PASSIVE OSINT DISCOVERY: $domain"
+        echo "Generated: $(date)"
+        echo "═══════════════════════════════════════════════════════════════"
+        echo ""
+        echo "Combined findings from crt.sh, HackerTarget, AlienVault OTX, RapidDNS:"
+        echo "────────────────────────────────────────────────────────────────"
+        
+        grep -hE "^[a-zA-Z0-9.-]+\.${domain//./\.}$" "$SUBDOMAIN_OUTPUT"/*.txt 2>/dev/null | sort -u | grep -v "^$" || \
+        grep -h "FOUND:" "$SUBDOMAIN_OUTPUT"/*.txt 2>/dev/null | awk '{print $NF}' | sort -u
+    } | tee "$output_file"
+    
+    log_subdomain "✅ Passive OSINT discovery complete"
 }
 
 # Function: Comprehensive scan (all methods)
@@ -267,9 +387,10 @@ comprehensive_subdomain_scan() {
     public_dns_scan "$domain"
     echo ""
     
-    cert_transparency_scan "$domain"
+    passive_osint_scan "$domain"
     
     # Generate summary
+    mkdir -p "$SUBDOMAIN_OUTPUT"
     summary_file="$SUBDOMAIN_OUTPUT/summary_$TIMESTAMP.txt"
     {
         echo "═══════════════════════════════════════════════════════════════"
@@ -296,17 +417,29 @@ if [[ $# -lt 2 ]]; then
     echo "  reverse          - Reverse IP lookup"
     echo "  records          - Public DNS records scan"
     echo "  cert             - Certificate transparency logs"
+    echo "  hackertarget     - HackerTarget OSINT API"
+    echo "  alienvault       - AlienVault OTX Passive DNS"
+    echo "  rapiddns         - RapidDNS subdomain lookup"
+    echo "  osint            - Aggregated Passive OSINT (crt.sh + APIs)"
     echo "  all              - Comprehensive scan (all methods)"
     echo ""
     echo "Examples:"
     echo "  $0 example.com all"
-    echo "  $0 example.com common"
-    echo "  $0 example.com cert"
+    echo "  $0 example.com osint"
+    echo "  $0 example.com hackertarget"
     exit 1
 fi
 
 DOMAIN=$1
 SCAN_TYPE=$2
+
+if type is_valid_domain &>/dev/null; then
+    if ! is_valid_domain "$DOMAIN"; then
+        echo "❌ Invalid domain format: '$DOMAIN'"
+        log_subdomain "❌ Invalid domain provided: $DOMAIN"
+        exit 1
+    fi
+fi
 
 case $SCAN_TYPE in
     dns)
@@ -324,6 +457,18 @@ case $SCAN_TYPE in
     cert)
         cert_transparency_scan "$DOMAIN"
         ;;
+    hackertarget)
+        hackertarget_osint_scan "$DOMAIN"
+        ;;
+    alienvault)
+        alienvault_osint_scan "$DOMAIN"
+        ;;
+    rapiddns)
+        rapiddns_osint_scan "$DOMAIN"
+        ;;
+    osint)
+        passive_osint_scan "$DOMAIN"
+        ;;
     all)
         comprehensive_subdomain_scan "$DOMAIN"
         ;;
@@ -337,3 +482,4 @@ echo ""
 echo "✅ Subdomain discovery complete!"
 echo "📁 Results saved to: $SUBDOMAIN_OUTPUT/"
 echo "📋 Log file: $SUBDOMAIN_LOG"
+

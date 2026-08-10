@@ -10,6 +10,13 @@ OUTPUT_DIR="output"
 LOGS_DIR="logs"
 mkdir -p "$OUTPUT_DIR" "$LOGS_DIR"
 
+# Source validation module if available
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/modules/validation.sh" ]]; then
+    source "$SCRIPT_DIR/modules/validation.sh"
+    setup_signal_traps
+fi
+
 # Timestamp for organized output
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 SESSION_LOG="$LOGS_DIR/session_$TIMESTAMP.log"
@@ -19,7 +26,7 @@ clear
 
 # Dependency checks
 for cmd in toilet lolcat; do
-    command -v $cmd &>/dev/null || {
+    command -v "$cmd" &>/dev/null || {
         echo "❌ $cmd is not installed. Install it first."
         [[ $cmd == "lolcat" ]] && echo "    sudo gem install lolcat"
         [[ $cmd == "toilet" ]] && echo "    sudo apt install toilet"
@@ -97,23 +104,29 @@ echo "1. Local Network Scan (Ping Sweep + Port Scan)"
 echo "2. Scan Specific Host (Website IP or Domain)"
 echo "3. Subdomain Discovery & Enumeration"
 echo "4. Web Vulnerability Scan"
-echo "5. View Last Results"
-echo "6. Generate Report"
-echo "7. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7]: " choice
+echo "5. Multi-Target Batch Scanner (Process target list file)"
+echo "6. View Last Results"
+echo "7. Generate Report"
+echo "8. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8]: " choice
 echo ""
 
 # ─── HANDLE USER CHOICE ─────────────────────────────────────
 if [[ "$choice" == "1" ]]; then
-    subnet=$(ip -4 addr show | grep -oP '(?<=inet\s)(?!127)\d+\.\d+\.\d+')
+    subnet=$(ip -4 addr show | grep -oP '(?<=inet\s)(?!127)\d+\.\d+\.\d+' | head -1)
+    if [[ -z "$subnet" ]]; then
+        echo "❌ Could not auto-detect subnet. Please check network interface."
+        exit 1
+    fi
     echo "[*] Scanning subnet: $subnet.0/24"
     log_output "🔍 Local network scan initiated on $subnet.0/24"
     tmpfile=$(mktemp)
+    if type register_tmp_file &>/dev/null; then register_tmp_file "$tmpfile"; fi
     scan_output="$OUTPUT_DIR/network_scan_$TIMESTAMP.txt"
 
     for i in {1..254}; do
         ip="$subnet.$i"
-        (ping -c 1 -W 1 $ip &> /dev/null && echo "$ip" >> "$tmpfile") &
+        (ping -c 1 -W 1 "$ip" &> /dev/null && echo "$ip" >> "$tmpfile") &
     done
     wait
 
@@ -125,26 +138,37 @@ if [[ "$choice" == "1" ]]; then
         log_output "✅ Discovered active hosts. Starting detailed port scan..."
         echo "[*] Starting full nmap scans..."
         
-        while read ip; do
+        while read -r ip; do
             echo "🔎 Scanning $ip ..."
             nmap_output="$OUTPUT_DIR/host_${ip//./_}_$TIMESTAMP.txt"
-            nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $ip | tee "$nmap_output"
+            nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- "$ip" | tee "$nmap_output"
             log_output "✅ Scan complete for $ip (results: $nmap_output)"
             echo ""
         done < "$tmpfile"
     else
-        echo "[*] No Host was up. Contact [+] ALL-RECON or THREAT [+]"
+        echo "[*] No Host was up."
         log_output "⚠️ No active hosts discovered in subnet"
     fi
     rm -f "$tmpfile"
 
 elif [[ "$choice" == "2" ]]; then
     read -p "Enter the target IP or domain: " target
+    if [[ -z "$target" ]]; then
+        echo "❌ Target cannot be empty"
+        exit 1
+    fi
+    if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
+        if ! is_valid_ip "$target" && ! is_valid_domain "$target"; then
+            echo "❌ Invalid target format. Must be a valid IP address or domain name."
+            log_output "❌ Invalid target provided: $target"
+            exit 1
+        fi
+    fi
     echo -e "$(tput setaf 3)⚠️  Press CTRL+C at any time to cancel the scan.$(tput sgr0)"
     log_output "🔍 Targeted scan initiated on $target"
     echo "🔎 Scanning $target ..."
     nmap_output="$OUTPUT_DIR/host_${target//[^a-zA-Z0-9]/_}_$TIMESTAMP.txt"
-    nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $target | tee "$nmap_output"
+    nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- "$target" | tee "$nmap_output"
     log_output "✅ Scan complete for $target (results: $nmap_output)"
 
 elif [[ "$choice" == "3" ]]; then
@@ -169,9 +193,10 @@ elif [[ "$choice" == "3" ]]; then
             echo "2. Common Subdomains (Brute Force)"
             echo "3. Reverse IP Lookup"
             echo "4. Public DNS Records"
-            echo "5. Certificate Transparency"
-            echo "6. Comprehensive (All Methods)"
-            read -p "Select scan type [1/2/3/4/5/6]: " subdomain_choice
+            echo "5. Certificate Transparency (crt.sh)"
+            echo "6. Aggregated Passive OSINT (crt.sh + HackerTarget + AlienVault + RapidDNS)"
+            echo "7. Comprehensive (All Methods)"
+            read -p "Select scan type [1/2/3/4/5/6/7]: " subdomain_choice
             
             case $subdomain_choice in
                 1)
@@ -195,6 +220,10 @@ elif [[ "$choice" == "3" ]]; then
                     bash modules/subdomain_finder.sh "$target_domain" cert
                     ;;
                 6)
+                    log_output "🔍 Aggregated Passive OSINT scan initiated for $target_domain"
+                    bash modules/subdomain_finder.sh "$target_domain" osint
+                    ;;
+                7)
                     log_output "🔍 Comprehensive subdomain discovery initiated for $target_domain"
                     bash modules/subdomain_finder.sh "$target_domain" all
                     ;;
@@ -288,6 +317,39 @@ elif [[ "$choice" == "4" ]]; then
     log_output "✅ Web vulnerability scan complete for $target_url"
 
 elif [[ "$choice" == "5" ]]; then
+    read -p "Enter path to target file (default: targets.txt): " target_file
+    target_file=${target_file:-targets.txt}
+
+    if [[ ! -f "$target_file" ]]; then
+        echo "❌ File '$target_file' not found."
+        echo "💡 Tip: Create a file with one IP/domain per line (e.g., echo 'example.com' > targets.txt)"
+        exit 1
+    fi
+
+    echo ""
+    echo "Select Batch Scan Mode:"
+    echo "1. Reconnaissance (DNS + WHOIS + Services)"
+    echo "2. Subdomain Discovery (Passive OSINT)"
+    echo "3. Web Vulnerabilities"
+    echo "4. Comprehensive Scan (All Modules)"
+    read -p "Enter mode choice [1/2/3/4]: " batch_mode_choice
+
+    case $batch_mode_choice in
+        1) mode="recon" ;;
+        2) mode="subdomain" ;;
+        3) mode="web" ;;
+        4) mode="all" ;;
+        *) mode="recon" ;;
+    esac
+
+    read -p "Enter max parallel workers [1-10] (default: 5): " max_workers
+    max_workers=${max_workers:-5}
+
+    log_output "🚀 Initiating Multi-Target Batch Scan from $target_file (Mode: $mode, Workers: $max_workers)"
+    bash modules/batch_runner.sh "$target_file" "$mode" "$max_workers"
+    log_output "✅ Multi-Target Batch Scan completed for $target_file"
+
+elif [[ "$choice" == "6" ]]; then
     echo "📁 Recent Scan Results:"
     echo ""
     if [[ -f "$OUTPUT_DIR"/*.txt ]]; then
@@ -301,7 +363,7 @@ elif [[ "$choice" == "5" ]]; then
         echo "[*] No scan results found yet."
     fi
 
-elif [[ "$choice" == "6" ]]; then
+elif [[ "$choice" == "7" ]]; then
     echo "📊 Generating Report..."
     report_file="$OUTPUT_DIR/report_$TIMESTAMP.txt"
     {
@@ -311,7 +373,7 @@ elif [[ "$choice" == "6" ]]; then
         echo "═════════════════════════════════════════════════════════"
         echo ""
         echo "📁 Scans Available:"
-        ls -1 "$OUTPUT_DIR"/*.txt | grep -v report || echo "No scans found"
+        ls -1 "$OUTPUT_DIR"/*.txt 2>/dev/null | grep -v report || echo "No scans found"
         echo ""
         echo "Session Log: $SESSION_LOG"
         echo ""
@@ -321,7 +383,7 @@ elif [[ "$choice" == "6" ]]; then
     echo "✅ Report saved to: $report_file"
     log_output "📊 Report generated: $report_file"
 
-elif [[ "$choice" == "7" ]]; then
+elif [[ "$choice" == "8" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0
