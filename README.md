@@ -21,6 +21,7 @@
 
 ✅ **Local Network Reconnaissance** - Automated ping sweep + comprehensive port scanning  
 ✅ **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
+✅ **WHOIS & Reverse Lookup** - Net ranges, co-hosted domains, and IP range mapping  
 ✅ **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
 ✅ **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
 ✅ **IP Detection** - Automatic internal & external IP discovery  
@@ -38,7 +39,7 @@
 
 ```bash
 sudo apt update
-sudo apt install nmap toilet git curl dnsutils -y
+sudo apt install nmap toilet git curl dnsutils whois -y
 sudo gem install lolcat  # or: sudo apt install lolcat
 ```
 
@@ -68,6 +69,28 @@ Deep reconnaissance on a single target:
 # Select option: 2
 # Enter target IP or domain
 ```
+
+### WHOIS & Reverse Lookup (Main Menu Option 8)
+Discover net ranges, organization details, and co-hosted domains for a target:
+```bash
+./all_recon.sh
+# Select option: 8
+# Enter target domain or IP
+# Choose mode: WHOIS, Reverse DNS + Co-hosted Domains, Netrange, or All
+```
+
+**Direct Module Usage:**
+```bash
+./modules/whois_reverse_lookup.sh example.com all
+./modules/whois_reverse_lookup.sh 8.8.8.8 whois
+```
+
+**Findings include:**
+- WHOIS net ranges / CIDR blocks
+- Organization, registrar, and contact emails
+- Reverse DNS (PTR) records
+- Co-hosted domains on the same IP (via reverse IP lookup)
+- Network boundary hints for IP range expansion
 
 ### 3. Subdomain Discovery & Enumeration
 Comprehensive subdomain reconnaissance using multiple methods:

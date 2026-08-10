@@ -78,6 +78,7 @@ script_files=(
     "modules/web_vulnerabilities.sh"
     "modules/reporting.sh"
     "modules/batch_runner.sh"
+    "modules/whois_reverse_lookup.sh"
     "CLEANER_GUIDE.sh"
     "QUICKSTART.sh"
     "START_HERE.sh"
@@ -218,6 +219,29 @@ assert_exit_code 1 $? "web_vulnerabilities: Rejects invalid URL format"
 # Test non-interactive execution with valid URL
 bash modules/web_vulnerabilities.sh "http://127.0.0.1" 1 &>/dev/null
 assert_exit_code 0 $? "web_vulnerabilities: Runs SQLi scan in non-interactive mode"
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 6: WHOIS & REVERSE LOOKUP MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 6: WHOIS & Reverse Lookup Module Integration Tests${NC}"
+
+# Test missing parameters
+bash modules/whois_reverse_lookup.sh &>/dev/null
+assert_exit_code 1 $? "whois_reverse_lookup: Rejects missing arguments"
+
+# Test invalid target rejection
+bash modules/whois_reverse_lookup.sh "not_a_valid_target" whois &>/dev/null
+assert_exit_code 1 $? "whois_reverse_lookup: Rejects invalid target format"
+
+# Test valid domain WHOIS mode (non-interactive)
+bash modules/whois_reverse_lookup.sh "example.com" whois &>/dev/null
+assert_exit_code 0 $? "whois_reverse_lookup: WHOIS mode succeeds for valid domain"
+
+# Test valid IP netrange mode
+bash modules/whois_reverse_lookup.sh "8.8.8.8" netrange &>/dev/null
+assert_exit_code 0 $? "whois_reverse_lookup: Netrange mode succeeds for valid IP"
 
 echo ""
 

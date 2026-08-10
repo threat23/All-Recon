@@ -107,8 +107,9 @@ echo "4. Web Vulnerability Scan"
 echo "5. Multi-Target Batch Scanner (Process target list file)"
 echo "6. View Last Results"
 echo "7. Generate Report"
-echo "8. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7/8]: " choice
+echo "8. WHOIS & Reverse Lookup (Net ranges & co-hosted domains)"
+echo "9. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8/9]: " choice
 echo ""
 
 # ─── HANDLE USER CHOICE ─────────────────────────────────────
@@ -384,6 +385,44 @@ elif [[ "$choice" == "7" ]]; then
     log_output "📊 Report generated: $report_file"
 
 elif [[ "$choice" == "8" ]]; then
+    read -p "Enter the target domain or IP (e.g., example.com or 8.8.8.8): " wr_target
+
+    if [[ -z "$wr_target" ]]; then
+        echo "❌ Target cannot be empty"
+        exit 1
+    fi
+
+    if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
+        if ! is_valid_ip "$wr_target" && ! is_valid_domain "$wr_target"; then
+            echo "❌ Invalid target format. Must be a valid IP address or domain name."
+            log_output "❌ Invalid WHOIS/reverse lookup target: $wr_target"
+            exit 1
+        fi
+    fi
+
+    echo ""
+    echo "🔍 WHOIS & Reverse Lookup Modes:"
+    echo "1. WHOIS (net ranges, org, contacts)"
+    echo "2. Reverse DNS & Co-hosted Domains"
+    echo "3. Network Range Discovery"
+    echo "4. All"
+    read -p "Select mode [1/2/3/4]: " wr_mode
+
+    case "$wr_mode" in
+        1) wr_mode_arg="whois" ;;
+        2) wr_mode_arg="reverse" ;;
+        3) wr_mode_arg="netrange" ;;
+        4) wr_mode_arg="all" ;;
+        *) echo "[!] Invalid mode"; exit 1 ;;
+    esac
+
+    echo ""
+    echo -e "$(tput setaf 3)⚠️  Press CTRL+C at any time to cancel the lookup.$(tput sgr0)"
+    log_output "🔍 WHOIS/reverse lookup initiated on $wr_target (mode: $wr_mode_arg)"
+    bash modules/whois_reverse_lookup.sh "$wr_target" "$wr_mode_arg"
+    log_output "✅ WHOIS/reverse lookup complete for $wr_target"
+
+elif [[ "$choice" == "9" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0

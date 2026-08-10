@@ -39,7 +39,7 @@ install_deps() {
         
         sudo apt update -qq
         
-        deps=("nmap" "curl" "dnsutils" "toilet")
+        deps=("nmap" "curl" "dnsutils" "toilet" "whois")
         for dep in "${deps[@]}"; do
             if ! dpkg -l | grep -q "^ii  $dep"; then
                 echo "   📦 Installing $dep..."
@@ -68,7 +68,7 @@ install_deps() {
             exit 1
         fi
         
-        deps=("nmap" "curl" "bind" "figlet")
+        deps=("nmap" "curl" "bind" "figlet" "whois")
         for dep in "${deps[@]}"; do
             if brew list "$dep" &>/dev/null 2>&1; then
                 echo "   ✅ $dep already installed"
@@ -126,7 +126,7 @@ echo "────────────────────────�
 echo ""
 
 verify_setup() {
-    tools=("nmap" "curl" "dig" "toilet")
+    tools=("nmap" "curl" "dig" "toilet" "whois")
     
     for tool in "${tools[@]}"; do
         if command -v "$tool" &> /dev/null; then
