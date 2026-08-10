@@ -105,10 +105,11 @@ echo "2. Scan Specific Host (Website IP or Domain)"
 echo "3. Subdomain Discovery & Enumeration"
 echo "4. Web Vulnerability Scan"
 echo "5. Multi-Target Batch Scanner (Process target list file)"
-echo "6. View Last Results"
-echo "7. Generate Report"
-echo "8. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7/8]: " choice
+echo "6. WHOIS & Reverse Lookup Recon"
+echo "7. View Last Results"
+echo "8. Generate Report"
+echo "9. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8/9]: " choice
 echo ""
 
 # ─── HANDLE USER CHOICE ─────────────────────────────────────
@@ -329,16 +330,18 @@ elif [[ "$choice" == "5" ]]; then
     echo ""
     echo "Select Batch Scan Mode:"
     echo "1. Reconnaissance (DNS + WHOIS + Services)"
-    echo "2. Subdomain Discovery (Passive OSINT)"
-    echo "3. Web Vulnerabilities"
-    echo "4. Comprehensive Scan (All Modules)"
-    read -p "Enter mode choice [1/2/3/4]: " batch_mode_choice
+    echo "2. WHOIS & Reverse Lookup Recon"
+    echo "3. Subdomain Discovery (Passive OSINT)"
+    echo "4. Web Vulnerabilities"
+    echo "5. Comprehensive Scan (All Modules)"
+    read -p "Enter mode choice [1/2/3/4/5]: " batch_mode_choice
 
     case $batch_mode_choice in
         1) mode="recon" ;;
-        2) mode="subdomain" ;;
-        3) mode="web" ;;
-        4) mode="all" ;;
+        2) mode="whois" ;;
+        3) mode="subdomain" ;;
+        4) mode="web" ;;
+        5) mode="all" ;;
         *) mode="recon" ;;
     esac
 
@@ -350,6 +353,54 @@ elif [[ "$choice" == "5" ]]; then
     log_output "✅ Multi-Target Batch Scan completed for $target_file"
 
 elif [[ "$choice" == "6" ]]; then
+    read -p "Enter target domain or IP (e.g., example.com or 8.8.8.8): " target_whois
+
+    if [[ -z "$target_whois" ]]; then
+        echo "[!] Target cannot be empty"
+        exit 1
+    fi
+
+    if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
+        if ! is_valid_ip "$target_whois" && ! is_valid_domain "$target_whois"; then
+            echo "❌ Invalid target format. Must be a valid IP address or domain name."
+            exit 1
+        fi
+    fi
+
+    echo ""
+    echo "🔍 WHOIS & Reverse Lookup Options:"
+    echo "1. Domain WHOIS"
+    echo "2. IP WHOIS"
+    echo "3. Reverse DNS (PTR)"
+    echo "4. IP Ranges / Netblocks"
+    echo "5. Related Domains / Shared Hosting"
+    echo "6. Run Everything"
+    read -p "Select lookup type [1/2/3/4/5/6]: " whois_choice
+
+    case "$whois_choice" in
+        1) mode="domain" ;;
+        2) mode="ip" ;;
+        3) mode="reverse" ;;
+        4) mode="ranges" ;;
+        5) mode="related" ;;
+        6) mode="all" ;;
+        *)
+            echo "[!] Invalid choice"
+            exit 1
+            ;;
+    esac
+
+    echo ""
+    echo -e "$(tput setaf 3)⚠️  Press CTRL+C at any time to cancel the scan.$(tput sgr0)"
+    log_output "🔍 WHOIS & Reverse Lookup recon initiated for $target_whois (mode: $mode)"
+    bash modules/whois_recon.sh "$target_whois" "$mode"
+
+    echo ""
+    echo "✅ WHOIS & Reverse Lookup recon complete!"
+    echo "📁 Results saved to: output/whois_*/"
+    log_output "✅ WHOIS & Reverse Lookup recon complete for $target_whois"
+
+elif [[ "$choice" == "7" ]]; then
     echo "📁 Recent Scan Results:"
     echo ""
     if [[ -f "$OUTPUT_DIR"/*.txt ]]; then
@@ -363,7 +414,7 @@ elif [[ "$choice" == "6" ]]; then
         echo "[*] No scan results found yet."
     fi
 
-elif [[ "$choice" == "7" ]]; then
+elif [[ "$choice" == "8" ]]; then
     echo "📊 Generating Report..."
     report_file="$OUTPUT_DIR/report_$TIMESTAMP.txt"
     {
@@ -383,7 +434,7 @@ elif [[ "$choice" == "7" ]]; then
     echo "✅ Report saved to: $report_file"
     log_output "📊 Report generated: $report_file"
 
-elif [[ "$choice" == "8" ]]; then
+elif [[ "$choice" == "9" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0

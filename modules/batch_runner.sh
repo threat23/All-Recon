@@ -29,9 +29,10 @@ usage() {
     echo ""
     echo "Scan Modes:"
     echo "  recon       - DNS, WHOIS, Port & Service Mapping (Default)"
+    echo "  whois       - WHOIS, Reverse DNS, Netblocks & Related Domains"
     echo "  subdomain   - Subdomain Discovery & OSINT"
     echo "  web         - Web Vulnerability Scanning"
-    echo "  all         - Comprehensive scan (recon + subdomain + web)"
+    echo "  all         - Comprehensive scan (recon + subdomain + web + whois)"
     echo ""
     echo "Parameters:"
     echo "  targets_file    - Path to text file containing target IPs, domains, or URLs"
@@ -105,6 +106,9 @@ run_target_scan() {
         recon)
             bash "$SCRIPT_DIR/recon.sh" "$target" all &> "$target_out/recon.log"
             ;;
+        whois)
+            bash "$SCRIPT_DIR/whois_recon.sh" "$target" all &> "$target_out/whois.log"
+            ;;
         subdomain)
             if type is_valid_domain &>/dev/null && is_valid_domain "$target"; then
                 bash "$SCRIPT_DIR/subdomain_finder.sh" "$target" osint &> "$target_out/subdomains.log"
@@ -121,6 +125,7 @@ run_target_scan() {
             ;;
         all)
             bash "$SCRIPT_DIR/recon.sh" "$target" all &> "$target_out/recon.log"
+            bash "$SCRIPT_DIR/whois_recon.sh" "$target" all &> "$target_out/whois.log"
             if type is_valid_domain &>/dev/null && is_valid_domain "$target"; then
                 bash "$SCRIPT_DIR/subdomain_finder.sh" "$target" osint &> "$target_out/subdomains.log"
             fi
