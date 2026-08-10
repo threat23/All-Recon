@@ -305,16 +305,26 @@ elif [[ "$choice" == "4" ]]; then
         exit 1
     fi
 
+    if type is_valid_url &>/dev/null && ! is_valid_url "$target_url"; then
+        echo "❌ Invalid URL format: '$target_url' (must start with http:// or https://)"
+        echo "🛑 Aborting without running any scan. No output saved."
+        exit 1
+    fi
+
     echo ""
     echo -e "$(tput setaf 3)⚠️  Press CTRL+C at any time to cancel the scan.$(tput sgr0)"
     log_output "🔍 Web vulnerability scan initiated for $target_url"
 
-    bash modules/web_vulnerabilities.sh "$target_url"
-
-    echo ""
-    echo "✅ Web vulnerability scan complete!"
-    echo "📁 Results saved to: output/web_vulns_*/"
-    log_output "✅ Web vulnerability scan complete for $target_url"
+    if bash modules/web_vulnerabilities.sh "$target_url"; then
+        echo ""
+        echo "✅ Web vulnerability scan complete!"
+        echo "📁 Results saved to: output/web_vulns_*/"
+        log_output "✅ Web vulnerability scan complete for $target_url"
+    else
+        echo ""
+        echo "🛑 Web vulnerability scan aborted. No output saved."
+        exit 1
+    fi
 
 elif [[ "$choice" == "5" ]]; then
     read -p "Enter path to target file (default: targets.txt): " target_file

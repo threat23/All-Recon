@@ -10,8 +10,6 @@ WEB_VULN_LOG="logs/web_vuln_$(date +%Y%m%d_%H%M%S).log"
 WEB_VULN_OUTPUT="output/web_vulns_$(date +%Y%m%d_%H%M%S)"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-mkdir -p logs output "$WEB_VULN_OUTPUT"
-
 log_vuln() {
     echo "[$(date +%H:%M:%S)] $1" | tee -a "$WEB_VULN_LOG"
 }
@@ -70,10 +68,14 @@ fi
 if type is_valid_url &>/dev/null; then
     if ! is_valid_url "$TARGET_URL"; then
         echo "❌ Invalid URL format: '$TARGET_URL' (must start with http:// or https://)"
-        log_vuln "❌ Invalid URL provided: $TARGET_URL"
+        echo "🛑 Aborting without running any scan. No output saved."
         exit 1
     fi
 fi
+
+# Only create output/log directories once the input is valid, so an aborted
+# run never leaves behind empty directories or log files.
+mkdir -p logs output "$WEB_VULN_OUTPUT"
 
 log_vuln "🎯 Web Vulnerability Scanner initialized for: $TARGET_URL"
 
