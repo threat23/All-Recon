@@ -39,7 +39,7 @@ install_deps() {
         
         sudo apt update -qq
         
-        deps=("nmap" "curl" "dnsutils" "toilet")
+        deps=("nmap" "curl" "dnsutils" "toilet" "python3" "python3-pip")
         for dep in "${deps[@]}"; do
             if ! dpkg -l | grep -q "^ii  $dep"; then
                 echo "   📦 Installing $dep..."
@@ -68,7 +68,7 @@ install_deps() {
             exit 1
         fi
         
-        deps=("nmap" "curl" "bind" "figlet")
+        deps=("nmap" "curl" "bind" "figlet" "python3")
         for dep in "${deps[@]}"; do
             if brew list "$dep" &>/dev/null 2>&1; then
                 echo "   ✅ $dep already installed"
@@ -88,6 +88,23 @@ install_deps() {
 }
 
 install_deps
+
+if [[ -f "requirements.txt" ]]; then
+    echo ""
+    echo "─────────────────────────────────────────────────────────────────"
+    echo "Step 1b: Installing Python Dependencies"
+    echo "─────────────────────────────────────────────────────────────────"
+    echo ""
+
+    if command -v pip3 &>/dev/null; then
+        echo "   📦 Installing Python packages from requirements.txt..."
+        pip3 install -r requirements.txt -q 2>/dev/null || \
+            pip3 install -r requirements.txt -q --break-system-packages 2>/dev/null || \
+            echo "   ⚠️  Could not install Python packages automatically. Run: pip3 install -r requirements.txt"
+    else
+        echo "   ⚠️  pip3 not found. Skipping Python dependency installation."
+    fi
+fi
 
 echo ""
 echo "─────────────────────────────────────────────────────────────────"
@@ -117,6 +134,7 @@ echo "────────────────────────�
 echo ""
 
 chmod +x ./*.sh modules/*.sh 2>/dev/null || true
+chmod +x modules/passive.py 2>/dev/null || true
 echo "   ✅ Scripts are executable"
 
 echo ""
@@ -126,7 +144,7 @@ echo "────────────────────────�
 echo ""
 
 verify_setup() {
-    tools=("nmap" "curl" "dig" "toilet")
+    tools=("nmap" "curl" "dig" "toilet" "python3")
     
     for tool in "${tools[@]}"; do
         if command -v "$tool" &> /dev/null; then

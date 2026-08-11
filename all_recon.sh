@@ -108,8 +108,9 @@ echo "5. Multi-Target Batch Scanner (Process target list file)"
 echo "6. WHOIS & Reverse Lookup Recon"
 echo "7. View Last Results"
 echo "8. Generate Report"
-echo "9. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7/8/9]: " choice
+echo "9. Passive OSINT Reconnaissance"
+echo "10. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8/9/10]: " choice
 echo ""
 
 # ─── HANDLE USER CHOICE ─────────────────────────────────────
@@ -333,15 +334,17 @@ elif [[ "$choice" == "5" ]]; then
     echo "2. WHOIS & Reverse Lookup Recon"
     echo "3. Subdomain Discovery (Passive OSINT)"
     echo "4. Web Vulnerabilities"
-    echo "5. Comprehensive Scan (All Modules)"
-    read -p "Enter mode choice [1/2/3/4/5]: " batch_mode_choice
+    echo "5. Passive OSINT (crt.sh + Wayback + RDAP)"
+    echo "6. Comprehensive Scan (All Modules)"
+    read -p "Enter mode choice [1/2/3/4/5/6]: " batch_mode_choice
 
     case $batch_mode_choice in
         1) mode="recon" ;;
         2) mode="whois" ;;
         3) mode="subdomain" ;;
         4) mode="web" ;;
-        5) mode="all" ;;
+        5) mode="passive" ;;
+        6) mode="all" ;;
         *) mode="recon" ;;
     esac
 
@@ -435,6 +438,34 @@ elif [[ "$choice" == "8" ]]; then
     log_output "📊 Report generated: $report_file"
 
 elif [[ "$choice" == "9" ]]; then
+    read -p "Enter the target domain (e.g., example.com): " target_domain
+
+    if [[ -z "$target_domain" ]]; then
+        echo "[!] Domain cannot be empty"
+        exit 1
+    fi
+
+    echo ""
+    echo "🔍 Passive OSINT Sources:"
+    echo "1. Certificate Transparency (crt.sh)"
+    echo "2. Wayback Machine"
+    echo "3. RDAP Registration Data"
+    echo "4. All Default Sources"
+    read -p "Select source [1/2/3/4]: " passive_choice
+
+    case $passive_choice in
+        1) sources="crtsh" ;;
+        2) sources="wayback" ;;
+        3) sources="rdap" ;;
+        4) sources="crtsh,wayback,rdap" ;;
+        *) echo "[!] Invalid choice"; exit 1 ;;
+    esac
+
+    log_output "🔍 Passive OSINT recon initiated for $target_domain (sources: $sources)"
+    bash modules/passive.sh "$target_domain" "$sources"
+    log_output "✅ Passive OSINT recon complete for $target_domain"
+
+elif [[ "$choice" == "10" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0

@@ -32,7 +32,8 @@ usage() {
     echo "  whois       - WHOIS, Reverse DNS, Netblocks & Related Domains"
     echo "  subdomain   - Subdomain Discovery & OSINT"
     echo "  web         - Web Vulnerability Scanning"
-    echo "  all         - Comprehensive scan (recon + subdomain + web + whois)"
+    echo "  passive     - Passive OSINT (crt.sh, Wayback, RDAP)"
+    echo "  all         - Comprehensive scan (recon + subdomain + web + whois + passive)"
     echo ""
     echo "Parameters:"
     echo "  targets_file    - Path to text file containing target IPs, domains, or URLs"
@@ -41,6 +42,7 @@ usage() {
     echo "Examples:"
     echo "  $0 targets.txt recon 5"
     echo "  $0 targets.txt subdomain 3"
+    echo "  $0 targets.txt passive 4"
     echo "  $0 targets.txt all"
     exit 1
 }
@@ -123,11 +125,19 @@ run_target_scan() {
             fi
             bash "$SCRIPT_DIR/web_vulnerabilities.sh" "$url" 10 &> "$target_out/web_vulns.log"
             ;;
+        passive)
+            if type is_valid_domain &>/dev/null && is_valid_domain "$target"; then
+                bash "$SCRIPT_DIR/passive.sh" "$target" "crtsh,wayback,rdap" &> "$target_out/passive.log"
+            else
+                echo "[!] $target is not a valid domain, skipping passive scan" > "$target_out/passive.log"
+            fi
+            ;;
         all)
             bash "$SCRIPT_DIR/recon.sh" "$target" all &> "$target_out/recon.log"
             bash "$SCRIPT_DIR/whois_recon.sh" "$target" all &> "$target_out/whois.log"
             if type is_valid_domain &>/dev/null && is_valid_domain "$target"; then
                 bash "$SCRIPT_DIR/subdomain_finder.sh" "$target" osint &> "$target_out/subdomains.log"
+                bash "$SCRIPT_DIR/passive.sh" "$target" "crtsh,wayback,rdap" &> "$target_out/passive.log"
             fi
             local url="$target"
             if [[ ! "$target" =~ ^https?:// ]]; then

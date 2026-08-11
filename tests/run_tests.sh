@@ -77,6 +77,7 @@ script_files=(
     "modules/subdomain_cleaner.sh"
     "modules/web_vulnerabilities.sh"
     "modules/reporting.sh"
+    "modules/passive.sh"
     "modules/batch_runner.sh"
     "modules/whois_recon.sh"
     "CLEANER_GUIDE.sh"
@@ -245,6 +246,27 @@ bash modules/batch_runner.sh "non_existent_file.txt" recon &>/dev/null
 assert_exit_code 1 $? "batch_runner: Rejects non-existent targets file"
 
 rm -f "$MOCK_TARGETS_FILE"
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 8: PASSIVE OSINT MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 8: Passive OSINT Module${NC}"
+
+if command -v python3 &>/dev/null; then
+    python3 -m py_compile modules/passive.py &>/dev/null
+    assert_exit_code 0 $? "passive.py: Python syntax is valid"
+
+    if python3 -c "import aiohttp" &>/dev/null; then
+        bash modules/passive.sh example.com crtsh &>/dev/null
+        assert_exit_code 0 $? "passive.sh: Runs passive recon for example.com"
+    else
+        log_skip "aiohttp not installed; skipping passive.sh integration test"
+    fi
+else
+    log_skip "python3 not installed; skipping passive module tests"
+fi
 
 echo ""
 
