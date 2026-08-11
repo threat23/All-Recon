@@ -23,6 +23,7 @@
 ✅ **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
 ✅ **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
 ✅ **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
+✅ **Passive OSINT** - Certificate transparency, Wayback Machine, and RDAP lookups  
 ✅ **IP Detection** - Automatic internal & external IP discovery  
 ✅ **Dependency Management** - Smart pre-flight checks for required tools  
 ✅ **Beautiful Output** - ASCII art + colored logging for quick visual parsing  
@@ -114,7 +115,7 @@ Scan multiple targets in parallel from a target list file:
 ./all_recon.sh
 # Select option: 5
 # Enter target list file (e.g., targets.txt)
-# Select scan mode (recon, subdomain, web, all)
+# Select scan mode (recon, subdomain, web, passive, all)
 # Specify max worker concurrency (e.g., 5)
 ```
 
@@ -122,9 +123,25 @@ Scan multiple targets in parallel from a target list file:
 ```bash
 ./modules/batch_runner.sh targets.txt recon 5
 ./modules/batch_runner.sh targets.txt osint 4
+./modules/batch_runner.sh targets.txt passive 4
 ```
 
-### 4. View Results & Generate Reports
+### 5. Passive OSINT Reconnaissance
+Run non-interactive passive reconnaissance against a domain:
+```bash
+./all_recon.sh
+# Select option: 8
+# Enter target domain (e.g., example.com)
+# Choose source: crt.sh, Wayback, RDAP, or All
+```
+
+**Direct Module Usage:**
+```bash
+./modules/passive.sh example.com crtsh,wayback,rdap
+python3 modules/passive.py example.com --sources crtsh,wayback,rdap -o output.json
+```
+
+### 6. View Results & Generate Reports
 ```bash
 ./all_recon.sh
 # Select option: 4 (View Last Results)
@@ -144,6 +161,8 @@ Project/
 │   └── automation_rules.conf   # Custom automation settings
 ├── modules/
 │   ├── recon.sh                # Reconnaissance module
+│   ├── passive.sh              # Passive OSINT wrapper
+│   ├── passive.py              # Passive OSINT Python engine
 │   ├── exploits.sh             # Exploitation tracking
 │   └── reporting.sh            # Report generation
 ├── output/                      # Auto-generated scan results
