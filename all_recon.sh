@@ -106,10 +106,11 @@ echo "3. Subdomain Discovery & Enumeration"
 echo "4. Web Vulnerability Scan"
 echo "5. Multi-Target Batch Scanner (Process target list file)"
 echo "6. WHOIS & Reverse Lookup Recon"
-echo "7. View Last Results"
-echo "8. Generate Report"
-echo "9. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7/8/9]: " choice
+echo "7. Passive OSINT (crt.sh, Wayback, RDAP)"
+echo "8. View Last Results"
+echo "9. Generate Report"
+echo "10. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8/9/10]: " choice
 echo ""
 
 # ─── HANDLE USER CHOICE ─────────────────────────────────────
@@ -332,16 +333,18 @@ elif [[ "$choice" == "5" ]]; then
     echo "1. Reconnaissance (DNS + WHOIS + Services)"
     echo "2. WHOIS & Reverse Lookup Recon"
     echo "3. Subdomain Discovery (Passive OSINT)"
-    echo "4. Web Vulnerabilities"
-    echo "5. Comprehensive Scan (All Modules)"
-    read -p "Enter mode choice [1/2/3/4/5]: " batch_mode_choice
+    echo "4. Passive OSINT (crt.sh + Wayback + RDAP)"
+    echo "5. Web Vulnerabilities"
+    echo "6. Comprehensive Scan (All Modules)"
+    read -p "Enter mode choice [1/2/3/4/5/6]: " batch_mode_choice
 
     case $batch_mode_choice in
         1) mode="recon" ;;
         2) mode="whois" ;;
         3) mode="subdomain" ;;
-        4) mode="web" ;;
-        5) mode="all" ;;
+        4) mode="passive" ;;
+        5) mode="web" ;;
+        6) mode="all" ;;
         *) mode="recon" ;;
     esac
 
@@ -401,6 +404,31 @@ elif [[ "$choice" == "6" ]]; then
     log_output "✅ WHOIS & Reverse Lookup recon complete for $target_whois"
 
 elif [[ "$choice" == "7" ]]; then
+    read -p "Enter target domain or IP for passive OSINT (e.g., example.com): " target_passive
+
+    if [[ -z "$target_passive" ]]; then
+        echo "[!] Target cannot be empty"
+        exit 1
+    fi
+
+    if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
+        if ! is_valid_ip "$target_passive" && ! is_valid_domain "$target_passive"; then
+            echo "❌ Invalid target format. Must be a valid IP address or domain name."
+            exit 1
+        fi
+    fi
+
+    echo ""
+    echo -e "$(tput setaf 3)⚠️  Passive OSINT queries may take a few seconds.$(tput sgr0)"
+    log_output "🔍 Passive OSINT scan initiated for $target_passive"
+    bash modules/passive.sh "$target_passive"
+
+    echo ""
+    echo "✅ Passive OSINT completed!"
+    echo "📁 Results saved to: output/passive_${target_passive//[^a-zA-Z0-9.-]/_}_*.json"
+    log_output "✅ Passive OSINT scan complete for $target_passive"
+
+elif [[ "$choice" == "8" ]]; then
     echo "📁 Recent Scan Results:"
     echo ""
     if [[ -f "$OUTPUT_DIR"/*.txt ]]; then
@@ -414,7 +442,7 @@ elif [[ "$choice" == "7" ]]; then
         echo "[*] No scan results found yet."
     fi
 
-elif [[ "$choice" == "8" ]]; then
+elif [[ "$choice" == "9" ]]; then
     echo "📊 Generating Report..."
     report_file="$OUTPUT_DIR/report_$TIMESTAMP.txt"
     {
@@ -434,7 +462,7 @@ elif [[ "$choice" == "8" ]]; then
     echo "✅ Report saved to: $report_file"
     log_output "📊 Report generated: $report_file"
 
-elif [[ "$choice" == "9" ]]; then
+elif [[ "$choice" == "10" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0
