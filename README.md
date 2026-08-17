@@ -146,7 +146,31 @@ Scan multiple targets in parallel from a target list file:
 ./modules/batch_runner.sh targets.txt all 3
 ```
 
-### 6. View Results & Generate Reports
+### 6. WHOIS & Reverse Lookup Reconnaissance
+Gather ownership, infrastructure, and PTR data for a target domain or IP.
+```bash
+./all_recon.sh
+# Select option: 6
+# Enter target domain or IP (e.g., example.com or 8.8.8.8)
+# Choose lookup type: domain WHOIS, IP WHOIS, PTR, netblocks, related domains, or all
+```
+
+**Direct Module Usage:**
+```bash
+./modules/whois_recon.sh example.com all
+./modules/whois_recon.sh 8.8.8.8 ip
+./modules/whois_recon.sh example.com reverse
+```
+
+This module produces timestamped output under `output/whois_<timestamp>/` including:
+- WHOIS domain records
+- WHOIS IP records
+- Reverse DNS (PTR) data
+- IP ranges / netblocks
+- Related domain / shared-hosting hints
+- Summary report
+
+### 7. View Results & Generate Reports
 ```bash
 ./all_recon.sh
 # Select option: 8 (View Last Results)
