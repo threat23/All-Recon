@@ -79,6 +79,7 @@ script_files=(
     "modules/reporting.sh"
     "modules/batch_runner.sh"
     "modules/whois_recon.sh"
+    "modules/passive.sh"
     "CLEANER_GUIDE.sh"
     "QUICKSTART.sh"
     "START_HERE.sh"
@@ -223,9 +224,26 @@ assert_exit_code 0 $? "web_vulnerabilities: Runs SQLi scan in non-interactive mo
 echo ""
 
 # -------------------------------------------------------------------
-# TEST SUITE 7: MULTI-TARGET BATCH SCANNER MODULE
+# TEST SUITE 7: PASSIVE OSINT MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 7: Multi-Target Batch Scanner Integration Tests${NC}"
+echo -e "${YELLOW}▶ TEST SUITE 7: Passive OSINT Module Integration Tests${NC}"
+
+bash modules/passive.sh "example.com" &>/dev/null
+assert_exit_code 0 $? "passive.sh: Runs passive OSINT collection for a valid domain"
+
+passive_json=$(ls output/passive_example.com_*.json 2>/dev/null | head -n 1)
+if [[ -n "$passive_json" && -f "$passive_json" ]]; then
+    log_pass "passive.sh: JSON output file created at $passive_json"
+else
+    log_fail "passive.sh: Expected JSON output file was not created"
+fi
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 8: MULTI-TARGET BATCH SCANNER MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 8: Multi-Target Batch Scanner Integration Tests${NC}"
 
 # Create mock targets file
 MOCK_TARGETS_FILE="output/test_mock_targets.txt"

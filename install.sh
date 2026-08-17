@@ -39,7 +39,7 @@ install_deps() {
         
         sudo apt update -qq
         
-        deps=("nmap" "curl" "dnsutils" "toilet")
+        deps=("nmap" "curl" "dnsutils" "toilet" "python3" "python3-pip")
         for dep in "${deps[@]}"; do
             if ! dpkg -l | grep -q "^ii  $dep"; then
                 echo "   📦 Installing $dep..."
@@ -48,6 +48,11 @@ install_deps() {
                 echo "   ✅ $dep already installed"
             fi
         done
+
+        if [[ -f "requirements.txt" ]]; then
+            echo "   📦 Installing Python dependencies from requirements.txt..."
+            python3 -m pip install --break-system-packages -r requirements.txt 2>/dev/null || pip3 install -r requirements.txt
+        fi
         
         # Install lolcat via gem (may not be available in apt)
         if ! command -v lolcat &> /dev/null; then
@@ -68,7 +73,7 @@ install_deps() {
             exit 1
         fi
         
-        deps=("nmap" "curl" "bind" "figlet")
+        deps=("nmap" "curl" "bind" "figlet" "python3")
         for dep in "${deps[@]}"; do
             if brew list "$dep" &>/dev/null 2>&1; then
                 echo "   ✅ $dep already installed"
@@ -77,7 +82,12 @@ install_deps() {
                 brew install "$dep" -q
             fi
         done
-        
+
+        if [[ -f "requirements.txt" ]]; then
+            echo "   📦 Installing Python dependencies from requirements.txt..."
+            python3 -m pip install -r requirements.txt 2>/dev/null || pip3 install -r requirements.txt
+        fi
+
         if ! command -v lolcat &> /dev/null; then
             echo "   📦 Installing lolcat..."
             brew install lolcat -q || gem install lolcat -q
@@ -126,7 +136,7 @@ echo "────────────────────────�
 echo ""
 
 verify_setup() {
-    tools=("nmap" "curl" "dig" "toilet")
+    tools=("nmap" "curl" "dig" "toilet" "python3")
     
     for tool in "${tools[@]}"; do
         if command -v "$tool" &> /dev/null; then
@@ -136,6 +146,12 @@ verify_setup() {
             echo "   ❌ $tool NOT FOUND"
         fi
     done
+
+    if python3 -m pip --version &> /dev/null; then
+        echo "   ✅ pip available"
+    else
+        echo "   ❌ pip NOT FOUND"
+    fi
     
     if [[ -f "all_recon.sh" ]]; then
         echo "   ✅ Main script ready"

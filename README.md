@@ -22,6 +22,7 @@
 ✅ **Local Network Reconnaissance** - Automated ping sweep + comprehensive port scanning  
 ✅ **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
 ✅ **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
+✅ **Passive OSINT** - crt.sh, Wayback, and RDAP lookups for target intelligence without active probes  
 ✅ **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
 ✅ **IP Detection** - Automatic internal & external IP discovery  
 ✅ **Dependency Management** - Smart pre-flight checks for required tools  
@@ -108,27 +109,48 @@ Option: Clean results (Y/N)
 ./modules/subdomain_cleaner.sh output/subdomains_*/ all
 ```
 
-### 4. Multi-Target Batch Scanner
+### 4. Passive OSINT Targets
+Collect passive intelligence from public data sources without a scan:
+```bash
+./all_recon.sh
+# Select option: 7
+# Enter target domain or IP (e.g., example.com)
+```
+
+**Direct Module Usage:**
+```bash
+./modules/passive.sh example.com
+./modules/passive.sh 8.8.8.8
+```
+
+This writes JSON output to `output/passive_<target>_timestamp.json` and includes data from:
+- crt.sh certificate transparency history
+- Wayback Machine snapshots
+- RDAP registration / network metadata
+- Shodan placeholder status (not enabled by default)
+
+### 5. Multi-Target Batch Scanner
 Scan multiple targets in parallel from a target list file:
 ```bash
 ./all_recon.sh
 # Select option: 5
 # Enter target list file (e.g., targets.txt)
-# Select scan mode (recon, subdomain, web, all)
+# Select scan mode (recon, whois, subdomain, passive, web, all)
 # Specify max worker concurrency (e.g., 5)
 ```
 
 **Direct Batch Module Usage:**
 ```bash
 ./modules/batch_runner.sh targets.txt recon 5
-./modules/batch_runner.sh targets.txt osint 4
+./modules/batch_runner.sh targets.txt passive 4
+./modules/batch_runner.sh targets.txt all 3
 ```
 
-### 4. View Results & Generate Reports
+### 6. View Results & Generate Reports
 ```bash
 ./all_recon.sh
-# Select option: 4 (View Last Results)
-# Select option: 5 (Generate Report)
+# Select option: 8 (View Last Results)
+# Select option: 9 (Generate Report)
 ```
 
 ---
