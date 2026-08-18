@@ -11,21 +11,21 @@ The philosophy behind ALL-RECON is simple: **eliminate routine, maximize focus.*
 ```
 Start Tool
     ↓
-    ├─-> Network Scan (or Specific Host)
-    │   ├─-> Parallel ping sweep
-    │   ├─-> Auto-capture results
-    │   └─-> Generate findings
-    │
-    ├─-> [WHILE AUTOMATION RUNS -> YOU ANALYZE]
-    │   ├─ Review high-risk ports
-    │   ├─ Identify attack vectors
-    │   ├─ Plan exploitation chains
-    │   └─ Document interesting findings
-    │
-    └─-> Review organized results
-        ├─ Auto-timestamped output
-        ├─ Ready for reporting
-        └─ Next target or deep-dive
+    +--> Network Scan (or Specific Host)
+    |   +--> Parallel ping sweep
+    |   +--> Auto-capture results
+    |   +--> Generate findings
+    |
+    +--> [WHILE AUTOMATION RUNS -> YOU ANALYZE]
+    |   +- Review high-risk ports
+    |   +- Identify attack vectors
+    |   +- Plan exploitation chains
+    |   +- Document interesting findings
+    |
+    +--> Review organized results
+        +- Auto-timestamped output
+        +- Ready for reporting
+        +- Next target or deep-dive
 ```
 
 ---
@@ -202,10 +202,10 @@ grep "open" output/*.txt | cut -d: -f1 | sort | uniq
 ```
 Assessment Time: 1 hour
 Breakdown:
-  ├─ Automation setup & running: 5 min (mostly passive)
-  ├─ Deep analysis & planning: 40 min (interesting work)
-  ├─ Report generation: 10 min (automated)
-  └─ Review & polish: 5 min (human touch)
+  +- Automation setup & running: 5 min (mostly passive)
+  +- Deep analysis & planning: 40 min (interesting work)
+  +- Report generation: 10 min (automated)
+  +- Review & polish: 5 min (human touch)
 
 Result: 40 minutes of high-value pentesting work per hour
 vs. Manual workflow: 20 minutes of actual pentesting work per hour

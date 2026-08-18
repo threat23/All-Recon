@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - WEB VULNERABILITIES MODULE
 # Comprehensive web application vulnerability scanning
 # Philosophy: Test systematically. Document thoroughly. Exploit safely.
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 WEB_VULN_LOG="logs/web_vuln_$(date +%Y%m%d_%H%M%S).log"
 WEB_VULN_OUTPUT="output/web_vulns_$(date +%Y%m%d_%H%M%S)"
@@ -77,9 +77,9 @@ fi
 
 log_vuln "[TARGET] Web Vulnerability Scanner initialized for: $TARGET_URL"
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # SQL INJECTION (SQLi) SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 sqli_scan() {
     local url=$1
     log_vuln "[SCAN] Starting SQL Injection (SQLi) tests on $url..."
@@ -87,15 +87,15 @@ sqli_scan() {
     output_file="$WEB_VULN_OUTPUT/sqli_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "SQL INJECTION (SQLi) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Testing URL Parameters for SQLi vulnerability..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
 
         echo "[*] Basic SQLi Payloads:"
@@ -123,7 +123,7 @@ sqli_scan() {
 
         echo ""
         echo "[SCAN] Time-Based Blind SQLi Detection:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    - MySQL: 1' AND SLEEP(5) --"
         echo "    - PostgreSQL: 1' AND PG_SLEEP(5) --"
         echo "    - SQL Server: 1'; WAITFOR DELAY '00:00:05' --"
@@ -132,7 +132,7 @@ sqli_scan() {
 
         echo ""
         echo "[SCAN] Automated Testing:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         if command -v sqlmap &>/dev/null; then
             echo "[*] sqlmap found. Running automated scan..."
             echo ""
@@ -147,7 +147,7 @@ sqli_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> Parameterized queries/prepared statements"
         echo "    -> Input validation and whitelisting"
         echo "    -> Web Application Firewall (WAF) rules"
@@ -158,9 +158,9 @@ sqli_scan() {
     log_vuln "[OK] SQL Injection scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # CROSS-SITE SCRIPTING (XSS) SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 xss_scan() {
     local url=$1
     log_vuln "[SCAN] Starting Cross-Site Scripting (XSS) tests on $url..."
@@ -168,15 +168,15 @@ xss_scan() {
     output_file="$WEB_VULN_OUTPUT/xss_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "CROSS-SITE SCRIPTING (XSS) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Testing for Reflected XSS..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
 
         declare -a xss_payloads=(
@@ -198,13 +198,13 @@ xss_scan() {
 
         echo ""
         echo "[SCAN] Testing HTML/Form Parameters..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "[*] Fetching page structure to identify input fields..."
         curl -s "$url" 2>/dev/null | grep -o 'name="[^"]*"' | head -10 || echo "No forms found"
 
         echo ""
         echo "[SCAN] Common XSS Bypass Techniques:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    - Case variation: <ScRiPt>alert('XSS')</sCrIpT>"
         echo "    - HTML entities: &lt;script&gt;alert('XSS')&lt;/script&gt;"
         echo "    - Unicode: \\x3cscript\\x3e"
@@ -212,7 +212,7 @@ xss_scan() {
 
         echo ""
         echo "[SCAN] Automated XSS Detection:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         if command -v zaproxy &>/dev/null; then
             echo "[*] OWASP ZAP found. Use: zaproxy -cmd -quickurl $url"
         else
@@ -223,7 +223,7 @@ xss_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> HTML entity encoding (< > & \" ')"
         echo "    -> Content Security Policy (CSP) headers"
         echo "    -> HTTPOnly and Secure flags on cookies"
@@ -234,9 +234,9 @@ xss_scan() {
     log_vuln "[OK] XSS scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # OS COMMAND INJECTION SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 command_injection_scan() {
     local url=$1
     log_vuln "[SCAN] Starting OS Command Injection tests on $url..."
@@ -244,15 +244,15 @@ command_injection_scan() {
     output_file="$WEB_VULN_OUTPUT/command_injection_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "OS COMMAND INJECTION SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Testing for Command Injection..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
 
         echo "[*] Command Separators to Test:"
@@ -278,14 +278,14 @@ command_injection_scan() {
 
         echo ""
         echo "[SCAN] Time-Based Command Injection Detection:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "[*] Testing with sleep command (5 second delay)..."
         echo "    Time-based detection requires manual testing"
         echo "    Payload: ; sleep 5"
 
         echo ""
         echo "[SCAN] Automated Testing:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         if command -v commix &>/dev/null; then
             echo "[*] commix found. Running automated scan..."
             echo ""
@@ -300,7 +300,7 @@ command_injection_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> Avoid shell execution (use APIs instead)"
         echo "    -> Whitelist allowed commands/arguments"
         echo "    -> Input validation and regex matching"
@@ -311,9 +311,9 @@ command_injection_scan() {
     log_vuln "[OK] Command Injection scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # CSRF (CROSS-SITE REQUEST FORGERY) SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 csrf_scan() {
     local url=$1
     log_vuln "[SCAN] Starting CSRF vulnerability scan on $url..."
@@ -321,15 +321,15 @@ csrf_scan() {
     output_file="$WEB_VULN_OUTPUT/csrf_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "CSRF (CROSS-SITE REQUEST FORGERY) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Checking for CSRF Tokens..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
 
         page_content=$(curl -s "$url" 2>/dev/null)
@@ -351,13 +351,13 @@ csrf_scan() {
 
         echo ""
         echo "[*] Checking HTTP Headers..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         headers=$(curl -s -i "$url" 2>/dev/null | head -20)
         echo "$headers" | grep -i "samesite\|x-csrf-token\|x-requested-with" || echo "    No CSRF-related headers found"
 
         echo ""
         echo "[*] Checking for SameSite Cookie Attribute..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         if echo "$headers" | grep -i "samesite=strict\|samesite=lax"; then
             echo "    [OK] SameSite cookie protection enabled"
         else
@@ -366,7 +366,7 @@ csrf_scan() {
 
         echo ""
         echo "[SCAN] Manual CSRF Testing Approach:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    1. Perform sensitive action while logged in"
         echo "    2. Intercept request in proxy (Burp Suite)"
         echo "    3. Note CSRF token value"
@@ -375,7 +375,7 @@ csrf_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> CSRF tokens on all state-changing requests"
         echo "    -> SameSite cookie attribute set"
         echo "    -> Custom request headers (X-Requested-With)"
@@ -386,9 +386,9 @@ csrf_scan() {
     log_vuln "[OK] CSRF scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # AUTHENTICATION & AUTHORIZATION SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 auth_scan() {
     local url=$1
     log_vuln "[SCAN] Starting Authentication & Authorization scan on $url..."
@@ -396,15 +396,15 @@ auth_scan() {
     output_file="$WEB_VULN_OUTPUT/auth_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "AUTHENTICATION & AUTHORIZATION SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Testing for Default Credentials..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         declare -a default_creds=(
             "admin:admin"
             "admin:password"
@@ -422,7 +422,7 @@ auth_scan() {
 
         echo ""
         echo "[SCAN] Analyzing Page for Login Forms..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         page_content=$(curl -s "$url" 2>/dev/null)
 
         if echo "$page_content" | grep -qi "login\|signin\|password"; then
@@ -434,7 +434,7 @@ auth_scan() {
 
         echo ""
         echo "[SCAN] Cookie Analysis..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         cookies=$(curl -s -i "$url" 2>/dev/null | grep -i "set-cookie" | head -5)
         if [[ ! -z "$cookies" ]]; then
             echo "[*] Cookies found:"
@@ -456,7 +456,7 @@ auth_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> Strong password requirements"
         echo "    -> Multi-factor authentication (MFA)"
         echo "    -> HTTPOnly and Secure flags on cookies"
@@ -468,9 +468,9 @@ auth_scan() {
     log_vuln "[OK] Authentication & Authorization scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # BROKEN ACCESS CONTROL SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 access_control_scan() {
     local url=$1
     log_vuln "[SCAN] Starting Broken Access Control scan on $url..."
@@ -478,15 +478,15 @@ access_control_scan() {
     output_file="$WEB_VULN_OUTPUT/access_control_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "BROKEN ACCESS CONTROL (IDOR) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Identifying Resource Identifiers..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
         echo "[*] Common parameter patterns to test:"
         echo "    - /user/profile?id=1"
@@ -502,7 +502,7 @@ access_control_scan() {
 
         echo ""
         echo "[SCAN] Path Traversal Testing..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         declare -a traversal_payloads=(
             "../admin"
             "../../etc/passwd"
@@ -519,14 +519,14 @@ access_control_scan() {
 
         echo ""
         echo "[SCAN] Privilege Escalation Testing..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    1. Test horizontal escalation (access other users' data)"
         echo "    2. Test vertical escalation (access admin functions)"
         echo "    3. Verify access controls on all endpoints"
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> User-based access control on all resources"
         echo "    -> Verify ownership before allowing modifications"
         echo "    -> Deny access by default, whitelist allowed actions"
@@ -537,9 +537,9 @@ access_control_scan() {
     log_vuln "[OK] Access Control scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # SENSITIVE DATA EXPOSURE SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 data_exposure_scan() {
     local url=$1
     log_vuln "[SCAN] Starting Sensitive Data Exposure scan on $url..."
@@ -547,15 +547,15 @@ data_exposure_scan() {
     output_file="$WEB_VULN_OUTPUT/data_exposure_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "SENSITIVE DATA EXPOSURE SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] SSL/TLS Configuration Check..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
 
         if [[ "$url" == https* ]]; then
             echo "[*] HTTPS detected. Running SSL/TLS analysis..."
@@ -574,7 +574,7 @@ data_exposure_scan() {
 
         echo ""
         echo "[SCAN] Checking for Unprotected Endpoints..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         declare -a sensitive_paths=(
             "/admin"
             "/admin/backup"
@@ -596,7 +596,7 @@ data_exposure_scan() {
 
         echo ""
         echo "[SCAN] Analyzing Page Source for Secrets..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         page_content=$(curl -s "$url" 2>/dev/null)
 
         if echo "$page_content" | grep -qi "password\|api_key\|secret\|token"; then
@@ -609,7 +609,7 @@ data_exposure_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> HTTPS everywhere"
         echo "    -> Strong encryption (TLS 1.2+)"
         echo "    -> No sensitive data in page source"
@@ -621,9 +621,9 @@ data_exposure_scan() {
     log_vuln "[OK] Sensitive Data Exposure scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # XXE (XML EXTERNAL ENTITIES) SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 xxe_scan() {
     local url=$1
     log_vuln "[SCAN] Starting XXE vulnerability scan on $url..."
@@ -631,15 +631,15 @@ xxe_scan() {
     output_file="$WEB_VULN_OUTPUT/xxe_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "XXE (XML EXTERNAL ENTITIES) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Identifying XML Processing Points..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
         echo "[*] Common XXE vulnerable endpoints:"
         echo "    - /upload (XML file upload)"
@@ -657,7 +657,7 @@ xxe_scan() {
 
         echo ""
         echo "[SCAN] XXE Payload Examples..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         cat << 'EOF'
 [*] Basic XXE:
 <?xml version="1.0" encoding="UTF-8"?>
@@ -677,7 +677,7 @@ EOF
 
         echo ""
         echo "[SCAN] SOAP/Web Service Detection..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         if echo "$page_content" | grep -qi "soap\|wsdl\|xml"; then
             echo "    [OK] SOAP/XML services potentially present"
         else
@@ -690,7 +690,7 @@ EOF
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> Disable XML external entity processing"
         echo "    -> Use XML parsers with XXE protection enabled"
         echo "    -> Whitelist allowed entities and schemas"
@@ -701,9 +701,9 @@ EOF
     log_vuln "[OK] XXE scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # BOLA (BROKEN OBJECT LEVEL AUTHORIZATION) SCAN
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 bola_scan() {
     local url=$1
     log_vuln "[SCAN] Starting BOLA vulnerability scan on $url..."
@@ -711,15 +711,15 @@ bola_scan() {
     output_file="$WEB_VULN_OUTPUT/bola_scan_$TIMESTAMP.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "BOLA (BROKEN OBJECT LEVEL AUTHORIZATION) SCAN"
         echo "Target: $url"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         echo "[SCAN] Identifying API Endpoints..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
         echo "[*] Common API patterns to test:"
         echo "    - /api/users/1"
@@ -742,7 +742,7 @@ bola_scan() {
 
         echo ""
         echo "[SCAN] Sequential ID Testing..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
         echo "[*] Testing for sequential/predictable IDs..."
         echo "    - Try changing ID in discovered endpoints"
@@ -751,7 +751,7 @@ bola_scan() {
 
         echo ""
         echo "[SCAN] Cross-User Testing..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "[*] Required steps (manual):"
         echo "    1. Obtain valid authentication token"
         echo "    2. Note your user ID"
@@ -760,7 +760,7 @@ bola_scan() {
 
         echo ""
         echo "[SCAN] Authorization Header Testing..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "[*] Common authentication methods:"
         echo "    - Bearer tokens (JWT)"
         echo "    - API keys"
@@ -778,7 +778,7 @@ bola_scan() {
 
         echo ""
         echo "[LIST] Remediation Indicators:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "    -> Verify user ownership of resources"
         echo "    -> Check permissions on every API call"
         echo "    -> Use non-sequential, unpredictable IDs"
@@ -789,9 +789,9 @@ bola_scan() {
     log_vuln "[OK] BOLA scan complete"
 }
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # MAIN SCAN MENU
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 scan_choice="${2:-}"
 

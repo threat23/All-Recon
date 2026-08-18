@@ -3,7 +3,7 @@
 # ALL-RECON SUBDOMAIN DISCOVERY QUICK REFERENCE
 
 echo "[SCAN] ALL-RECON - SUBDOMAIN DISCOVERY MODULE"
-echo "═══════════════════════════════════════════════════════════"
+echo "==========================================================="
 echo ""
 
 echo "QUICK USAGE:"
@@ -63,4 +63,4 @@ echo "  - Adjust timeout values"
 echo "  - Customize alert thresholds"
 echo ""
 
-echo "═══════════════════════════════════════════════════════════"
+echo "==========================================================="

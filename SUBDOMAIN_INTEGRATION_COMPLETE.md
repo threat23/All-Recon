@@ -166,40 +166,40 @@ Step 5: Deep Analysis & Exploitation
 
 ```
 ALL-RECON/ (208 KB)
-│
-├── [INPUT] ENTRY POINTS
-│   ├── START_HERE.sh
-│   ├── QUICKSTART.sh
-│   ├── install.sh
-│   └── TEST_SUBDOMAIN.sh ← NEW
-│
-├── [SETUP] TOOLS
-│   ├── all_recon.sh (ENHANCED with Option 3)
-│   └── all_recon_alt.sh
-│
-├── [DOCS] DOCUMENTATION
-│   ├── README.md
-│   ├── WORKFLOW_GUIDE.md
-│   ├── PROJECT_MANIFEST.md
-│   ├── COMPLETION_SUMMARY.md
-│   ├── PROJECT_OVERVIEW.txt
-│   ├── SUBDOMAIN_FEATURE.md ← NEW
-│   └── SUBDOMAIN_GUIDE.sh ← NEW
-│
-├── [CONFIG] CONFIGURATION
-│   ├── config/nmap_profiles.conf
-│   ├── config/automation_rules.conf
-│   └── config/subdomain_discovery.conf ← NEW
-│
-├── [SETUP] MODULES
-│   ├── modules/recon.sh
-│   ├── modules/reporting.sh
-│   └── modules/subdomain_finder.sh ← NEW (15 KB)
-│
-└── [REPORT] OUTPUT (Auto-created)
-    ├── output/
-    ├── logs/
-    └── config/templates/
+|
++-- [INPUT] ENTRY POINTS
+|   +-- START_HERE.sh
+|   +-- QUICKSTART.sh
+|   +-- install.sh
+|   +-- TEST_SUBDOMAIN.sh ← NEW
+|
++-- [SETUP] TOOLS
+|   +-- all_recon.sh (ENHANCED with Option 3)
+|   +-- all_recon_alt.sh
+|
++-- [DOCS] DOCUMENTATION
+|   +-- README.md
+|   +-- WORKFLOW_GUIDE.md
+|   +-- PROJECT_MANIFEST.md
+|   +-- COMPLETION_SUMMARY.md
+|   +-- PROJECT_OVERVIEW.txt
+|   +-- SUBDOMAIN_FEATURE.md ← NEW
+|   +-- SUBDOMAIN_GUIDE.sh ← NEW
+|
++-- [CONFIG] CONFIGURATION
+|   +-- config/nmap_profiles.conf
+|   +-- config/automation_rules.conf
+|   +-- config/subdomain_discovery.conf ← NEW
+|
++-- [SETUP] MODULES
+|   +-- modules/recon.sh
+|   +-- modules/reporting.sh
+|   +-- modules/subdomain_finder.sh ← NEW (15 KB)
+|
++-- [REPORT] OUTPUT (Auto-created)
+    +-- output/
+    +-- logs/
+    +-- config/templates/
 ```
 
 ---

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - MULTI-TARGET BATCH SCANNER MODULE
 # Process multiple targets concurrently from a target file
 # Philosophy: Scalable automation for target lists & enterprise scope
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -83,14 +83,14 @@ fi
 log_batch "[OK] Loaded $TOTAL_TARGETS targets from $TARGETS_FILE"
 
 echo ""
-echo "════════════════════════════════════════════════════════════════"
+echo "================================================================"
 echo "[TARGET] ALL-RECON MULTI-TARGET BATCH SCANNER"
-echo "════════════════════════════════════════════════════════════════"
+echo "================================================================"
 echo "Loaded Targets: $TOTAL_TARGETS"
 echo "Scan Mode     : $SCAN_MODE"
 echo "Concurrency   : $MAX_CONCURRENCY"
 echo "Output Dir    : $BATCH_OUTPUT"
-echo "════════════════════════════════════════════════════════════════"
+echo "================================================================"
 echo ""
 
 run_target_scan() {
@@ -157,7 +157,7 @@ active_jobs=0
 
 for target in "${TARGET_LIST[@]}"; do
     ((current++))
-    echo -e "▶ [$current/$TOTAL_TARGETS] Dispatching worker for: \e[1;36m$target\e[0m"
+    echo -e "-> [$current/$TOTAL_TARGETS] Dispatching worker for: \e[1;36m$target\e[0m"
 
     run_target_scan "$target" "$SCAN_MODE" &
     ((active_jobs++))
@@ -176,15 +176,15 @@ log_batch "[OK] All $TOTAL_TARGETS batch targets completed execution."
 # Generate consolidated batch summary report
 SUMMARY_FILE="$BATCH_OUTPUT/batch_summary.txt"
 {
-    echo "═══════════════════════════════════════════════════════════════"
+    echo "==============================================================="
     echo "ALL-RECON - BATCH SCAN SUMMARY REPORT"
     echo "Generated: $(date)"
     echo "Scan Mode: $SCAN_MODE"
     echo "Targets Scanned: $TOTAL_TARGETS"
-    echo "═══════════════════════════════════════════════════════════════"
+    echo "==============================================================="
     echo ""
     echo "TARGET RESULTS DIRECTORY BREAKDOWN:"
-    echo "───────────────────────────────────────────────────────────────"
+    echo "---------------------------------------------------------------"
     for target_dir in "$BATCH_OUTPUT"/*/; do
         if [[ -d "$target_dir" ]]; then
             target_name=$(basename "$target_dir")
@@ -193,7 +193,7 @@ SUMMARY_FILE="$BATCH_OUTPUT/batch_summary.txt"
             echo ""
         fi
     done
-    echo "═══════════════════════════════════════════════════════════════"
+    echo "==============================================================="
 } | tee "$SUMMARY_FILE"
 
 echo ""

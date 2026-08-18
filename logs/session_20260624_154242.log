@@ -1,3 +1,3 @@
-[15:42:59] 🔍 Web vulnerability scan initiated for kmu.ac.zm
-[15:43:05] ✅ Web vulnerability scan complete for kmu.ac.zm
-[15:43:05] 🏁 Workflow step complete. Results in output/
+[15:42:59] [SCAN] Web vulnerability scan initiated for kmu.ac.zm
+[15:43:05] [OK] Web vulnerability scan complete for kmu.ac.zm
+[15:43:05] [DONE] Workflow step complete. Results in output/

@@ -1,4 +1,4 @@
-[15:45:58] 🎯 Web Vulnerability Scanner initialized for: https://kmu.ac.zm
-[15:46:03] 🔍 Starting Cross-Site Scripting (XSS) tests on https://kmu.ac.zm...
-[15:57:18] ✅ XSS scan complete
-[15:57:18] 🏁 All scans complete. Results in output/web_vulns_20260624_154558/
+[15:45:58] [TARGET] Web Vulnerability Scanner initialized for: https://kmu.ac.zm
+[15:46:03] [SCAN] Starting Cross-Site Scripting (XSS) tests on https://kmu.ac.zm...
+[15:57:18] [OK] XSS scan complete
+[15:57:18] [DONE] All scans complete. Results in output/web_vulns_20260624_154558/

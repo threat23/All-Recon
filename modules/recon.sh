@@ -22,9 +22,9 @@ dns_recon() {
     log_recon "[SCAN] Starting DNS reconnaissance on $target..."
     
     mkdir -p "$RECON_OUTPUT"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/dns.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/dns.txt"
     echo "DNS RECONNAISSANCE: $target" | tee -a "$RECON_OUTPUT/dns.txt"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/dns.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/dns.txt"
     
     # DNS lookup
     nslookup "$target" | tee -a "$RECON_OUTPUT/dns.txt"
@@ -53,9 +53,9 @@ whois_recon() {
     log_recon "[SCAN] Gathering WHOIS information for $target..."
     
     mkdir -p "$RECON_OUTPUT"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/whois.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/whois.txt"
     echo "WHOIS INFORMATION: $target" | tee -a "$RECON_OUTPUT/whois.txt"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/whois.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/whois.txt"
     
     whois "$target" 2>/dev/null | tee -a "$RECON_OUTPUT/whois.txt" || echo "WHOIS tool not available"
     
@@ -68,9 +68,9 @@ service_mapping() {
     log_recon "[SCAN] Mapping services on $target..."
     
     mkdir -p "$RECON_OUTPUT"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/services.txt"
     echo "SERVICE MAPPING: $target" | tee -a "$RECON_OUTPUT/services.txt"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
+    echo "-------------------------------------------------" | tee -a "$RECON_OUTPUT/services.txt"
     
     nmap -sV -T4 --top-ports 1000 "$target" | tee -a "$RECON_OUTPUT/services.txt"
     

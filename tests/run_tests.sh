@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON AUTOMATED TEST SUITE
 # Framework for unit and integration testing of all modules & scripts
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$TEST_DIR/.." && pwd)"
@@ -65,7 +65,7 @@ echo -e "${BLUE}====================================================${NC}\n"
 # -------------------------------------------------------------------
 # TEST SUITE 1: BASH SYNTAX VALIDATION
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 1: Bash Syntax Validation (bash -n)${NC}"
+echo -e "${YELLOW}-> TEST SUITE 1: Bash Syntax Validation (bash -n)${NC}"
 
 script_files=(
     "all_recon.sh"
@@ -100,7 +100,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 2: INPUT VALIDATION MODULE (modules/validation.sh)
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 2: Input Validation Helper Unit Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 2: Input Validation Helper Unit Tests${NC}"
 
 if [[ -f "modules/validation.sh" ]]; then
     source "modules/validation.sh"
@@ -152,7 +152,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 3: SUBDOMAIN FINDER MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 3: Subdomain Finder Module Integration Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 3: Subdomain Finder Module Integration Tests${NC}"
 
 # Test invalid domain rejection
 bash modules/subdomain_finder.sh "invalid_domain_format" all &>/dev/null
@@ -174,7 +174,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 4: SUBDOMAIN CLEANER MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 4: Subdomain Cleaner Integration Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 4: Subdomain Cleaner Integration Tests${NC}"
 
 # Create mock subdomain discovery output directory
 MOCK_DIR="output/test_mock_subdomains_$(date +%Y%m%d_%H%M%S)"
@@ -211,7 +211,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 5: WEB VULNERABILITIES MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 5: Web Vulnerabilities Module Integration Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 5: Web Vulnerabilities Module Integration Tests${NC}"
 
 # Test invalid URL rejection
 bash modules/web_vulnerabilities.sh "not_a_valid_url" 1 &>/dev/null
@@ -226,7 +226,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 7: PASSIVE OSINT MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 7: Passive OSINT Module Integration Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 7: Passive OSINT Module Integration Tests${NC}"
 
 bash modules/passive.sh "example.com" &>/dev/null
 assert_exit_code 0 $? "passive.sh: Runs passive OSINT collection for a valid domain"
@@ -243,7 +243,7 @@ echo ""
 # -------------------------------------------------------------------
 # TEST SUITE 8: MULTI-TARGET BATCH SCANNER MODULE
 # -------------------------------------------------------------------
-echo -e "${YELLOW}▶ TEST SUITE 8: Multi-Target Batch Scanner Integration Tests${NC}"
+echo -e "${YELLOW}-> TEST SUITE 8: Multi-Target Batch Scanner Integration Tests${NC}"
 
 # Create mock targets file
 MOCK_TARGETS_FILE="output/test_mock_targets.txt"

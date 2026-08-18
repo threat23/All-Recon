@@ -1,12 +1,12 @@
-╔════════════════════════════════════════════════════════════════════════════╗
-║                                                                            ║
-║                  [TARGET] ALL-RECON - PROJECT COMPLETE [TARGET]                      ║
-║              Pentester Workflow Automation Suite - v1.0                   ║
-║                                                                            ║
-╚════════════════════════════════════════════════════════════════════════════╝
++============================================================================+
+|                                                                            |
+|                  [TARGET] ALL-RECON - PROJECT COMPLETE [TARGET]                      |
+|              Pentester Workflow Automation Suite - v1.0                   |
+|                                                                            |
++============================================================================+
 
 PROJECT PHILOSOPHY
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 "As a pentester, I have a good day when my workflow is smooth and uninterrupted.
  Pushing routine tasks to the background (sweet automation!) helps me stay 
@@ -16,83 +16,83 @@ PROJECT PHILOSOPHY
 
                               -> ALL-RECON DELIVERS THIS ←
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 WHAT WAS CREATED
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 [INSTALL] COMPLETE AUTOMATION SUITE
 
 Entry Points (Start here)
-├── START_HERE.sh              ⭐ Interactive first-time guide
-├── install.sh                 Complete setup & dependency installation  
-└── QUICKSTART.sh              5-minute rapid bootstrap
++-- START_HERE.sh              ⭐ Interactive first-time guide
++-- install.sh                 Complete setup & dependency installation  
++-- QUICKSTART.sh              5-minute rapid bootstrap
 
 Main Tools
-├── all_recon.sh        [OK] ENHANCED main engine with logging
-├── all_recon_alt.sh              Alternative workflow variant
-└── modules/                   Extensible module system
-    ├── recon.sh               DNS/WHOIS/service reconnaissance
-    └── reporting.sh           Automated report generation
++-- all_recon.sh        [OK] ENHANCED main engine with logging
++-- all_recon_alt.sh              Alternative workflow variant
++-- modules/                   Extensible module system
+    +-- recon.sh               DNS/WHOIS/service reconnaissance
+    +-- reporting.sh           Automated report generation
 
 Configuration
-├── config/nmap_profiles.conf      7 pre-tuned scan profiles
-└── config/automation_rules.conf   20+ automation settings
++-- config/nmap_profiles.conf      7 pre-tuned scan profiles
++-- config/automation_rules.conf   20+ automation settings
 
 Documentation (1200+ lines)
-├── README.md                  Full project guide & features
-├── WEB_VULNERABILITIES.md     Vulnerability testing reference (SQLi, XSS, RCE, etc.)
-├── WORKFLOW_GUIDE.md          Practical workflow patterns & examples
-├── PROJECT_MANIFEST.md        Technical reference & API
-└── COMPLETION_SUMMARY.md      This project's transformation story
++-- README.md                  Full project guide & features
++-- WEB_VULNERABILITIES.md     Vulnerability testing reference (SQLi, XSS, RCE, etc.)
++-- WORKFLOW_GUIDE.md          Practical workflow patterns & examples
++-- PROJECT_MANIFEST.md        Technical reference & API
++-- COMPLETION_SUMMARY.md      This project's transformation story
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 KEY IMPROVEMENTS OVER ORIGINAL
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 BEFORE: Two scripts with nice ASCII art
-        ├─ No result organization
-        ├─ No logging
-        ├─ No automation
-        ├─ No setup process
-        └─ No documentation
+        +- No result organization
+        +- No logging
+        +- No automation
+        +- No setup process
+        +- No documentation
 
 AFTER: Professional automation framework
-       ├─ [OK] Organized timestamped output
-       ├─ [OK] Comprehensive session logging  
-       ├─ [OK] Full result management
-       ├─ [OK] Automated installation
-       ├─ [OK] 900+ lines of documentation
-       ├─ [OK] Extensible module system
-       ├─ [OK] Customizable profiles
-       ├─ [OK] Professional error handling
-       ├─ [OK] Interactive guides
-       └─ [OK] 4-8x productivity improvement
+       +- [OK] Organized timestamped output
+       +- [OK] Comprehensive session logging  
+       +- [OK] Full result management
+       +- [OK] Automated installation
+       +- [OK] 900+ lines of documentation
+       +- [OK] Extensible module system
+       +- [OK] Customizable profiles
+       +- [OK] Professional error handling
+       +- [OK] Interactive guides
+       +- [OK] 4-8x productivity improvement
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 STATISTICS
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 [REPORT] Project Metrics
-├─ Total Lines of Code:         2,470
-├─ Documentation Lines:         900+
-├─ Executable Scripts:          7
-├─ Configuration Files:         2
-├─ Module Scripts:              2
-├─ Setup Guides:                3
-├─ Supported Platforms:         Linux, macOS
-├─ Scan Profiles:               7
-├─ Automation Rules:            20+
-├─ Time to Setup:               5 minutes
-├─ Network Assessment Time:     30-50 min (vs 2+ hours manual)
-└─ Productivity Gain:           4-8x faster
++- Total Lines of Code:         2,470
++- Documentation Lines:         900+
++- Executable Scripts:          7
++- Configuration Files:         2
++- Module Scripts:              2
++- Setup Guides:                3
++- Supported Platforms:         Linux, macOS
++- Scan Profiles:               7
++- Automation Rules:            20+
++- Time to Setup:               5 minutes
++- Network Assessment Time:     30-50 min (vs 2+ hours manual)
++- Productivity Gain:           4-8x faster
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 HOW IT WORKS
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 YOUR WORKFLOW WITH ALL-RECON
 
@@ -118,10 +118,10 @@ RESULT: 30-50 minute assessment instead of 2-3 hours
         Plus: Sharp mind for analyzing findings
         Plus: Professional output ready for client
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 QUICK START (3 COMMANDS)
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 1. Setup:
    bash install.sh
@@ -134,10 +134,10 @@ QUICK START (3 COMMANDS)
 
 That's it! You're now using professional pentesting automation.
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 KEY FEATURES
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 [OK] Automation
    - Parallel scanning (254 hosts in ~2 minutes)
@@ -169,66 +169,66 @@ KEY FEATURES
    - Custom reporting
    - Profile customization
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 FILE DIRECTORY GUIDE
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 PROJECT/
-│
-├─ -> START HERE (Pick one)
-│  ├─ START_HERE.sh          Interactive guide for first-time users
-│  ├─ install.sh             Full setup with dependency installation
-│  └─ QUICKSTART.sh          Quick 5-minute setup
-│
-├─ [INPUT] MAIN TOOLS
-│  ├─ all_recon.sh    Main automation engine ⭐ ENHANCED
-│  └─ all_recon_alt.sh          Alternative workflow variant
-│
-├─ [DOCS] LEARN HERE
-│  ├─ README.md              Full documentation & features
-│  ├─ WORKFLOW_GUIDE.md      Practical patterns & examples
-│  ├─ PROJECT_MANIFEST.md    Technical reference
-│  └─ COMPLETION_SUMMARY.md  Project transformation story
-│
-├─ [CONFIG]  CUSTOMIZE HERE
-│  ├─ config/nmap_profiles.conf      Scan profiles (Quick/Standard/Thorough)
-│  └─ config/automation_rules.conf   Automation behavior
-│
-├─ [SETUP] EXTEND HERE
-│  ├─ modules/recon.sh       DNS/WHOIS/service reconnaissance
-│  └─ modules/reporting.sh   Report generation
-│
-├─ [REPORT] RESULTS (Auto-created)
-│  ├─ output/                 Scan results (organized by timestamp)
-│  ├─ logs/                   Session logs with full audit trail
-│  └─ output/reports/         Generated reports
-│
-└─ [SECURITY] PROJECT FILES
-   └─ .gitignore             Git configuration (protects sensitive data)
+|
++- -> START HERE (Pick one)
+|  +- START_HERE.sh          Interactive guide for first-time users
+|  +- install.sh             Full setup with dependency installation
+|  +- QUICKSTART.sh          Quick 5-minute setup
+|
++- [INPUT] MAIN TOOLS
+|  +- all_recon.sh    Main automation engine ⭐ ENHANCED
+|  +- all_recon_alt.sh          Alternative workflow variant
+|
++- [DOCS] LEARN HERE
+|  +- README.md              Full documentation & features
+|  +- WORKFLOW_GUIDE.md      Practical patterns & examples
+|  +- PROJECT_MANIFEST.md    Technical reference
+|  +- COMPLETION_SUMMARY.md  Project transformation story
+|
++- [CONFIG]  CUSTOMIZE HERE
+|  +- config/nmap_profiles.conf      Scan profiles (Quick/Standard/Thorough)
+|  +- config/automation_rules.conf   Automation behavior
+|
++- [SETUP] EXTEND HERE
+|  +- modules/recon.sh       DNS/WHOIS/service reconnaissance
+|  +- modules/reporting.sh   Report generation
+|
++- [REPORT] RESULTS (Auto-created)
+|  +- output/                 Scan results (organized by timestamp)
+|  +- logs/                   Session logs with full audit trail
+|  +- output/reports/         Generated reports
+|
++- [SECURITY] PROJECT FILES
+   +- .gitignore             Git configuration (protects sensitive data)
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 PRODUCTIVITY GAINS
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 Scenario: 30-minute network assessment
 
 MANUAL WORKFLOW (2-3 hours typical)
-├─ Type nmap commands (10 min)
-├─ Wait for scans (30-45 min)
-├─ Parse results manually (20 min)
-├─ Context switching overhead (15 min)
-├─ Organize findings (10 min)
-├─ Generate report (10 min)
-└─ Mental exhaustion (mostly from tool fighting)
++- Type nmap commands (10 min)
++- Wait for scans (30-45 min)
++- Parse results manually (20 min)
++- Context switching overhead (15 min)
++- Organize findings (10 min)
++- Generate report (10 min)
++- Mental exhaustion (mostly from tool fighting)
 
 ALL-RECON WORKFLOW (30-50 minutes)
-├─ Setup & start scan (5 min, mostly passive)
-├─ Coffee break  (Automation runs)
-├─ Review results & analyze (25 min, mentally sharp)
-├─ Generate report (5 min, automated)
-└─ Happy pentester with energy for next engagement [OK]
++- Setup & start scan (5 min, mostly passive)
++- Coffee break  (Automation runs)
++- Review results & analyze (25 min, mentally sharp)
++- Generate report (5 min, automated)
++- Happy pentester with energy for next engagement [OK]
 
 RESULT: 
 - 4-8x faster assessments
@@ -236,10 +236,10 @@ RESULT:
 - Professional output automatically generated
 - Ready for next client assessment
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 WHAT THIS ENABLES
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 [TARGET] FOR THE PENTESTER
 [OK] Smooth workflow that "just works"
@@ -264,10 +264,10 @@ WHAT THIS ENABLES
 [OK] Clear, organized findings
 [OK] Better value for their security investment
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 SUCCESS INDICATORS
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 You'll know ALL-RECON is working when:
 
@@ -281,10 +281,10 @@ You'll know ALL-RECON is working when:
 [OK] You want to run more assessments
 [OK] Your team asks how you do assessments faster
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 DEPLOYMENT READY
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 [OK] Core functionality        Complete
 [OK] Documentation             Complete (900+ lines)
@@ -297,10 +297,10 @@ DEPLOYMENT READY
 
 Ready to deploy in any pentesting engagement!
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 NEXT STEPS
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 1. SETUP (First time, one-time)
    $ bash install.sh
@@ -319,10 +319,10 @@ NEXT STEPS
    $ edit config/nmap_profiles.conf
    $ create modules/custom_recon.sh
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 THE PENTESTER'S MINDSET
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 What makes a good day:
 
@@ -336,11 +336,11 @@ What makes a good day:
 
 ALL-RECON makes this your default day.
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 "Your perimeter just became my playground." [TARGET]
 
-═══════════════════════════════════════════════════════════════════════════════
+===============================================================================
 
 Created: June 9, 2026
 Status: [OK] PRODUCTION READY

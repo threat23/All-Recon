@@ -159,17 +159,17 @@ Scan multiple targets in parallel from a target list file:
 
 ```
 Project/
-├── all_recon.sh         # Main automation engine
-├── all_recon_alt.sh               # Alternative workflow variant
-├── config/
-│   ├── nmap_profiles.conf      # Pre-tuned scan profiles
-│   └── automation_rules.conf   # Custom automation settings
-├── modules/
-│   ├── recon.sh                # Reconnaissance module
-│   ├── exploits.sh             # Exploitation tracking
-│   └── reporting.sh            # Report generation
-├── output/                      # Auto-generated scan results
-└── README.md                    # This file
++-- all_recon.sh         # Main automation engine
++-- all_recon_alt.sh               # Alternative workflow variant
++-- config/
+|   +-- nmap_profiles.conf      # Pre-tuned scan profiles
+|   +-- automation_rules.conf   # Custom automation settings
++-- modules/
+|   +-- recon.sh                # Reconnaissance module
+|   +-- exploits.sh             # Exploitation tracking
+|   +-- reporting.sh            # Report generation
++-- output/                      # Auto-generated scan results
++-- README.md                    # This file
 ```
 
 ---
@@ -252,9 +252,9 @@ All scan results are automatically saved with timestamps:
 
 ```
 output/
-├── scan_192.168.1.100_20260609_143022.txt
-├── scan_192.168.1.101_20260609_143022.txt
-└── scan_results_summary_20260609.txt
++-- scan_192.168.1.100_20260609_143022.txt
++-- scan_192.168.1.101_20260609_143022.txt
++-- scan_results_summary_20260609.txt
 ```
 
 ---

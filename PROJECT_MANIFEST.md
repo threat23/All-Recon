@@ -21,34 +21,34 @@
 
 ```
 ALL-RECON/
-│
-├── [FILE] all_recon.sh          ⭐ Main automation engine
-├── [FILE] all_recon_alt.sh                 Alternative workflow variant
-│
-├── [DOCS] Documentation
-│   ├── README.md                    Full guide & features
-│   ├── WORKFLOW_GUIDE.md            Practical workflow patterns
-│   ├── QUICKSTART.sh                Quick 5-minute setup
-│   └── install.sh                   Full installation & setup
-│
-├── [CONFIG]  Configuration (config/)
-│   ├── nmap_profiles.conf           Pre-tuned scan templates
-│   └── automation_rules.conf        Automation behavior settings
-│
-├── [SETUP] Extensions (modules/)
-│   ├── recon.sh                     DNS/WHOIS reconnaissance
-│   ├── reporting.sh                 Report generation
-│   └── [extensible]                 Add custom modules here
-│
-├── [REPORT] Output (auto-created)
-│   ├── output/                      Scan results (timestamped)
-│   ├── logs/                        Session logs
-│   └── output/reports/              Generated reports
-│
-└── [SECURITY] Project Files
-    ├── .gitignore                   Git ignore rules
-    ├── PROJECT_MANIFEST.md          This file
-    └── LICENSE                      (Internal Use Only)
+|
++-- [FILE] all_recon.sh          ⭐ Main automation engine
++-- [FILE] all_recon_alt.sh                 Alternative workflow variant
+|
++-- [DOCS] Documentation
+|   +-- README.md                    Full guide & features
+|   +-- WORKFLOW_GUIDE.md            Practical workflow patterns
+|   +-- QUICKSTART.sh                Quick 5-minute setup
+|   +-- install.sh                   Full installation & setup
+|
++-- [CONFIG]  Configuration (config/)
+|   +-- nmap_profiles.conf           Pre-tuned scan templates
+|   +-- automation_rules.conf        Automation behavior settings
+|
++-- [SETUP] Extensions (modules/)
+|   +-- recon.sh                     DNS/WHOIS reconnaissance
+|   +-- reporting.sh                 Report generation
+|   +-- [extensible]                 Add custom modules here
+|
++-- [REPORT] Output (auto-created)
+|   +-- output/                      Scan results (timestamped)
+|   +-- logs/                        Session logs
+|   +-- output/reports/              Generated reports
+|
++-- [SECURITY] Project Files
+    +-- .gitignore                   Git ignore rules
+    +-- PROJECT_MANIFEST.md          This file
+    +-- LICENSE                      (Internal Use Only)
 ```
 
 ---

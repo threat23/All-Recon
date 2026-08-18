@@ -12,12 +12,12 @@ A comprehensive subdomain discovery engine with 6 discovery methods:
 
 ```
 modules/subdomain_finder.sh (15 KB)
-├─ DNS Zone Transfers
-├─ DNS Enumeration (A, AAAA, MX, NS, TXT, SPF, CNAME, SOA, SRV)
-├─ Common Subdomains Brute Force (100+ wordlist)
-├─ Reverse IP Lookup
-├─ Public DNS Records Scan
-└─ SSL/TLS Certificate Transparency Logs
++- DNS Zone Transfers
++- DNS Enumeration (A, AAAA, MX, NS, TXT, SPF, CNAME, SOA, SRV)
++- Common Subdomains Brute Force (100+ wordlist)
++- Reverse IP Lookup
++- Public DNS Records Scan
++- SSL/TLS Certificate Transparency Logs
 ```
 
 ### Integration Points
@@ -47,11 +47,11 @@ Subdomain Discovery Options:
 #### 3. Configuration
 ```
 config/subdomain_discovery.conf (2.8 KB)
-├─ Enable/disable methods
-├─ Timeout settings
-├─ Alert thresholds
-├─ Logging options
-└─ Performance tuning
++- Enable/disable methods
++- Timeout settings
++- Alert thresholds
++- Logging options
++- Performance tuning
 ```
 
 #### 4. Documentation & Testing
@@ -147,15 +147,15 @@ bash TEST_SUBDOMAIN.sh
 
 ```
 output/subdomains_20260609_154200/
-├─ dns_enum_20260609_154200.txt
-├─ common_subdomains_20260609_154200.txt
-├─ reverse_ip_20260609_154200.txt
-├─ dns_records_20260609_154200.txt
-├─ cert_transparency_20260609_154200.txt
-└─ summary_20260609_154200.txt
++- dns_enum_20260609_154200.txt
++- common_subdomains_20260609_154200.txt
++- reverse_ip_20260609_154200.txt
++- dns_records_20260609_154200.txt
++- cert_transparency_20260609_154200.txt
++- summary_20260609_154200.txt
 
 logs/
-└─ subdomain_20260609_154200.log
++- subdomain_20260609_154200.log
 ```
 
 ---

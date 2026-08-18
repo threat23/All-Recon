@@ -137,31 +137,31 @@ bash CLEANER_GUIDE.sh
 
 ```
 output/clean_subdomains_20260609_171500/
-├── extracted_subdomains_20260609_171500.txt
-│   └── List of all unique subdomains found
-│
-├── deduplicated_20260609_171500.txt
-│   └── Deduped subdomains with IP resolution
-│       (Shows: subdomain | IP | status)
-│
-├── active_subdomains_20260609_171500.txt
-│   └── Only successfully resolved hosts
-│       (IP != "N/A")
-│
-├── grouped_by_ip_20260609_171500.txt
-│   └── Subdomains organized by IP address
-│       (Shows which domains share same IP)
-│
-├── subdomains_20260609_171500.csv
-│   └── Spreadsheet-ready format
-│       (subdomain, ip_address, status, resolved_date)
-│
-├── subdomains_20260609_171500.json
-│   └── JSON format for programmatic use
-│       (Array of subdomain objects)
-│
-└── CLEANING_SUMMARY_20260609_171500.txt
-    └── Summary report with statistics
++-- extracted_subdomains_20260609_171500.txt
+|   +-- List of all unique subdomains found
+|
++-- deduplicated_20260609_171500.txt
+|   +-- Deduped subdomains with IP resolution
+|       (Shows: subdomain | IP | status)
+|
++-- active_subdomains_20260609_171500.txt
+|   +-- Only successfully resolved hosts
+|       (IP != "N/A")
+|
++-- grouped_by_ip_20260609_171500.txt
+|   +-- Subdomains organized by IP address
+|       (Shows which domains share same IP)
+|
++-- subdomains_20260609_171500.csv
+|   +-- Spreadsheet-ready format
+|       (subdomain, ip_address, status, resolved_date)
+|
++-- subdomains_20260609_171500.json
+|   +-- JSON format for programmatic use
+|       (Array of subdomain objects)
+|
++-- CLEANING_SUMMARY_20260609_171500.txt
+    +-- Summary report with statistics
 ```
 
 ---
@@ -171,7 +171,7 @@ output/clean_subdomains_20260609_171500/
 ### **Deduplicated Output**
 ```
 SUBDOMAIN                            | IP ADDRESS         | STATUS
-─────────────────────────────────────┼────────────────────┼──────────
+-------------------------------------+--------------------+----------
 example.com                         | 93.184.216.34      | [OK] ACTIVE
 www.example.com                     | 93.184.216.34      | [OK] ACTIVE
 mail.example.com                    | 93.184.216.35      | [OK] ACTIVE

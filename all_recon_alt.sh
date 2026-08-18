@@ -1,7 +1,7 @@
 #!/bin/bash
 #!/bin/bash
 
-# ─── GLORIOUS BANNER ────────────────────────────────────────
+# --- GLORIOUS BANNER ----------------------------------------
 clear
 
 # Dependency checks
@@ -15,7 +15,7 @@ for cmd in toilet lolcat; do
 done
 
 # Decorative bar
-bar="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+bar="--------------------------------------------------------------------------------"
 
 # Tagline pool
 taglines=(
@@ -38,15 +38,15 @@ echo "$bar" | lolcat
 echo -e "\e[1;37m$tagline\e[0m" | lolcat
 echo ""
 
-# ─── CHECK DEPENDENCIES ───────────────────────────────
+# --- CHECK DEPENDENCIES -------------------------------
 command -v figlet &>/dev/null || { echo "figlet missing. Run: sudo apt install figlet"; exit 1; }
 command -v nmap &>/dev/null || { echo "nmap missing. Run: sudo apt install nmap"; exit 1; }
 
-# ─── DISPLAY BANNER ───────────────────────────────────
+# --- DISPLAY BANNER -----------------------------------
 figlet -w 120 "ALL-RECON" | lolcat 2>/dev/null || figlet -w 120 "ALL-RECON"
 echo ""
 
-# ─── IP DETECTION ──────────────────────────────────────────────
+# --- IP DETECTION ----------------------------------------------
 
 # Detect internal IP (first usable IP)
 internal_ip=$(hostname -I | awk '{print $1}')
@@ -65,7 +65,7 @@ echo -e "$(tput bold)[IP] Internal IP  : $internal_ip$(tput sgr0)"
 echo -e "$(tput bold)[IP] External IP  : $external_ip$(tput sgr0)"
 echo ""
 
-# ─── MENU ─────────────────────────────────────────────
+# --- MENU ---------------------------------------------
 echo "Select Scan Type:"
 echo "1. Local Network Scan (Ping Sweep + Port Scan)"
 echo "2. Scan Specific Host (Website IP or Domain)"
@@ -73,9 +73,9 @@ echo "3. Exit / Cancel"
 read -p "Enter choice [1/2/3]: " choice
 echo ""
 
-# ─── SCAN OPTIONS ─────────────────────────────────────
+# --- SCAN OPTIONS -------------------------------------
 if [[ "$choice" == "1" ]]; then
-    # ─── OPTION 1: LOCAL NETWORK SCAN ─────────────────────
+    # --- OPTION 1: LOCAL NETWORK SCAN ---------------------
     subnet=$(ip -4 addr show | grep -oP '(?<=inet\s)(?!127)\d+\.\d+\.\d+')
     echo "[*] Scanning subnet: $subnet.0/24"
     tmpfile=$(mktemp)
@@ -104,18 +104,18 @@ if [[ "$choice" == "1" ]]; then
     rm -f "$tmpfile"
 
 elif [[ "$choice" == "2" ]]; then
-    # ─── OPTION 2: REMOTE TARGET SCAN ─────────────────────
+    # --- OPTION 2: REMOTE TARGET SCAN ---------------------
     read -p "Enter the target IP or domain: " target
     echo "[SCAN] Scanning $target ..."
     nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $target | tee "scan_${target//[^a-zA-Z0-9]/_}.txt"
 
 elif [[ "$choice" == "3" ]]; then
-    # ─── OPTION 3: EXIT ───────────────────────────────────
+    # --- OPTION 3: EXIT -----------------------------------
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. [SAFE]$(tput sgr0)"
     exit 0
 
 else
-    # ─── INVALID INPUT ────────────────────────────────────
+    # --- INVALID INPUT ------------------------------------
     echo -e "$(tput bold)[!] Invalid choice. Exiting.$(tput sgr0)"
     exit 1
 fi

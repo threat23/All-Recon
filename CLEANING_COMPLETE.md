@@ -54,23 +54,23 @@ CLEANER_GUIDE.sh              - Quick reference
 
 ```
 DISCOVERY PHASE (2 minutes)
-├─ Discover subdomains
-├─ Enumerate DNS records
-├─ Check certificates
-└─ Output: Multiple files with raw data
++- Discover subdomains
++- Enumerate DNS records
++- Check certificates
++- Output: Multiple files with raw data
         ↓
 CLEANING PHASE (1 minute)
-├─ Extract unique subdomains
-├─ Deduplicate entries
-├─ Resolve IP addresses
-├─ Filter invalid entries
-└─ Output: Organized, clean results
++- Extract unique subdomains
++- Deduplicate entries
++- Resolve IP addresses
++- Filter invalid entries
++- Output: Organized, clean results
         ↓
 ANALYSIS PHASE (Your Work)
-├─ Review active hosts
-├─ Identify interesting targets
-├─ Plan attack sequences
-└─ Proceed to port scanning
++- Review active hosts
++- Identify interesting targets
++- Plan attack sequences
++- Proceed to port scanning
 ```
 
 ---
@@ -157,7 +157,7 @@ www.example.com      ← Duplicate
 ### **After Cleaning (Clean)**
 ```
 SUBDOMAIN                          | IP ADDRESS         | STATUS
-───────────────────────────────────┼────────────────────┼──────────
+-----------------------------------+--------------------+----------
 example.com                       | 93.184.216.34      | [OK] ACTIVE
 www.example.com                   | 93.184.216.34      | [OK] ACTIVE
 ftp.example.com                   | 93.184.216.35      | [OK] ACTIVE
@@ -371,16 +371,16 @@ DNS_RESOLUTION_TIMEOUT=5
 
 ```
 DISCOVERY                  CLEANING                 ANALYSIS
-┌──────────────────┐      ┌──────────────────┐      ┌──────────┐
-│  Subdomain       │      │  Subdomain       │      │ Your     │
-│  Finder Module   │─────->│  Cleaner Module  │─────->│ Analysis │
-│                  │      │                  │      │          │
-│ 6 methods       │      │ 7 operations     │      │ Port     │
-│ DNS, Brute,     │      │ Extract,         │      │ Scan,    │
-│ Reverse, etc.   │      │ Deduplicate,     │      │ Exploit, │
-└──────────────────┘      │ Filter, Group    │      │ Report   │
-                          │ CSV, JSON        │      └──────────┘
-                          └──────────────────┘
++------------------+      +------------------+      +----------+
+|  Subdomain       |      |  Subdomain       |      | Your     |
+|  Finder Module   |------>|  Cleaner Module  |------>| Analysis |
+|                  |      |                  |      |          |
+| 6 methods       |      | 7 operations     |      | Port     |
+| DNS, Brute,     |      | Extract,         |      | Scan,    |
+| Reverse, etc.   |      | Deduplicate,     |      | Exploit, |
++------------------+      | Filter, Group    |      | Report   |
+                          | CSV, JSON        |      +----------+
+                          +------------------+
 ```
 
 ---

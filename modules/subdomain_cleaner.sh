@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - SUBDOMAIN CLEANER & DEDUPLICATOR
 # Clean and organize subdomain discovery results
 # Remove duplicates, invalid entries, and unnecessary data
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 # Source validation module if available
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,10 +31,10 @@ extract_subdomains() {
     log_clean "[SCAN] Extracting subdomains from results..."
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "EXTRACTED SUBDOMAINS"
         echo "Extracted: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         # Extract from common_subdomains file
@@ -60,13 +60,13 @@ deduplicate_and_resolve() {
     log_clean "[CLEAN] Deduplicating and resolving IPs..."
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "CLEAN SUBDOMAIN LIST WITH IP RESOLUTION"
         echo "Cleaned: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "SUBDOMAIN                          | IP ADDRESS         | STATUS"
-        echo "───────────────────────────────────┼────────────────────┼──────────"
+        echo "-----------------------------------+--------------------+----------"
         
         local resolved=0
         local unresolved=0
@@ -97,7 +97,7 @@ deduplicate_and_resolve() {
         done < "$input_file"
         
         echo ""
-        echo "───────────────────────────────────┴────────────────────┴──────────"
+        echo "-----------------------------------+--------------------+----------"
         echo "Summary:"
         echo "  [OK] Resolved:     $resolved"
         echo "  [WARN]  Unresolved:   $unresolved"
@@ -117,13 +117,13 @@ filter_active_only() {
     log_clean "[TARGET] Filtering for active hosts only..."
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "ACTIVE SUBDOMAINS ONLY"
         echo "Filtered: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "SUBDOMAIN                          | IP ADDRESS"
-        echo "───────────────────────────────────┼────────────────────"
+        echo "-----------------------------------+--------------------"
         
         local active_count=0
         
@@ -138,7 +138,7 @@ filter_active_only() {
         done
         
         echo ""
-        echo "───────────────────────────────────┴────────────────────"
+        echo "-----------------------------------+--------------------"
         
     } | tee "$output_file"
     
@@ -154,10 +154,10 @@ group_by_ip() {
     log_clean "[LINK] Grouping subdomains by IP address..."
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "SUBDOMAINS GROUPED BY IP ADDRESS"
         echo "Grouped: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         # Extract unique IPs
@@ -165,9 +165,9 @@ group_by_ip() {
         awk -F'|' '{print $2}' | xargs | sort -u | while read -r ip; do
             [[ -z "$ip" || "$ip" == "N/A" ]] && continue
             
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "--------------------------------------------------------"
             echo "IP: $ip"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "--------------------------------------------------------"
             
             grep "[OK] ACTIVE" "$input_file" | \
             awk -v target_ip="$ip" -F'|' '$2 ~ target_ip {print $1}' | \
@@ -270,10 +270,10 @@ comprehensive_clean() {
     # Generate summary
     summary_file="$CLEAN_OUTPUT/CLEANING_SUMMARY_$TIMESTAMP.txt"
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "SUBDOMAIN CLEANING SUMMARY"
         echo "Cleaned: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "[DIR] Input Directory: $input_dir"
         echo ""

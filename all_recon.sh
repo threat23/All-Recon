@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - PENTESTER WORKFLOW AUTOMATION SUITE
 # Philosophy: Automate boring tasks. Focus on interesting findings.
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 # Setup directories
 OUTPUT_DIR="output"
@@ -21,7 +21,7 @@ fi
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 SESSION_LOG="$LOGS_DIR/session_$TIMESTAMP.log"
 
-# ─── GLORIOUS BANNER ────────────────────────────────────────
+# --- GLORIOUS BANNER ----------------------------------------
 clear
 
 # Dependency checks
@@ -40,7 +40,7 @@ log_output() {
 }
 
 # Decorative bar
-bar="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+bar="--------------------------------------------------------------------------------"
 
 # Tagline pool
 taglines=(
@@ -63,7 +63,7 @@ echo "$bar" | lolcat
 echo -e "\e[1;37m$tagline\e[0m" | lolcat
 echo ""
 
-# ─── LOADING FX ──────────────────────────────────────────────
+# --- LOADING FX ----------------------------------------------
 echo -ne "$(tput bold)-> Initializing ALL-RECON Scan Engine...$(tput sgr0)"
 for i in {1..8}; do echo -ne "."; sleep 0.15; done
 echo -e "\n"
@@ -74,7 +74,7 @@ echo -ne "$(tput bold)[LOAD] Charging payload modules: [$(tput sgr0)"
 for ((i=1; i<=max; i++)); do
     percent=$((i * 100 / max))
     color=$((31 + RANDOM % 7))
-    progress+=$(tput setaf $color)█$(tput sgr0)
+    progress+=$(tput setaf $color)#$(tput sgr0)
     echo -ne "\r$(tput bold)[LOAD] Charging payload modules: [${progress}$(tput bold)] $percent%$(tput sgr0)"
     sleep 0.07
 done
@@ -87,7 +87,7 @@ done
 echo -e "\n$(tput bold)[+] Target lock confirmed.$(tput sgr0)"
 echo ""
 
-# ─── IP DETECTION ──────────────────────────────────────────────
+# --- IP DETECTION ----------------------------------------------
 internal_ip=$(hostname -I | awk '{print $1}')
 external_ip=$(curl -s ifconfig.me)
 if [[ -z "$external_ip" ]]; then
@@ -98,7 +98,7 @@ echo -e "$(tput bold)[IP] Internal IP  : $internal_ip$(tput sgr0)"
 echo -e "$(tput bold)[IP] External IP  : $external_ip$(tput sgr0)"
 echo ""
 
-# ─── MAIN MENU ─────────────────────────────────────────────
+# --- MAIN MENU ---------------------------------------------
 echo "Select Scan Type:"
 echo "1. Local Network Scan (Ping Sweep + Port Scan)"
 echo "2. Scan Specific Host (Website IP or Domain)"
@@ -113,7 +113,7 @@ echo "10. Exit / Cancel"
 read -p "Enter choice [1/2/3/4/5/6/7/8/9/10]: " choice
 echo ""
 
-# ─── HANDLE USER CHOICE ─────────────────────────────────────
+# --- HANDLE USER CHOICE -------------------------------------
 if [[ "$choice" == "1" ]]; then
     subnet=$(ip -4 addr show | grep -oP '(?<=inet\s)(?!127)\d+\.\d+\.\d+' | head -1)
     if [[ -z "$subnet" ]]; then
@@ -446,17 +446,17 @@ elif [[ "$choice" == "9" ]]; then
     echo "[REPORT] Generating Report..."
     report_file="$OUTPUT_DIR/report_$TIMESTAMP.txt"
     {
-        echo "═════════════════════════════════════════════════════════"
+        echo "========================================================="
         echo "ALL-RECON - SCAN REPORT"
         echo "Generated: $(date)"
-        echo "═════════════════════════════════════════════════════════"
+        echo "========================================================="
         echo ""
         echo "[DIR] Scans Available:"
         ls -1 "$OUTPUT_DIR"/*.txt 2>/dev/null | grep -v report || echo "No scans found"
         echo ""
         echo "Session Log: $SESSION_LOG"
         echo ""
-        echo "═════════════════════════════════════════════════════════"
+        echo "========================================================="
     } | tee "$report_file"
     echo ""
     echo "[OK] Report saved to: $report_file"

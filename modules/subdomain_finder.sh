@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - SUBDOMAIN DISCOVERY MODULE
 # Comprehensive subdomain enumeration & reconnaissance
 # Philosophy: Find all the hidden doors before you start knocking
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 # Source validation module if available
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -32,15 +32,15 @@ dns_subdomain_enum() {
     output_file="$SUBDOMAIN_OUTPUT/dns_enum_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "DNS SUBDOMAIN ENUMERATION: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         # Attempt zone transfer
         echo "[SCAN] Attempting Zone Transfer..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         for ns in $(dig +short NS "$domain"); do
             echo "Trying $ns..."
             dig @"$ns" "$domain" AXFR 2>/dev/null || echo "No zone transfer available"
@@ -48,7 +48,7 @@ dns_subdomain_enum() {
         
         echo ""
         echo "[SCAN] Reverse DNS Lookup..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" +nocmd +noall +answer | while read -r line; do
             ip=$(echo "$line" | awk '{print $NF}')
             if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
@@ -59,7 +59,7 @@ dns_subdomain_enum() {
         
         echo ""
         echo "[SCAN] Common DNS Records..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         for record in A AAAA MX NS TXT SPF CNAME; do
             echo ""
             echo "[$record Records]"
@@ -96,13 +96,13 @@ common_subdomains_bruteforce() {
     )
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "COMMON SUBDOMAIN BRUTE FORCE: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "Testing ${#subdomains[@]} common subdomains..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo ""
         
         local found_count=0
@@ -119,7 +119,7 @@ common_subdomains_bruteforce() {
         done
         
         echo ""
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         echo "Summary: Found $found_count subdomains"
         
     } | tee "$output_file"
@@ -136,10 +136,10 @@ reverse_ip_lookup() {
     output_file="$SUBDOMAIN_OUTPUT/reverse_ip_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "REVERSE IP LOOKUP: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         # Get primary IP
@@ -173,49 +173,49 @@ public_dns_scan() {
     output_file="$SUBDOMAIN_OUTPUT/dns_records_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "PUBLIC DNS RECORDS SCAN: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         echo "[REPORT] A Records (IPv4):"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" A +noall +answer
         
         echo ""
         echo "[REPORT] AAAA Records (IPv6):"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" AAAA +noall +answer
         
         echo ""
         echo "[REPORT] CNAME Records:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" CNAME +noall +answer
         
         echo ""
         echo "[REPORT] MX Records (Mail Servers):"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" MX +noall +answer
         
         echo ""
         echo "[REPORT] NS Records (Name Servers):"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" NS +noall +answer
         
         echo ""
         echo "[REPORT] TXT Records:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" TXT +noall +answer
         
         echo ""
         echo "[REPORT] SOA Records:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" SOA +noall +answer
         
         echo ""
         echo "[REPORT] SRV Records:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         dig "$domain" SRV +noall +answer
         
     } | tee "$output_file"
@@ -232,14 +232,14 @@ cert_transparency_scan() {
     output_file="$SUBDOMAIN_OUTPUT/cert_transparency_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "CERTIFICATE TRANSPARENCY: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         echo "Using crt.sh API for Certificate Transparency logs..."
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         
         # Query crt.sh for SSL certificates
         curl -s "https://crt.sh/?q=%25.$domain&output=json" 2>/dev/null | \
@@ -263,10 +263,10 @@ hackertarget_osint_scan() {
     output_file="$SUBDOMAIN_OUTPUT/hackertarget_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "HACKERTARGET OSINT DISCOVERY: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         resp=$(curl -s --max-time 15 "https://api.hackertarget.com/hostsearch/?q=$domain" 2>/dev/null)
@@ -289,10 +289,10 @@ alienvault_osint_scan() {
     output_file="$SUBDOMAIN_OUTPUT/alienvault_otx_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "ALIENVULT OTX OSINT DISCOVERY: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         resp=$(curl -s --max-time 15 "https://otx.alienvault.com/api/v1/indicators/domain/$domain/passive_dns" 2>/dev/null)
@@ -315,10 +315,10 @@ rapiddns_osint_scan() {
     output_file="$SUBDOMAIN_OUTPUT/rapiddns_$TIMESTAMP.txt"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "RAPIDDNS OSINT DISCOVERY: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         
         resp=$(curl -s --max-time 15 "https://rapiddns.io/subdomain/$domain?full=1" 2>/dev/null)
@@ -348,13 +348,13 @@ passive_osint_scan() {
     rapiddns_osint_scan "$domain"
     
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "AGGREGATED PASSIVE OSINT DISCOVERY: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "Combined findings from crt.sh, HackerTarget, AlienVault OTX, RapidDNS:"
-        echo "────────────────────────────────────────────────────────────────"
+        echo "----------------------------------------------------------------"
         
         grep -hE "^[a-zA-Z0-9.-]+\.${domain//./\.}$" "$SUBDOMAIN_OUTPUT"/*.txt 2>/dev/null | sort -u | grep -v "^$" || \
         grep -h "FOUND:" "$SUBDOMAIN_OUTPUT"/*.txt 2>/dev/null | awk '{print $NF}' | sort -u
@@ -370,9 +370,9 @@ comprehensive_subdomain_scan() {
     log_subdomain "This may take a few minutes..."
     
     echo ""
-    echo "════════════════════════════════════════════════════════════════"
+    echo "================================================================"
     echo "[TARGET] COMPREHENSIVE SUBDOMAIN DISCOVERY"
-    echo "════════════════════════════════════════════════════════════════"
+    echo "================================================================"
     echo ""
     
     dns_subdomain_enum "$domain"
@@ -393,11 +393,11 @@ comprehensive_subdomain_scan() {
     mkdir -p "$SUBDOMAIN_OUTPUT"
     summary_file="$SUBDOMAIN_OUTPUT/summary_$TIMESTAMP.txt"
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "SUBDOMAIN DISCOVERY SUMMARY"
         echo "Domain: $domain"
         echo "Date: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "Files generated:"
         ls -1 "$SUBDOMAIN_OUTPUT"/ | sed 's/^/  /'

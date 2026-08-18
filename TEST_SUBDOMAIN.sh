@@ -3,17 +3,17 @@
 # ALL-RECON - SUBDOMAIN DISCOVERY TEST GUIDE
 
 echo ""
-echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║  [SCAN] SUBDOMAIN DISCOVERY - TEST GUIDE                           ║"
-echo "╚════════════════════════════════════════════════════════════════╝"
+echo "+================================================================+"
+echo "|  [SCAN] SUBDOMAIN DISCOVERY - TEST GUIDE                           |"
+echo "+================================================================+"
 echo ""
 
 echo "[LIST] QUICK TEST OPTIONS"
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 echo "Option 1: Test via Main Menu (Interactive)"
-echo "─────────────────────────────────────────────────────────────────"
+echo "-----------------------------------------------------------------"
 echo "$ ./all_recon.sh"
 echo "Select: 3 (Subdomain Discovery)"
 echo "Enter domain: example.com"
@@ -23,7 +23,7 @@ echo "[OK] This will run ALL discovery methods on example.com"
 echo ""
 
 echo "Option 2: Test Individual Methods (Direct)"
-echo "─────────────────────────────────────────────────────────────────"
+echo "-----------------------------------------------------------------"
 echo ""
 
 echo "Test 1: DNS Enumeration"
@@ -51,16 +51,16 @@ echo "  $ ./modules/subdomain_finder.sh example.com all"
 echo ""
 
 echo "Option 3: Quick Syntax Check (No Live Requests)"
-echo "─────────────────────────────────────────────────────────────────"
+echo "-----------------------------------------------------------------"
 echo "$ bash -n modules/subdomain_finder.sh"
 echo "$ ./all_recon.sh"
 echo ""
 
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 echo "[REPORT] WHAT TO EXPECT"
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 echo "Results will be saved to:"
@@ -80,11 +80,11 @@ echo "Logs saved to:"
 echo "  [LIST] logs/subdomain_YYYYMMDD_HHMMSS.log"
 echo ""
 
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 echo "[TARGET] RECOMMENDED FIRST TEST"
-echo "─────────────────────────────────────────────────────────────────"
+echo "-----------------------------------------------------------------"
 echo ""
 echo "1. Start main tool:"
 echo "   ./all_recon.sh"
@@ -102,11 +102,11 @@ echo "   ls -lh output/subdomains_*"
 echo "   cat output/subdomains_*/summary*.txt"
 echo ""
 
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 echo "[READY] TIPS"
-echo "─────────────────────────────────────────────────────────────────"
+echo "-----------------------------------------------------------------"
 echo ""
 echo "- Use with AUTHORIZED domains only"
 echo "- Common method finds: www, mail, ftp, admin, dev, staging, etc."
@@ -115,7 +115,7 @@ echo "- Reverse IP can reveal other domains on same server"
 echo "- DNS records show infrastructure details (MX, NS, TXT)"
 echo ""
 
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 
 read -p "Ready to test? Run: ./all_recon.sh [Enter]"

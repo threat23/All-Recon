@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - WHOIS & REVERSE LOOKUP RECONNAISSANCE MODULE
 # WHOIS, reverse DNS, netrange extraction and related-domain discovery
 # Philosophy: Map ownership and infrastructure ranges before scanning.
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 # Source validation module if available
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,10 +26,10 @@ write_section() {
     local title=$2
     {
         echo ""
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "$title"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
     } | tee -a "$file"
 }
 
@@ -49,17 +49,17 @@ primary_ip_from_target() {
     fi
 }
 
-# ─── WHOIS LOOKUP (DOMAIN) ───────────────────────────────────────
+# --- WHOIS LOOKUP (DOMAIN) ---------------------------------------
 whois_domain_lookup() {
     local domain=$1
     log_whois "[SCAN] WHOIS lookup for domain: $domain"
     local output_file="$WHOIS_OUTPUT/whois_domain.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "WHOIS LOOKUP: $domain"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         if command -v whois &>/dev/null; then
             whois "$domain" 2>/dev/null || echo "[!] WHOIS query failed for $domain"
@@ -71,17 +71,17 @@ whois_domain_lookup() {
     log_whois "[OK] Domain WHOIS saved to $output_file"
 }
 
-# ─── WHOIS LOOKUP (IP) ───────────────────────────────────────────
+# --- WHOIS LOOKUP (IP) -------------------------------------------
 whois_ip_lookup() {
     local ip=$1
     log_whois "[SCAN] WHOIS lookup for IP: $ip"
     local output_file="$WHOIS_OUTPUT/whois_ip.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "WHOIS LOOKUP: $ip"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         if command -v whois &>/dev/null; then
             whois "$ip" 2>/dev/null || echo "[!] WHOIS query failed for $ip"
@@ -93,17 +93,17 @@ whois_ip_lookup() {
     log_whois "[OK] IP WHOIS saved to $output_file"
 }
 
-# ─── REVERSE DNS (PTR) LOOKUP ────────────────────────────────────
+# --- REVERSE DNS (PTR) LOOKUP ------------------------------------
 reverse_dns_lookup() {
     local target=$1
     log_whois "[SCAN] Reverse DNS lookup for: $target"
     local output_file="$WHOIS_OUTPUT/reverse_dns.txt"
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "REVERSE DNS (PTR) LOOKUP: $target"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         local ips
@@ -119,7 +119,7 @@ reverse_dns_lookup() {
 
         for ip in "${ips[@]}"; do
             echo "Target IP: $ip"
-            echo "────────────────────────────────────────────────────────────────"
+            echo "----------------------------------------------------------------"
             local ptr
             ptr=$(dig -x "$ip" +short 2>/dev/null)
             if [[ -n "$ptr" ]]; then
@@ -134,7 +134,7 @@ reverse_dns_lookup() {
     log_whois "[OK] Reverse DNS results saved to $output_file"
 }
 
-# ─── IP RANGE / NETBLOCK EXTRACTION ──────────────────────────────
+# --- IP RANGE / NETBLOCK EXTRACTION ------------------------------
 ip_range_extraction() {
     local target=$1
     log_whois "[SCAN] Extracting IP ranges/netblocks for: $target"
@@ -144,10 +144,10 @@ ip_range_extraction() {
     ip=$(primary_ip_from_target "$target")
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "IP RANGES & NETBLOCKS: $target"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         if [[ -z "$ip" ]]; then
@@ -160,7 +160,7 @@ ip_range_extraction() {
 
         if command -v whois &>/dev/null; then
             echo "[REPORT] WHOIS netblock information:"
-            echo "────────────────────────────────────────────────────────────────"
+            echo "----------------------------------------------------------------"
             local whois_data
             whois_data=$(whois "$ip" 2>/dev/null || true)
 
@@ -168,7 +168,7 @@ ip_range_extraction() {
 
             echo ""
             echo "[REPORT] Parsed CIDR / NetRange blocks:"
-            echo "────────────────────────────────────────────────────────────────"
+            echo "----------------------------------------------------------------"
             echo "$whois_data" | grep -iE '^cidr' | awk -F':' '{print $2}' | tr ',' '\n' | sed 's/^[[:space:]]*//' | sort -u || true
             echo "$whois_data" | grep -iE '^inetnum' | sed -E 's/^[Ii]netnum:[[:space:]]*//' || true
             echo "$whois_data" | grep -iE '^netrange' | sed -E 's/^[Nn]etrange:[[:space:]]*//' || true
@@ -180,7 +180,7 @@ ip_range_extraction() {
     log_whois "[OK] IP ranges saved to $output_file"
 }
 
-# ─── RELATED DOMAINS / SHARED HOSTING DISCOVERY ──────────────────
+# --- RELATED DOMAINS / SHARED HOSTING DISCOVERY ------------------
 related_domains_lookup() {
     local target=$1
     log_whois "[SCAN] Finding related domains / shared hosting for: $target"
@@ -190,10 +190,10 @@ related_domains_lookup() {
     ip=$(primary_ip_from_target "$target")
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "RELATED DOMAINS / SHARED HOSTING: $target"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
 
         if [[ -z "$ip" ]]; then
@@ -206,7 +206,7 @@ related_domains_lookup() {
 
         if command -v curl &>/dev/null; then
             echo "[REPORT] Reverse IP lookup (passive, via HackerTarget API):"
-            echo "────────────────────────────────────────────────────────────────"
+            echo "----------------------------------------------------------------"
             local reverse_result
             reverse_result=$(curl -s --max-time 20 "https://api.hackertarget.com/reverseiplookup/?q=$ip" 2>/dev/null || true)
             if [[ -n "$reverse_result" && "$reverse_result" != *"error"* && "$reverse_result" != *"No DNS"* ]]; then
@@ -220,7 +220,7 @@ related_domains_lookup() {
 
             echo ""
             echo "[REPORT] ASN / Organization lookup (passive, via HackerTarget API):"
-            echo "────────────────────────────────────────────────────────────────"
+            echo "----------------------------------------------------------------"
             local asn_result
             asn_result=$(curl -s --max-time 20 "https://api.hackertarget.com/aslookup/?q=$ip" 2>/dev/null || true)
             if [[ -n "$asn_result" && "$asn_result" != *"error"* ]]; then
@@ -239,7 +239,7 @@ related_domains_lookup() {
     log_whois "[OK] Related domains saved to $output_file"
 }
 
-# ─── SUMMARY ─────────────────────────────────────────────────────
+# --- SUMMARY -----------------------------------------------------
 generate_summary() {
     local target=$1
     local output_file="$WHOIS_OUTPUT/summary.txt"
@@ -247,12 +247,12 @@ generate_summary() {
     primary=$(primary_ip_from_target "$target")
 
     {
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo "WHOIS & REVERSE LOOKUP SUMMARY"
         echo "Target: $target"
         echo "Primary IP: ${primary:-N/A}"
         echo "Generated: $(date)"
-        echo "═══════════════════════════════════════════════════════════════"
+        echo "==============================================================="
         echo ""
         echo "Output files:"
         ls -1 "$WHOIS_OUTPUT" 2>/dev/null | sed 's/^/  - /'
@@ -266,7 +266,7 @@ generate_summary() {
     log_whois "[OK] Summary saved to $output_file"
 }
 
-# ─── MAIN ────────────────────────────────────────────────────────
+# --- MAIN --------------------------------------------------------
 TARGET="${1:-}"
 MODE="${2:-all}"
 

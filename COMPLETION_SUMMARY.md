@@ -76,32 +76,32 @@ A **professional penetration testing automation framework** embodying the philos
 
 ```
 Project Root (11 files, 2,092 lines)
-│
-├── -> ENTRY POINTS
-│   ├── START_HERE.sh                (Interactive guide)
-│   ├── install.sh                   (Setup & dependencies)
-│   └── QUICKSTART.sh                (Quick bootstrap)
-│
-├── [INPUT] AUTOMATION
-│   ├── all_recon.sh          (Main engine - ENHANCED)
-│   └── all_recon_alt.sh                (Alternative variant)
-│
-├── [DOCS] DOCUMENTATION (900+ lines)
-│   ├── README.md                    (240 lines - Full guide)
-│   ├── WORKFLOW_GUIDE.md            (270 lines - Patterns)
-│   ├── PROJECT_MANIFEST.md          (360 lines - Reference)
-│   └── This file                    (This summary)
-│
-├── [CONFIG]  CONFIGURATION
-│   ├── config/nmap_profiles.conf    (7 scan profiles)
-│   └── config/automation_rules.conf (Automation settings)
-│
-├── [SETUP] MODULES (Extensible)
-│   ├── modules/recon.sh             (Reconnaissance)
-│   └── modules/reporting.sh         (Report generation)
-│
-└── [SECURITY] PROJECT FILES
-    └── .gitignore                   (Git configuration)
+|
++-- -> ENTRY POINTS
+|   +-- START_HERE.sh                (Interactive guide)
+|   +-- install.sh                   (Setup & dependencies)
+|   +-- QUICKSTART.sh                (Quick bootstrap)
+|
++-- [INPUT] AUTOMATION
+|   +-- all_recon.sh          (Main engine - ENHANCED)
+|   +-- all_recon_alt.sh                (Alternative variant)
+|
++-- [DOCS] DOCUMENTATION (900+ lines)
+|   +-- README.md                    (240 lines - Full guide)
+|   +-- WORKFLOW_GUIDE.md            (270 lines - Patterns)
+|   +-- PROJECT_MANIFEST.md          (360 lines - Reference)
+|   +-- This file                    (This summary)
+|
++-- [CONFIG]  CONFIGURATION
+|   +-- config/nmap_profiles.conf    (7 scan profiles)
+|   +-- config/automation_rules.conf (Automation settings)
+|
++-- [SETUP] MODULES (Extensible)
+|   +-- modules/recon.sh             (Reconnaissance)
+|   +-- modules/reporting.sh         (Report generation)
+|
++-- [SECURITY] PROJECT FILES
+    +-- .gitignore                   (Git configuration)
 ```
 
 ---

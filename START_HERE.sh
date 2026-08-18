@@ -1,23 +1,23 @@
 #!/bin/bash
 
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 # ALL-RECON - START HERE
 # First-time user guide
-# ═══════════════════════════════════════════════════════════════════
+# ===================================================================
 
 echo ""
-echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║                                                                ║"
-echo "║         [TARGET] ALL-RECON - PENTESTER AUTOMATION SUITE [TARGET]         ║"
-echo "║                                                                ║"
-echo "║  Automate the boring. Focus on the interesting.              ║"
-echo "║  Smooth workflow. Uninterrupted focus. Get stuff done.        ║"
-echo "║                                                                ║"
-echo "╚════════════════════════════════════════════════════════════════╝"
+echo "+================================================================+"
+echo "|                                                                |"
+echo "|         [TARGET] ALL-RECON - PENTESTER AUTOMATION SUITE [TARGET]         |"
+echo "|                                                                |"
+echo "|  Automate the boring. Focus on the interesting.              |"
+echo "|  Smooth workflow. Uninterrupted focus. Get stuff done.        |"
+echo "|                                                                |"
+echo "+================================================================+"
 echo ""
 
 echo "[LIST] PROJECT STRUCTURE"
-echo "───────────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------------"
 echo ""
 echo "[FILE] Documentation (START HERE):"
 echo "   1. README.md                - Full project guide"
@@ -37,7 +37,7 @@ echo "[SETUP] Extended Features:"
 echo "   - modules/recon.sh               - Reconnaissance module"
 echo "   - modules/reporting.sh           - Report generation"
 echo ""
-echo "───────────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------------"
 echo ""
 
 echo "[TARGET] FIRST-TIME SETUP (Choose one):"
@@ -60,7 +60,7 @@ echo "   -> Run main tool directly"
 echo "   -> (May fail if dependencies missing)"
 echo ""
 
-echo "───────────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------------"
 echo ""
 
 echo "[DOCS] LEARNING PATH:"
@@ -82,7 +82,7 @@ echo "   2. Review configuration files"
 echo "   3. Check modules/ directory"
 echo ""
 
-echo "───────────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------------"
 echo ""
 
 echo "[FAST] QUICK COMMANDS:"
@@ -102,7 +102,7 @@ echo "   cat logs/session_*.log          # View session logs"
 echo "   ls -lh output/reports/          # View reports"
 echo ""
 
-echo "───────────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------------"
 echo ""
 
 read -p "Ready to get started? Would you like to run setup now? (y/n): " response
@@ -139,7 +139,7 @@ else
 fi
 
 echo ""
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
 echo "[NEXT] Next Steps:"
 echo "  1. Run: bash install.sh"
@@ -152,5 +152,5 @@ echo "  Set it up once, run it many times."
 echo "  Let automation handle the routine."
 echo "  You focus on the interesting stuff."
 echo ""
-echo "═══════════════════════════════════════════════════════════════════"
+echo "==================================================================="
 echo ""
