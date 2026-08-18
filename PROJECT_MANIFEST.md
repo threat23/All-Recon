@@ -7,7 +7,7 @@
 
 ---
 
-## 📋 Project Overview
+## [LIST] Project Overview
 
 **ALL-RECON** is a professional-grade penetration testing automation suite designed to streamline reconnaissance and keep pentesters focused on high-value analysis rather than routine command execution.
 
@@ -17,35 +17,35 @@
 
 ---
 
-## 📁 Project Structure
+## [DIR] Project Structure
 
 ```
 ALL-RECON/
 │
-├── 📄 all_recon.sh          ⭐ Main automation engine
-├── 📄 all_recon_alt.sh                 Alternative workflow variant
+├── [FILE] all_recon.sh          ⭐ Main automation engine
+├── [FILE] all_recon_alt.sh                 Alternative workflow variant
 │
-├── 📚 Documentation
+├── [DOCS] Documentation
 │   ├── README.md                    Full guide & features
 │   ├── WORKFLOW_GUIDE.md            Practical workflow patterns
 │   ├── QUICKSTART.sh                Quick 5-minute setup
 │   └── install.sh                   Full installation & setup
 │
-├── ⚙️  Configuration (config/)
+├── [CONFIG]  Configuration (config/)
 │   ├── nmap_profiles.conf           Pre-tuned scan templates
 │   └── automation_rules.conf        Automation behavior settings
 │
-├── 🔧 Extensions (modules/)
+├── [SETUP] Extensions (modules/)
 │   ├── recon.sh                     DNS/WHOIS reconnaissance
 │   ├── reporting.sh                 Report generation
 │   └── [extensible]                 Add custom modules here
 │
-├── 📊 Output (auto-created)
+├── [REPORT] Output (auto-created)
 │   ├── output/                      Scan results (timestamped)
 │   ├── logs/                        Session logs
 │   └── output/reports/              Generated reports
 │
-└── 🔐 Project Files
+└── [SECURITY] Project Files
     ├── .gitignore                   Git ignore rules
     ├── PROJECT_MANIFEST.md          This file
     └── LICENSE                      (Internal Use Only)
@@ -53,7 +53,7 @@ ALL-RECON/
 
 ---
 
-## 🚀 Getting Started
+## -> Getting Started
 
 ### 1. First-Time Setup (5 minutes)
 ```bash
@@ -75,16 +75,16 @@ Interactive menu-driven interface.
 
 ---
 
-## 💾 Files Reference
+## [SAVE] Files Reference
 
 ### Core Scripts
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `all_recon.sh` | Main engine with logging & result organization | ✅ Enhanced |
-| `all_recon_alt.sh` | Alternative workflow variant | ✅ Legacy |
-| `install.sh` | Dependency installation & setup | ✅ New |
-| `QUICKSTART.sh` | Rapid project initialization | ✅ New |
+| `all_recon.sh` | Main engine with logging & result organization | [OK] Enhanced |
+| `all_recon_alt.sh` | Alternative workflow variant | [OK] Legacy |
+| `install.sh` | Dependency installation & setup | [OK] New |
+| `QUICKSTART.sh` | Rapid project initialization | [OK] New |
 
 ### Configuration
 
@@ -111,36 +111,36 @@ Interactive menu-driven interface.
 
 ---
 
-## ⚡ Key Features
+## [FAST] Key Features
 
-✅ **Automated Network Scanning**
+[OK] **Automated Network Scanning**
 - Parallel ping sweep (254 hosts ~2 minutes)
 - Concurrent nmap analysis
 - Background execution
 
-✅ **Organized Output**
+[OK] **Organized Output**
 - Timestamped results
 - Structured directories
 - Session logging
 
-✅ **Result Management**
+[OK] **Result Management**
 - View previous scans
 - Auto-generate reports
 - Persistent history
 
-✅ **Customizable Profiles**
+[OK] **Customizable Profiles**
 - Quick scans (2-3 min)
 - Standard scans (10-15 min)
 - Thorough scans (30-60 min)
 - Stealth scans (1-3 hours)
 
-✅ **Extended Modules**
+[OK] **Extended Modules**
 - DNS reconnaissance
 - WHOIS lookup
 - Service mapping
 - Report generation
 
-✅ **Production Ready**
+[OK] **Production Ready**
 - Error handling
 - Dependency checks
 - Permission management
@@ -148,7 +148,7 @@ Interactive menu-driven interface.
 
 ---
 
-## 🎯 Use Cases
+## [TARGET] Use Cases
 
 ### 1. Network Assessment (Local Subnet)
 ```bash
@@ -174,7 +174,7 @@ Interactive menu-driven interface.
 
 ---
 
-## 📊 Workflow Benefits
+## [REPORT] Workflow Benefits
 
 ### Time Savings
 - **Manual scanning:** 2-3 hours for 10 hosts
@@ -195,7 +195,7 @@ Interactive menu-driven interface.
 
 ---
 
-## 🔧 Configuration Guide
+## [SETUP] Configuration Guide
 
 ### Customize Scan Speed
 
@@ -222,7 +222,7 @@ ALERT_ON_COMMON_VULNS="true"
 
 ---
 
-## 🛠️ Extending ALL-RECON
+## [TOOLS] Extending ALL-RECON
 
 ### Add Custom Reconnaissance
 
@@ -249,16 +249,16 @@ git commit -m "Standard profiles for team"
 
 ---
 
-## 📈 Performance Metrics
+## [STATS] Performance Metrics
 
 ### Scan Performance (per host)
 
 | Profile | Speed | Coverage | Time |
 |---------|-------|----------|------|
-| Quick | ⚡⚡⚡ | 🎯 | 2-3 min |
-| Standard | ⚡⚡ | 🎯🎯 | 10-15 min |
-| Thorough | ⚡ | 🎯🎯🎯 | 30-60 min |
-| Stealth | 🐢 | 🎯 | 1-3 hours |
+| Quick | [FAST][FAST][FAST] | [TARGET] | 2-3 min |
+| Standard | [FAST][FAST] | [TARGET][TARGET] | 10-15 min |
+| Thorough | [FAST] | [TARGET][TARGET][TARGET] | 30-60 min |
+| Stealth | [SLOW] | [TARGET] | 1-3 hours |
 
 ### Network Scan (254 hosts)
 
@@ -271,7 +271,7 @@ git commit -m "Standard profiles for team"
 
 ---
 
-## 🔐 Security & Legal
+## [SECURITY] Security & Legal
 
 ### Authorized Use Only
 This toolkit is designed for **authorized security testing only**. Unauthorized access to computer systems is illegal.
@@ -290,7 +290,7 @@ This toolkit is designed for **authorized security testing only**. Unauthorized 
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -311,18 +311,18 @@ This toolkit is designed for **authorized security testing only**. Unauthorized 
 
 ---
 
-## 📚 Documentation Map
+## [DOCS] Documentation Map
 
-- **Starting Out?** → Read `README.md` + run `install.sh`
-- **New Assessment?** → Run `./all_recon.sh`
-- **Want to Learn Workflow?** → Study `WORKFLOW_GUIDE.md`
-- **Extending Features?** → Check `modules/` directory
-- **Customizing Profiles?** → Edit `config/` files
-- **Troubleshooting?** → Run `bash QUICKSTART.sh`
+- **Starting Out?** -> Read `README.md` + run `install.sh`
+- **New Assessment?** -> Run `./all_recon.sh`
+- **Want to Learn Workflow?** -> Study `WORKFLOW_GUIDE.md`
+- **Extending Features?** -> Check `modules/` directory
+- **Customizing Profiles?** -> Edit `config/` files
+- **Troubleshooting?** -> Run `bash QUICKSTART.sh`
 
 ---
 
-## 🎓 Learning Path
+##  Learning Path
 
 ### Day 1: Setup & Learn
 - Run `bash install.sh`
@@ -341,45 +341,45 @@ This toolkit is designed for **authorized security testing only**. Unauthorized 
 
 ---
 
-## 🌟 Project Goals
+##  Project Goals
 
-✅ **Streamline Pentester Workflow**
+[OK] **Streamline Pentester Workflow**
 - Eliminate routine task overhead
 - Free mental bandwidth for analysis
 - Improve productivity by 5-10x
 
-✅ **Professional Quality**
+[OK] **Professional Quality**
 - Production-ready code
 - Comprehensive error handling
 - Enterprise-grade logging
 
-✅ **Easy Extensibility**
+[OK] **Easy Extensibility**
 - Modular architecture
 - Configuration-driven behavior
 - Simple custom integration
 
-✅ **Community-Friendly**
+[OK] **Community-Friendly**
 - Well documented
 - Example workflows
 - Easy to understand
 
 ---
 
-## 🎯 Success Indicators
+## [TARGET] Success Indicators
 
 You'll know ALL-RECON is working when:
 
-- ✅ Assessments finish ahead of schedule
-- ✅ You're not fighting with tool syntax
-- ✅ Results are always organized
-- ✅ You have time to think about vulnerabilities
-- ✅ Reports generate automatically
-- ✅ Your mental energy is preserved
-- ✅ Colleagues ask how you do assessments faster
+- [OK] Assessments finish ahead of schedule
+- [OK] You're not fighting with tool syntax
+- [OK] Results are always organized
+- [OK] You have time to think about vulnerabilities
+- [OK] Reports generate automatically
+- [OK] Your mental energy is preserved
+- [OK] Colleagues ask how you do assessments faster
 
 ---
 
-## 🚀 Future Roadmap
+## -> Future Roadmap
 
 **Planned Features:**
 - [ ] Metasploit integration
@@ -392,7 +392,7 @@ You'll know ALL-RECON is working when:
 
 ---
 
-## 📞 Credits & Attribution
+##  Credits & Attribution
 
 **Created By:** Humphrey Chile | THREAT | ALL-RECON | & JOSH  
 **Division:** Code Red Ops | Threat Intelligence Division  
@@ -407,7 +407,7 @@ This tool embodies the pentester's creed: do the interesting work, automate the 
 
 ---
 
-## 📄 License
+## [FILE] License
 
 **Internal Use Only**  
 For authorized security professionals only.  
@@ -415,7 +415,7 @@ Unauthorized access to computer systems is illegal.
 
 ---
 
-## 🎯 Quick Reference
+## [TARGET] Quick Reference
 
 ```bash
 # First time setup
@@ -441,10 +441,10 @@ cat logs/*.log
 
 **Remember:** ALL-RECON is a force multiplier. It's not about being lazy—it's about being *efficiently focused* on what matters: the interesting attack sequences, the creative exploitation paths, and the findings that make you a better pentester.
 
-*Your perimeter just became my playground.* 🎯
+*Your perimeter just became my playground.* [TARGET]
 
 ---
 
 **Last Updated:** June 9, 2026  
-**Status:** ✅ Production Ready  
+**Status:** [OK] Production Ready  
 **Ready to use:** Yes

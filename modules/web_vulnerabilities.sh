@@ -42,10 +42,10 @@ prompt_install() {
         echo "[*] Installing $tool..."
         eval "$install_cmd"
         if command -v "$tool" &>/dev/null; then
-            echo "    ✓ $tool installed successfully"
+            echo "    [OK] $tool installed successfully"
             return 0
         else
-            echo "    ✗ Installation failed or $tool not in PATH"
+            echo "     Installation failed or $tool not in PATH"
             return 1
         fi
     else
@@ -63,26 +63,26 @@ fi
 
 TARGET_URL="${1:-}"
 if [[ -z "$TARGET_URL" ]]; then
-    echo "❌ No target URL provided"
+    echo "[ERROR] No target URL provided"
     exit 1
 fi
 
 if type is_valid_url &>/dev/null; then
     if ! is_valid_url "$TARGET_URL"; then
-        echo "❌ Invalid URL format: '$TARGET_URL' (must start with http:// or https://)"
-        log_vuln "❌ Invalid URL provided: $TARGET_URL"
+        echo "[ERROR] Invalid URL format: '$TARGET_URL' (must start with http:// or https://)"
+        log_vuln "[ERROR] Invalid URL provided: $TARGET_URL"
         exit 1
     fi
 fi
 
-log_vuln "🎯 Web Vulnerability Scanner initialized for: $TARGET_URL"
+log_vuln "[TARGET] Web Vulnerability Scanner initialized for: $TARGET_URL"
 
 # ═══════════════════════════════════════════════════════════════════
 # SQL INJECTION (SQLi) SCAN
 # ═══════════════════════════════════════════════════════════════════
 sqli_scan() {
     local url=$1
-    log_vuln "🔍 Starting SQL Injection (SQLi) tests on $url..."
+    log_vuln "[SCAN] Starting SQL Injection (SQLi) tests on $url..."
 
     output_file="$WEB_VULN_OUTPUT/sqli_scan_$TIMESTAMP.txt"
 
@@ -94,14 +94,14 @@ sqli_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Testing URL Parameters for SQLi vulnerability..."
+        echo "[SCAN] Testing URL Parameters for SQLi vulnerability..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
 
         echo "[*] Basic SQLi Payloads:"
-        echo "    • ' OR '1'='1"
-        echo "    • admin' --"
-        echo "    • 1 OR 1=1"
+        echo "    - ' OR '1'='1"
+        echo "    - admin' --"
+        echo "    - 1 OR 1=1"
         echo ""
 
         # Test basic payloads
@@ -122,16 +122,16 @@ sqli_scan() {
         done
 
         echo ""
-        echo "🔎 Time-Based Blind SQLi Detection:"
+        echo "[SCAN] Time-Based Blind SQLi Detection:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    • MySQL: 1' AND SLEEP(5) --"
-        echo "    • PostgreSQL: 1' AND PG_SLEEP(5) --"
-        echo "    • SQL Server: 1'; WAITFOR DELAY '00:00:05' --"
+        echo "    - MySQL: 1' AND SLEEP(5) --"
+        echo "    - PostgreSQL: 1' AND PG_SLEEP(5) --"
+        echo "    - SQL Server: 1'; WAITFOR DELAY '00:00:05' --"
         echo ""
         echo "[*] Note: Time-based detection requires manual testing or sqlmap"
 
         echo ""
-        echo "🔎 Automated Testing:"
+        echo "[SCAN] Automated Testing:"
         echo "────────────────────────────────────────────────────────────────"
         if command -v sqlmap &>/dev/null; then
             echo "[*] sqlmap found. Running automated scan..."
@@ -146,16 +146,16 @@ sqli_scan() {
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → Parameterized queries/prepared statements"
-        echo "    → Input validation and whitelisting"
-        echo "    → Web Application Firewall (WAF) rules"
-        echo "    → Least privilege database accounts"
+        echo "    -> Parameterized queries/prepared statements"
+        echo "    -> Input validation and whitelisting"
+        echo "    -> Web Application Firewall (WAF) rules"
+        echo "    -> Least privilege database accounts"
 
     } | tee "$output_file"
 
-    log_vuln "✅ SQL Injection scan complete"
+    log_vuln "[OK] SQL Injection scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -163,7 +163,7 @@ sqli_scan() {
 # ═══════════════════════════════════════════════════════════════════
 xss_scan() {
     local url=$1
-    log_vuln "🔍 Starting Cross-Site Scripting (XSS) tests on $url..."
+    log_vuln "[SCAN] Starting Cross-Site Scripting (XSS) tests on $url..."
 
     output_file="$WEB_VULN_OUTPUT/xss_scan_$TIMESTAMP.txt"
 
@@ -175,7 +175,7 @@ xss_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Testing for Reflected XSS..."
+        echo "[SCAN] Testing for Reflected XSS..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
 
@@ -192,26 +192,26 @@ xss_scan() {
             echo "[*] Testing: $payload"
             response=$(curl -s "$url?search=$encoded_payload" 2>/dev/null)
             if echo "$response" | grep -q "<script>alert" || echo "$response" | grep -q "onerror"; then
-                echo "    ⚠️  Potential XSS found! Payload reflected in response"
+                echo "    [WARN]  Potential XSS found! Payload reflected in response"
             fi
         done
 
         echo ""
-        echo "🔎 Testing HTML/Form Parameters..."
+        echo "[SCAN] Testing HTML/Form Parameters..."
         echo "────────────────────────────────────────────────────────────────"
         echo "[*] Fetching page structure to identify input fields..."
         curl -s "$url" 2>/dev/null | grep -o 'name="[^"]*"' | head -10 || echo "No forms found"
 
         echo ""
-        echo "🔎 Common XSS Bypass Techniques:"
+        echo "[SCAN] Common XSS Bypass Techniques:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    • Case variation: <ScRiPt>alert('XSS')</sCrIpT>"
-        echo "    • HTML entities: &lt;script&gt;alert('XSS')&lt;/script&gt;"
-        echo "    • Unicode: \\x3cscript\\x3e"
-        echo "    • Data URI: data:text/html,<script>alert('XSS')</script>"
+        echo "    - Case variation: <ScRiPt>alert('XSS')</sCrIpT>"
+        echo "    - HTML entities: &lt;script&gt;alert('XSS')&lt;/script&gt;"
+        echo "    - Unicode: \\x3cscript\\x3e"
+        echo "    - Data URI: data:text/html,<script>alert('XSS')</script>"
 
         echo ""
-        echo "🔎 Automated XSS Detection:"
+        echo "[SCAN] Automated XSS Detection:"
         echo "────────────────────────────────────────────────────────────────"
         if command -v zaproxy &>/dev/null; then
             echo "[*] OWASP ZAP found. Use: zaproxy -cmd -quickurl $url"
@@ -222,16 +222,16 @@ xss_scan() {
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → HTML entity encoding (< > & \" ')"
-        echo "    → Content Security Policy (CSP) headers"
-        echo "    → HTTPOnly and Secure flags on cookies"
-        echo "    → Input validation and whitelisting"
+        echo "    -> HTML entity encoding (< > & \" ')"
+        echo "    -> Content Security Policy (CSP) headers"
+        echo "    -> HTTPOnly and Secure flags on cookies"
+        echo "    -> Input validation and whitelisting"
 
     } | tee "$output_file"
 
-    log_vuln "✅ XSS scan complete"
+    log_vuln "[OK] XSS scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -239,7 +239,7 @@ xss_scan() {
 # ═══════════════════════════════════════════════════════════════════
 command_injection_scan() {
     local url=$1
-    log_vuln "🔍 Starting OS Command Injection tests on $url..."
+    log_vuln "[SCAN] Starting OS Command Injection tests on $url..."
 
     output_file="$WEB_VULN_OUTPUT/command_injection_$TIMESTAMP.txt"
 
@@ -251,17 +251,17 @@ command_injection_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Testing for Command Injection..."
+        echo "[SCAN] Testing for Command Injection..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
 
         echo "[*] Command Separators to Test:"
-        echo "    • ; command"
-        echo "    • | command"
-        echo "    • || command"
-        echo "    • && command"
-        echo "    • \` command \`"
-        echo "    • \$( command )"
+        echo "    - ; command"
+        echo "    - | command"
+        echo "    - || command"
+        echo "    - && command"
+        echo "    - \` command \`"
+        echo "    - \$( command )"
         echo ""
 
         # Common parameter names for command injection
@@ -277,14 +277,14 @@ command_injection_scan() {
         done
 
         echo ""
-        echo "🔎 Time-Based Command Injection Detection:"
+        echo "[SCAN] Time-Based Command Injection Detection:"
         echo "────────────────────────────────────────────────────────────────"
         echo "[*] Testing with sleep command (5 second delay)..."
         echo "    Time-based detection requires manual testing"
         echo "    Payload: ; sleep 5"
 
         echo ""
-        echo "🔎 Automated Testing:"
+        echo "[SCAN] Automated Testing:"
         echo "────────────────────────────────────────────────────────────────"
         if command -v commix &>/dev/null; then
             echo "[*] commix found. Running automated scan..."
@@ -299,16 +299,16 @@ command_injection_scan() {
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → Avoid shell execution (use APIs instead)"
-        echo "    → Whitelist allowed commands/arguments"
-        echo "    → Input validation and regex matching"
-        echo "    → Run with minimal privileges"
+        echo "    -> Avoid shell execution (use APIs instead)"
+        echo "    -> Whitelist allowed commands/arguments"
+        echo "    -> Input validation and regex matching"
+        echo "    -> Run with minimal privileges"
 
     } | tee "$output_file"
 
-    log_vuln "✅ Command Injection scan complete"
+    log_vuln "[OK] Command Injection scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -316,7 +316,7 @@ command_injection_scan() {
 # ═══════════════════════════════════════════════════════════════════
 csrf_scan() {
     local url=$1
-    log_vuln "🔍 Starting CSRF vulnerability scan on $url..."
+    log_vuln "[SCAN] Starting CSRF vulnerability scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/csrf_scan_$TIMESTAMP.txt"
 
@@ -328,7 +328,7 @@ csrf_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Checking for CSRF Tokens..."
+        echo "[SCAN] Checking for CSRF Tokens..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
 
@@ -336,17 +336,17 @@ csrf_scan() {
 
         echo "[*] Analyzing page source for CSRF protection..."
         if echo "$page_content" | grep -qi "csrf"; then
-            echo "    ✓ Found 'csrf' keyword in page"
+            echo "    [OK] Found 'csrf' keyword in page"
         fi
 
         if echo "$page_content" | grep -qi "csrf_token\|_token\|csrf-token"; then
-            echo "    ✓ Found CSRF token patterns"
+            echo "    [OK] Found CSRF token patterns"
             echo ""
             echo "[*] Token locations found:"
             echo "$page_content" | grep -o 'name="[^"]*csrf[^"]*"' | head -5
             echo "$page_content" | grep -o 'name="_token"' | head -5
         else
-            echo "    ⚠️  No CSRF tokens detected in page"
+            echo "    [WARN]  No CSRF tokens detected in page"
         fi
 
         echo ""
@@ -359,13 +359,13 @@ csrf_scan() {
         echo "[*] Checking for SameSite Cookie Attribute..."
         echo "────────────────────────────────────────────────────────────────"
         if echo "$headers" | grep -i "samesite=strict\|samesite=lax"; then
-            echo "    ✓ SameSite cookie protection enabled"
+            echo "    [OK] SameSite cookie protection enabled"
         else
-            echo "    ⚠️  SameSite cookie attribute missing or not strict"
+            echo "    [WARN]  SameSite cookie attribute missing or not strict"
         fi
 
         echo ""
-        echo "🔎 Manual CSRF Testing Approach:"
+        echo "[SCAN] Manual CSRF Testing Approach:"
         echo "────────────────────────────────────────────────────────────────"
         echo "    1. Perform sensitive action while logged in"
         echo "    2. Intercept request in proxy (Burp Suite)"
@@ -374,16 +374,16 @@ csrf_scan() {
         echo "    5. Try to repeat with old/modified token"
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → CSRF tokens on all state-changing requests"
-        echo "    → SameSite cookie attribute set"
-        echo "    → Custom request headers (X-Requested-With)"
-        echo "    → Verify Origin/Referer headers"
+        echo "    -> CSRF tokens on all state-changing requests"
+        echo "    -> SameSite cookie attribute set"
+        echo "    -> Custom request headers (X-Requested-With)"
+        echo "    -> Verify Origin/Referer headers"
 
     } | tee "$output_file"
 
-    log_vuln "✅ CSRF scan complete"
+    log_vuln "[OK] CSRF scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -391,7 +391,7 @@ csrf_scan() {
 # ═══════════════════════════════════════════════════════════════════
 auth_scan() {
     local url=$1
-    log_vuln "🔍 Starting Authentication & Authorization scan on $url..."
+    log_vuln "[SCAN] Starting Authentication & Authorization scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/auth_scan_$TIMESTAMP.txt"
 
@@ -403,7 +403,7 @@ auth_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Testing for Default Credentials..."
+        echo "[SCAN] Testing for Default Credentials..."
         echo "────────────────────────────────────────────────────────────────"
         declare -a default_creds=(
             "admin:admin"
@@ -417,23 +417,23 @@ auth_scan() {
         for cred in "${default_creds[@]}"; do
             username="${cred%%:*}"
             password="${cred##*:}"
-            echo "    • $username:$password"
+            echo "    - $username:$password"
         done
 
         echo ""
-        echo "🔎 Analyzing Page for Login Forms..."
+        echo "[SCAN] Analyzing Page for Login Forms..."
         echo "────────────────────────────────────────────────────────────────"
         page_content=$(curl -s "$url" 2>/dev/null)
 
         if echo "$page_content" | grep -qi "login\|signin\|password"; then
-            echo "    ✓ Login form detected"
+            echo "    [OK] Login form detected"
             echo "$page_content" | grep -o 'type="password"' -B1 | grep 'name=' || echo "    Could not identify password field"
         else
             echo "    [*] No obvious login form found on homepage"
         fi
 
         echo ""
-        echo "🔎 Cookie Analysis..."
+        echo "[SCAN] Cookie Analysis..."
         echo "────────────────────────────────────────────────────────────────"
         cookies=$(curl -s -i "$url" 2>/dev/null | grep -i "set-cookie" | head -5)
         if [[ ! -z "$cookies" ]]; then
@@ -441,31 +441,31 @@ auth_scan() {
             echo "$cookies"
             echo ""
             if echo "$cookies" | grep -i "httponly"; then
-                echo "    ✓ HttpOnly flag present"
+                echo "    [OK] HttpOnly flag present"
             else
-                echo "    ⚠️  HttpOnly flag missing"
+                echo "    [WARN]  HttpOnly flag missing"
             fi
             if echo "$cookies" | grep -i "secure"; then
-                echo "    ✓ Secure flag present"
+                echo "    [OK] Secure flag present"
             else
-                echo "    ⚠️  Secure flag missing"
+                echo "    [WARN]  Secure flag missing"
             fi
         else
             echo "    No cookies detected"
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → Strong password requirements"
-        echo "    → Multi-factor authentication (MFA)"
-        echo "    → HTTPOnly and Secure flags on cookies"
-        echo "    → Session timeout enforcement"
-        echo "    → Secure password reset mechanism"
+        echo "    -> Strong password requirements"
+        echo "    -> Multi-factor authentication (MFA)"
+        echo "    -> HTTPOnly and Secure flags on cookies"
+        echo "    -> Session timeout enforcement"
+        echo "    -> Secure password reset mechanism"
 
     } | tee "$output_file"
 
-    log_vuln "✅ Authentication & Authorization scan complete"
+    log_vuln "[OK] Authentication & Authorization scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -473,7 +473,7 @@ auth_scan() {
 # ═══════════════════════════════════════════════════════════════════
 access_control_scan() {
     local url=$1
-    log_vuln "🔍 Starting Broken Access Control scan on $url..."
+    log_vuln "[SCAN] Starting Broken Access Control scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/access_control_$TIMESTAMP.txt"
 
@@ -485,14 +485,14 @@ access_control_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Identifying Resource Identifiers..."
+        echo "[SCAN] Identifying Resource Identifiers..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
         echo "[*] Common parameter patterns to test:"
-        echo "    • /user/profile?id=1"
-        echo "    • /api/users/123"
-        echo "    • /document/view/456"
-        echo "    • /invoice/789"
+        echo "    - /user/profile?id=1"
+        echo "    - /api/users/123"
+        echo "    - /document/view/456"
+        echo "    - /invoice/789"
 
         # Extract URLs with IDs
         echo ""
@@ -501,7 +501,7 @@ access_control_scan() {
         echo "$page_content" | grep -o 'href="[^"]*[0-9]\+[^"]*"' | head -10 || echo "    No obvious ID-based URLs found"
 
         echo ""
-        echo "🔎 Path Traversal Testing..."
+        echo "[SCAN] Path Traversal Testing..."
         echo "────────────────────────────────────────────────────────────────"
         declare -a traversal_payloads=(
             "../admin"
@@ -511,30 +511,30 @@ access_control_scan() {
 
         echo "[*] Path traversal patterns:"
         for payload in "${traversal_payloads[@]}"; do
-            echo "    • $payload"
+            echo "    - $payload"
         done
 
         echo ""
         echo "[*] Note: Requires manual testing with identified endpoints"
 
         echo ""
-        echo "🔎 Privilege Escalation Testing..."
+        echo "[SCAN] Privilege Escalation Testing..."
         echo "────────────────────────────────────────────────────────────────"
         echo "    1. Test horizontal escalation (access other users' data)"
         echo "    2. Test vertical escalation (access admin functions)"
         echo "    3. Verify access controls on all endpoints"
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → User-based access control on all resources"
-        echo "    → Verify ownership before allowing modifications"
-        echo "    → Deny access by default, whitelist allowed actions"
-        echo "    → Proper role-based access control (RBAC)"
+        echo "    -> User-based access control on all resources"
+        echo "    -> Verify ownership before allowing modifications"
+        echo "    -> Deny access by default, whitelist allowed actions"
+        echo "    -> Proper role-based access control (RBAC)"
 
     } | tee "$output_file"
 
-    log_vuln "✅ Access Control scan complete"
+    log_vuln "[OK] Access Control scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -542,7 +542,7 @@ access_control_scan() {
 # ═══════════════════════════════════════════════════════════════════
 data_exposure_scan() {
     local url=$1
-    log_vuln "🔍 Starting Sensitive Data Exposure scan on $url..."
+    log_vuln "[SCAN] Starting Sensitive Data Exposure scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/data_exposure_$TIMESTAMP.txt"
 
@@ -554,7 +554,7 @@ data_exposure_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 SSL/TLS Configuration Check..."
+        echo "[SCAN] SSL/TLS Configuration Check..."
         echo "────────────────────────────────────────────────────────────────"
 
         if [[ "$url" == https* ]]; then
@@ -569,11 +569,11 @@ data_exposure_scan() {
                 echo | openssl s_client -connect "$domain:443" 2>/dev/null | openssl x509 -noout -dates -subject 2>/dev/null || echo "    Could not retrieve certificate"
             fi
         else
-            echo "    ⚠️  HTTPS not used. Communication unencrypted!"
+            echo "    [WARN]  HTTPS not used. Communication unencrypted!"
         fi
 
         echo ""
-        echo "🔎 Checking for Unprotected Endpoints..."
+        echo "[SCAN] Checking for Unprotected Endpoints..."
         echo "────────────────────────────────────────────────────────────────"
         declare -a sensitive_paths=(
             "/admin"
@@ -590,17 +590,17 @@ data_exposure_scan() {
         for path in "${sensitive_paths[@]}"; do
             response=$(curl -s -o /dev/null -w "%{http_code}" "$url$path" 2>/dev/null)
             if [[ "$response" == "200" || "$response" == "301" || "$response" == "302" ]]; then
-                echo "    ⚠️  Found: $path (HTTP $response)"
+                echo "    [WARN]  Found: $path (HTTP $response)"
             fi
         done
 
         echo ""
-        echo "🔎 Analyzing Page Source for Secrets..."
+        echo "[SCAN] Analyzing Page Source for Secrets..."
         echo "────────────────────────────────────────────────────────────────"
         page_content=$(curl -s "$url" 2>/dev/null)
 
         if echo "$page_content" | grep -qi "password\|api_key\|secret\|token"; then
-            echo "    ⚠️  Potentially sensitive keywords found in page source"
+            echo "    [WARN]  Potentially sensitive keywords found in page source"
         fi
 
         if echo "$page_content" | grep -oE '[A-Za-z0-9_-]{20,}' | head -10 | grep -q .; then
@@ -608,17 +608,17 @@ data_exposure_scan() {
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → HTTPS everywhere"
-        echo "    → Strong encryption (TLS 1.2+)"
-        echo "    → No sensitive data in page source"
-        echo "    → Restrict access to sensitive endpoints"
-        echo "    → No credentials in logs or comments"
+        echo "    -> HTTPS everywhere"
+        echo "    -> Strong encryption (TLS 1.2+)"
+        echo "    -> No sensitive data in page source"
+        echo "    -> Restrict access to sensitive endpoints"
+        echo "    -> No credentials in logs or comments"
 
     } | tee "$output_file"
 
-    log_vuln "✅ Sensitive Data Exposure scan complete"
+    log_vuln "[OK] Sensitive Data Exposure scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -626,7 +626,7 @@ data_exposure_scan() {
 # ═══════════════════════════════════════════════════════════════════
 xxe_scan() {
     local url=$1
-    log_vuln "🔍 Starting XXE vulnerability scan on $url..."
+    log_vuln "[SCAN] Starting XXE vulnerability scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/xxe_scan_$TIMESTAMP.txt"
 
@@ -638,25 +638,25 @@ xxe_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Identifying XML Processing Points..."
+        echo "[SCAN] Identifying XML Processing Points..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
         echo "[*] Common XXE vulnerable endpoints:"
-        echo "    • /upload (XML file upload)"
-        echo "    • /api/process"
-        echo "    • /parse"
-        echo "    • /import"
-        echo "    • Any endpoint accepting XML input"
+        echo "    - /upload (XML file upload)"
+        echo "    - /api/process"
+        echo "    - /parse"
+        echo "    - /import"
+        echo "    - Any endpoint accepting XML input"
 
         echo ""
         echo "[*] Analyzing page for file upload forms..."
         page_content=$(curl -s "$url" 2>/dev/null)
         if echo "$page_content" | grep -qi "upload\|file\|import"; then
-            echo "    ✓ Upload/import functionality detected"
+            echo "    [OK] Upload/import functionality detected"
         fi
 
         echo ""
-        echo "🔎 XXE Payload Examples..."
+        echo "[SCAN] XXE Payload Examples..."
         echo "────────────────────────────────────────────────────────────────"
         cat << 'EOF'
 [*] Basic XXE:
@@ -676,10 +676,10 @@ xxe_scan() {
 EOF
 
         echo ""
-        echo "🔎 SOAP/Web Service Detection..."
+        echo "[SCAN] SOAP/Web Service Detection..."
         echo "────────────────────────────────────────────────────────────────"
         if echo "$page_content" | grep -qi "soap\|wsdl\|xml"; then
-            echo "    ✓ SOAP/XML services potentially present"
+            echo "    [OK] SOAP/XML services potentially present"
         else
             echo "    [*] No obvious SOAP/XML services detected"
         fi
@@ -689,16 +689,16 @@ EOF
         echo "    Recommend manual testing or automated scanners"
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → Disable XML external entity processing"
-        echo "    → Use XML parsers with XXE protection enabled"
-        echo "    → Whitelist allowed entities and schemas"
-        echo "    → Implement input validation"
+        echo "    -> Disable XML external entity processing"
+        echo "    -> Use XML parsers with XXE protection enabled"
+        echo "    -> Whitelist allowed entities and schemas"
+        echo "    -> Implement input validation"
 
     } | tee "$output_file"
 
-    log_vuln "✅ XXE scan complete"
+    log_vuln "[OK] XXE scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -706,7 +706,7 @@ EOF
 # ═══════════════════════════════════════════════════════════════════
 bola_scan() {
     local url=$1
-    log_vuln "🔍 Starting BOLA vulnerability scan on $url..."
+    log_vuln "[SCAN] Starting BOLA vulnerability scan on $url..."
 
     output_file="$WEB_VULN_OUTPUT/bola_scan_$TIMESTAMP.txt"
 
@@ -718,15 +718,15 @@ bola_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
 
-        echo "🔎 Identifying API Endpoints..."
+        echo "[SCAN] Identifying API Endpoints..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
         echo "[*] Common API patterns to test:"
-        echo "    • /api/users/1"
-        echo "    • /api/v1/users/123"
-        echo "    • /api/orders/456"
-        echo "    • /api/documents/789"
-        echo "    • /user/profile/999"
+        echo "    - /api/users/1"
+        echo "    - /api/v1/users/123"
+        echo "    - /api/orders/456"
+        echo "    - /api/documents/789"
+        echo "    - /user/profile/999"
 
         echo ""
         echo "[*] Fetching page to identify endpoints..."
@@ -741,16 +741,16 @@ bola_scan() {
         fi
 
         echo ""
-        echo "🔎 Sequential ID Testing..."
+        echo "[SCAN] Sequential ID Testing..."
         echo "────────────────────────────────────────────────────────────────"
         echo ""
         echo "[*] Testing for sequential/predictable IDs..."
-        echo "    • Try changing ID in discovered endpoints"
-        echo "    • Test with adjacent IDs: 1, 2, 3, etc."
-        echo "    • Verify you can only access your own resources"
+        echo "    - Try changing ID in discovered endpoints"
+        echo "    - Test with adjacent IDs: 1, 2, 3, etc."
+        echo "    - Verify you can only access your own resources"
 
         echo ""
-        echo "🔎 Cross-User Testing..."
+        echo "[SCAN] Cross-User Testing..."
         echo "────────────────────────────────────────────────────────────────"
         echo "[*] Required steps (manual):"
         echo "    1. Obtain valid authentication token"
@@ -759,34 +759,34 @@ bola_scan() {
         echo "    4. Verify proper authorization checks"
 
         echo ""
-        echo "🔎 Authorization Header Testing..."
+        echo "[SCAN] Authorization Header Testing..."
         echo "────────────────────────────────────────────────────────────────"
         echo "[*] Common authentication methods:"
-        echo "    • Bearer tokens (JWT)"
-        echo "    • API keys"
-        echo "    • Session cookies"
-        echo "    • OAuth tokens"
+        echo "    - Bearer tokens (JWT)"
+        echo "    - API keys"
+        echo "    - Session cookies"
+        echo "    - OAuth tokens"
 
         echo ""
         echo "[*] Testing $url with auth analysis..."
         headers=$(curl -s -i "$url" 2>/dev/null | head -15)
         if echo "$headers" | grep -i "authorization\|x-api-key\|bearer"; then
-            echo "    ✓ Authentication headers required"
+            echo "    [OK] Authentication headers required"
         else
             echo "    [*] No obvious auth headers"
         fi
 
         echo ""
-        echo "📋 Remediation Indicators:"
+        echo "[LIST] Remediation Indicators:"
         echo "────────────────────────────────────────────────────────────────"
-        echo "    → Verify user ownership of resources"
-        echo "    → Check permissions on every API call"
-        echo "    → Use non-sequential, unpredictable IDs"
-        echo "    → Implement proper RBAC/ABAC"
+        echo "    -> Verify user ownership of resources"
+        echo "    -> Check permissions on every API call"
+        echo "    -> Use non-sequential, unpredictable IDs"
+        echo "    -> Implement proper RBAC/ABAC"
 
     } | tee "$output_file"
 
-    log_vuln "✅ BOLA scan complete"
+    log_vuln "[OK] BOLA scan complete"
 }
 
 # ═══════════════════════════════════════════════════════════════════
@@ -797,7 +797,7 @@ scan_choice="${2:-}"
 
 if [[ -z "$scan_choice" ]]; then
     echo ""
-    echo "🎯 Web Vulnerability Scan Options:"
+    echo "[TARGET] Web Vulnerability Scan Options:"
     echo "1. SQL Injection (SQLi)"
     echo "2. Cross-Site Scripting (XSS)"
     echo "3. OS Command Injection"
@@ -824,7 +824,7 @@ case $scan_choice in
     8) xxe_scan "$TARGET_URL" ;;
     9) bola_scan "$TARGET_URL" ;;
     10)
-        log_vuln "🚀 Running ALL vulnerability scans..."
+        log_vuln "-> Running ALL vulnerability scans..."
         sqli_scan "$TARGET_URL"
         xss_scan "$TARGET_URL"
         command_injection_scan "$TARGET_URL"
@@ -842,7 +842,7 @@ case $scan_choice in
 esac
 
 echo ""
-echo "✅ Web Vulnerability Scans Complete!"
-echo "📁 Results saved to: $WEB_VULN_OUTPUT/"
-echo "📋 Session log: $WEB_VULN_LOG"
-log_vuln "🏁 All scans complete. Results in $WEB_VULN_OUTPUT/"
+echo "[OK] Web Vulnerability Scans Complete!"
+echo "[DIR] Results saved to: $WEB_VULN_OUTPUT/"
+echo "[LIST] Session log: $WEB_VULN_LOG"
+log_vuln "[DONE] All scans complete. Results in $WEB_VULN_OUTPUT/"

@@ -26,7 +26,7 @@ log_subdomain() {
 # Function: DNS enumeration
 dns_subdomain_enum() {
     local domain=$1
-    log_subdomain "🔍 Starting DNS subdomain enumeration on $domain..."
+    log_subdomain "[SCAN] Starting DNS subdomain enumeration on $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/dns_enum_$TIMESTAMP.txt"
@@ -39,7 +39,7 @@ dns_subdomain_enum() {
         echo ""
         
         # Attempt zone transfer
-        echo "🔎 Attempting Zone Transfer..."
+        echo "[SCAN] Attempting Zone Transfer..."
         echo "────────────────────────────────────────────────────────────────"
         for ns in $(dig +short NS "$domain"); do
             echo "Trying $ns..."
@@ -47,7 +47,7 @@ dns_subdomain_enum() {
         done
         
         echo ""
-        echo "🔎 Reverse DNS Lookup..."
+        echo "[SCAN] Reverse DNS Lookup..."
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" +nocmd +noall +answer | while read -r line; do
             ip=$(echo "$line" | awk '{print $NF}')
@@ -58,7 +58,7 @@ dns_subdomain_enum() {
         done
         
         echo ""
-        echo "🔎 Common DNS Records..."
+        echo "[SCAN] Common DNS Records..."
         echo "────────────────────────────────────────────────────────────────"
         for record in A AAAA MX NS TXT SPF CNAME; do
             echo ""
@@ -68,13 +68,13 @@ dns_subdomain_enum() {
         
     } | tee "$output_file"
     
-    log_subdomain "✅ DNS enumeration complete"
+    log_subdomain "[OK] DNS enumeration complete"
 }
 
 # Function: Common subdomains brute force
 common_subdomains_bruteforce() {
     local domain=$1
-    log_subdomain "🔍 Brute-forcing common subdomains on $domain..."
+    log_subdomain "[SCAN] Brute-forcing common subdomains on $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/common_subdomains_$TIMESTAMP.txt"
@@ -112,7 +112,7 @@ common_subdomains_bruteforce() {
             result=$(dig +short "$target" A 2>/dev/null | grep -v "^$")
             
             if [[ -n "$result" ]]; then
-                echo "✅ FOUND: $target"
+                echo "[OK] FOUND: $target"
                 echo "   IP: $result"
                 ((found_count++))
             fi
@@ -124,13 +124,13 @@ common_subdomains_bruteforce() {
         
     } | tee "$output_file"
     
-    log_subdomain "✅ Brute force complete - found subdomains"
+    log_subdomain "[OK] Brute force complete - found subdomains"
 }
 
 # Function: Reverse IP lookup
 reverse_ip_lookup() {
     local domain=$1
-    log_subdomain "🔍 Performing reverse IP lookup for $domain..."
+    log_subdomain "[SCAN] Performing reverse IP lookup for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/reverse_ip_$TIMESTAMP.txt"
@@ -161,13 +161,13 @@ reverse_ip_lookup() {
         
     } | tee "$output_file"
     
-    log_subdomain "✅ Reverse IP lookup complete"
+    log_subdomain "[OK] Reverse IP lookup complete"
 }
 
 # Function: Public DNS records scan
 public_dns_scan() {
     local domain=$1
-    log_subdomain "🔍 Scanning public DNS records for $domain..."
+    log_subdomain "[SCAN] Scanning public DNS records for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/dns_records_$TIMESTAMP.txt"
@@ -179,54 +179,54 @@ public_dns_scan() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
         
-        echo "📊 A Records (IPv4):"
+        echo "[REPORT] A Records (IPv4):"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" A +noall +answer
         
         echo ""
-        echo "📊 AAAA Records (IPv6):"
+        echo "[REPORT] AAAA Records (IPv6):"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" AAAA +noall +answer
         
         echo ""
-        echo "📊 CNAME Records:"
+        echo "[REPORT] CNAME Records:"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" CNAME +noall +answer
         
         echo ""
-        echo "📊 MX Records (Mail Servers):"
+        echo "[REPORT] MX Records (Mail Servers):"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" MX +noall +answer
         
         echo ""
-        echo "📊 NS Records (Name Servers):"
+        echo "[REPORT] NS Records (Name Servers):"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" NS +noall +answer
         
         echo ""
-        echo "📊 TXT Records:"
+        echo "[REPORT] TXT Records:"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" TXT +noall +answer
         
         echo ""
-        echo "📊 SOA Records:"
+        echo "[REPORT] SOA Records:"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" SOA +noall +answer
         
         echo ""
-        echo "📊 SRV Records:"
+        echo "[REPORT] SRV Records:"
         echo "────────────────────────────────────────────────────────────────"
         dig "$domain" SRV +noall +answer
         
     } | tee "$output_file"
     
-    log_subdomain "✅ DNS records scan complete"
+    log_subdomain "[OK] DNS records scan complete"
 }
 
 # Function: HTTPS certificate scanning (if available)
 cert_transparency_scan() {
     local domain=$1
-    log_subdomain "🔍 Scanning certificate transparency logs for $domain..."
+    log_subdomain "[SCAN] Scanning certificate transparency logs for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/cert_transparency_$TIMESTAMP.txt"
@@ -247,17 +247,17 @@ cert_transparency_scan() {
         echo "Could not reach crt.sh or no results found"
         
         echo ""
-        echo "💡 Tip: Visit https://crt.sh for web interface"
+        echo "[TIP] Tip: Visit https://crt.sh for web interface"
         
     } | tee "$output_file"
     
-    log_subdomain "✅ Certificate transparency scan complete"
+    log_subdomain "[OK] Certificate transparency scan complete"
 }
 
 # Function: HackerTarget OSINT lookup
 hackertarget_osint_scan() {
     local domain=$1
-    log_subdomain "🔍 Querying HackerTarget API for $domain..."
+    log_subdomain "[SCAN] Querying HackerTarget API for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/hackertarget_$TIMESTAMP.txt"
@@ -277,13 +277,13 @@ hackertarget_osint_scan() {
         fi
     } | tee "$output_file"
     
-    log_subdomain "✅ HackerTarget OSINT scan complete"
+    log_subdomain "[OK] HackerTarget OSINT scan complete"
 }
 
 # Function: AlienVault OTX Passive DNS lookup
 alienvault_osint_scan() {
     local domain=$1
-    log_subdomain "🔍 Querying AlienVault OTX Passive DNS for $domain..."
+    log_subdomain "[SCAN] Querying AlienVault OTX Passive DNS for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/alienvault_otx_$TIMESTAMP.txt"
@@ -303,13 +303,13 @@ alienvault_osint_scan() {
         fi
     } | tee "$output_file"
     
-    log_subdomain "✅ AlienVault OTX OSINT scan complete"
+    log_subdomain "[OK] AlienVault OTX OSINT scan complete"
 }
 
 # Function: RapidDNS lookup
 rapiddns_osint_scan() {
     local domain=$1
-    log_subdomain "🔍 Querying RapidDNS for $domain..."
+    log_subdomain "[SCAN] Querying RapidDNS for $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/rapiddns_$TIMESTAMP.txt"
@@ -331,13 +331,13 @@ rapiddns_osint_scan() {
         fi
     } | tee "$output_file"
     
-    log_subdomain "✅ RapidDNS OSINT scan complete"
+    log_subdomain "[OK] RapidDNS OSINT scan complete"
 }
 
 # Function: Aggregated Passive OSINT scan
 passive_osint_scan() {
     local domain=$1
-    log_subdomain "🔍 Starting Aggregated Passive OSINT discovery on $domain..."
+    log_subdomain "[SCAN] Starting Aggregated Passive OSINT discovery on $domain..."
     
     mkdir -p "$SUBDOMAIN_OUTPUT"
     output_file="$SUBDOMAIN_OUTPUT/passive_osint_$TIMESTAMP.txt"
@@ -360,18 +360,18 @@ passive_osint_scan() {
         grep -h "FOUND:" "$SUBDOMAIN_OUTPUT"/*.txt 2>/dev/null | awk '{print $NF}' | sort -u
     } | tee "$output_file"
     
-    log_subdomain "✅ Passive OSINT discovery complete"
+    log_subdomain "[OK] Passive OSINT discovery complete"
 }
 
 # Function: Comprehensive scan (all methods)
 comprehensive_subdomain_scan() {
     local domain=$1
-    log_subdomain "🔍 Starting COMPREHENSIVE subdomain scan on $domain..."
+    log_subdomain "[SCAN] Starting COMPREHENSIVE subdomain scan on $domain..."
     log_subdomain "This may take a few minutes..."
     
     echo ""
     echo "════════════════════════════════════════════════════════════════"
-    echo "🎯 COMPREHENSIVE SUBDOMAIN DISCOVERY"
+    echo "[TARGET] COMPREHENSIVE SUBDOMAIN DISCOVERY"
     echo "════════════════════════════════════════════════════════════════"
     echo ""
     
@@ -404,7 +404,7 @@ comprehensive_subdomain_scan() {
         echo ""
     } | tee "$summary_file"
     
-    log_subdomain "✅ Comprehensive scan complete"
+    log_subdomain "[OK] Comprehensive scan complete"
 }
 
 # Main execution
@@ -435,8 +435,8 @@ SCAN_TYPE=$2
 
 if type is_valid_domain &>/dev/null; then
     if ! is_valid_domain "$DOMAIN"; then
-        echo "❌ Invalid domain format: '$DOMAIN'"
-        log_subdomain "❌ Invalid domain provided: $DOMAIN"
+        echo "[ERROR] Invalid domain format: '$DOMAIN'"
+        log_subdomain "[ERROR] Invalid domain provided: $DOMAIN"
         exit 1
     fi
 fi
@@ -479,7 +479,7 @@ case $SCAN_TYPE in
 esac
 
 echo ""
-echo "✅ Subdomain discovery complete!"
-echo "📁 Results saved to: $SUBDOMAIN_OUTPUT/"
-echo "📋 Log file: $SUBDOMAIN_LOG"
+echo "[OK] Subdomain discovery complete!"
+echo "[DIR] Results saved to: $SUBDOMAIN_OUTPUT/"
+echo "[LIST] Log file: $SUBDOMAIN_LOG"
 

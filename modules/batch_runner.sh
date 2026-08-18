@@ -55,14 +55,14 @@ SCAN_MODE="${2:-recon}"
 MAX_CONCURRENCY="${3:-5}"
 
 if [[ ! -f "$TARGETS_FILE" ]]; then
-    echo "❌ Target file not found: $TARGETS_FILE"
+    echo "[ERROR] Target file not found: $TARGETS_FILE"
     exit 1
 fi
 
-log_batch "🚀 Initializing Batch Runner..."
-log_batch "📋 Target File : $TARGETS_FILE"
-log_batch "🎯 Scan Mode   : $SCAN_MODE"
-log_batch "⚡ Concurrency : $MAX_CONCURRENCY workers"
+log_batch "-> Initializing Batch Runner..."
+log_batch "[LIST] Target File : $TARGETS_FILE"
+log_batch "[TARGET] Scan Mode   : $SCAN_MODE"
+log_batch "[FAST] Concurrency : $MAX_CONCURRENCY workers"
 
 # Parse valid targets into array
 declare -a TARGET_LIST=()
@@ -76,15 +76,15 @@ done < "$TARGETS_FILE"
 TOTAL_TARGETS=${#TARGET_LIST[@]}
 
 if [[ $TOTAL_TARGETS -eq 0 ]]; then
-    echo "❌ No valid targets found in $TARGETS_FILE"
+    echo "[ERROR] No valid targets found in $TARGETS_FILE"
     exit 1
 fi
 
-log_batch "✅ Loaded $TOTAL_TARGETS targets from $TARGETS_FILE"
+log_batch "[OK] Loaded $TOTAL_TARGETS targets from $TARGETS_FILE"
 
 echo ""
 echo "════════════════════════════════════════════════════════════════"
-echo "🎯 ALL-RECON MULTI-TARGET BATCH SCANNER"
+echo "[TARGET] ALL-RECON MULTI-TARGET BATCH SCANNER"
 echo "════════════════════════════════════════════════════════════════"
 echo "Loaded Targets: $TOTAL_TARGETS"
 echo "Scan Mode     : $SCAN_MODE"
@@ -171,7 +171,7 @@ done
 # Wait for all background jobs to finish
 wait
 
-log_batch "✅ All $TOTAL_TARGETS batch targets completed execution."
+log_batch "[OK] All $TOTAL_TARGETS batch targets completed execution."
 
 # Generate consolidated batch summary report
 SUMMARY_FILE="$BATCH_OUTPUT/batch_summary.txt"
@@ -188,7 +188,7 @@ SUMMARY_FILE="$BATCH_OUTPUT/batch_summary.txt"
     for target_dir in "$BATCH_OUTPUT"/*/; do
         if [[ -d "$target_dir" ]]; then
             target_name=$(basename "$target_dir")
-            echo "📊 Target: $target_name"
+            echo "[REPORT] Target: $target_name"
             ls -lh "$target_dir" | tail -n +2 | awk '{print "   -", $9, "(" $5 ")"}'
             echo ""
         fi
@@ -197,7 +197,7 @@ SUMMARY_FILE="$BATCH_OUTPUT/batch_summary.txt"
 } | tee "$SUMMARY_FILE"
 
 echo ""
-echo "🎉 Batch Scanning Complete!"
-echo "📁 Results saved to: $BATCH_OUTPUT/"
-echo "📋 Summary report : $SUMMARY_FILE"
-echo "📋 Session Log     : $BATCH_LOG"
+echo "[PASS] Batch Scanning Complete!"
+echo "[DIR] Results saved to: $BATCH_OUTPUT/"
+echo "[LIST] Summary report : $SUMMARY_FILE"
+echo "[LIST] Session Log     : $BATCH_LOG"

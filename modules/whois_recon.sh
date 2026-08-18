@@ -52,7 +52,7 @@ primary_ip_from_target() {
 # ─── WHOIS LOOKUP (DOMAIN) ───────────────────────────────────────
 whois_domain_lookup() {
     local domain=$1
-    log_whois "🔍 WHOIS lookup for domain: $domain"
+    log_whois "[SCAN] WHOIS lookup for domain: $domain"
     local output_file="$WHOIS_OUTPUT/whois_domain.txt"
 
     {
@@ -64,17 +64,17 @@ whois_domain_lookup() {
         if command -v whois &>/dev/null; then
             whois "$domain" 2>/dev/null || echo "[!] WHOIS query failed for $domain"
         else
-            echo "❌ whois command not found. Install with: sudo apt install whois"
+            echo "[ERROR] whois command not found. Install with: sudo apt install whois"
         fi
     } | tee "$output_file"
 
-    log_whois "✅ Domain WHOIS saved to $output_file"
+    log_whois "[OK] Domain WHOIS saved to $output_file"
 }
 
 # ─── WHOIS LOOKUP (IP) ───────────────────────────────────────────
 whois_ip_lookup() {
     local ip=$1
-    log_whois "🔍 WHOIS lookup for IP: $ip"
+    log_whois "[SCAN] WHOIS lookup for IP: $ip"
     local output_file="$WHOIS_OUTPUT/whois_ip.txt"
 
     {
@@ -86,17 +86,17 @@ whois_ip_lookup() {
         if command -v whois &>/dev/null; then
             whois "$ip" 2>/dev/null || echo "[!] WHOIS query failed for $ip"
         else
-            echo "❌ whois command not found. Install with: sudo apt install whois"
+            echo "[ERROR] whois command not found. Install with: sudo apt install whois"
         fi
     } | tee "$output_file"
 
-    log_whois "✅ IP WHOIS saved to $output_file"
+    log_whois "[OK] IP WHOIS saved to $output_file"
 }
 
 # ─── REVERSE DNS (PTR) LOOKUP ────────────────────────────────────
 reverse_dns_lookup() {
     local target=$1
-    log_whois "🔍 Reverse DNS lookup for: $target"
+    log_whois "[SCAN] Reverse DNS lookup for: $target"
     local output_file="$WHOIS_OUTPUT/reverse_dns.txt"
 
     {
@@ -131,13 +131,13 @@ reverse_dns_lookup() {
         done
     } | tee "$output_file"
 
-    log_whois "✅ Reverse DNS results saved to $output_file"
+    log_whois "[OK] Reverse DNS results saved to $output_file"
 }
 
 # ─── IP RANGE / NETBLOCK EXTRACTION ──────────────────────────────
 ip_range_extraction() {
     local target=$1
-    log_whois "🔍 Extracting IP ranges/netblocks for: $target"
+    log_whois "[SCAN] Extracting IP ranges/netblocks for: $target"
     local output_file="$WHOIS_OUTPUT/ip_ranges.txt"
 
     local ip
@@ -159,7 +159,7 @@ ip_range_extraction() {
         echo ""
 
         if command -v whois &>/dev/null; then
-            echo "📊 WHOIS netblock information:"
+            echo "[REPORT] WHOIS netblock information:"
             echo "────────────────────────────────────────────────────────────────"
             local whois_data
             whois_data=$(whois "$ip" 2>/dev/null || true)
@@ -167,23 +167,23 @@ ip_range_extraction() {
             echo "$whois_data" | grep -iE '^(inetnum|netrange|cidr|route|origin|aut-num|orgname|org-name|netname|descr|organization|city|country)' || true
 
             echo ""
-            echo "📊 Parsed CIDR / NetRange blocks:"
+            echo "[REPORT] Parsed CIDR / NetRange blocks:"
             echo "────────────────────────────────────────────────────────────────"
             echo "$whois_data" | grep -iE '^cidr' | awk -F':' '{print $2}' | tr ',' '\n' | sed 's/^[[:space:]]*//' | sort -u || true
             echo "$whois_data" | grep -iE '^inetnum' | sed -E 's/^[Ii]netnum:[[:space:]]*//' || true
             echo "$whois_data" | grep -iE '^netrange' | sed -E 's/^[Nn]etrange:[[:space:]]*//' || true
         else
-            echo "❌ whois command not found. Install with: sudo apt install whois"
+            echo "[ERROR] whois command not found. Install with: sudo apt install whois"
         fi
     } | tee "$output_file"
 
-    log_whois "✅ IP ranges saved to $output_file"
+    log_whois "[OK] IP ranges saved to $output_file"
 }
 
 # ─── RELATED DOMAINS / SHARED HOSTING DISCOVERY ──────────────────
 related_domains_lookup() {
     local target=$1
-    log_whois "🔍 Finding related domains / shared hosting for: $target"
+    log_whois "[SCAN] Finding related domains / shared hosting for: $target"
     local output_file="$WHOIS_OUTPUT/related_domains.txt"
 
     local ip
@@ -205,7 +205,7 @@ related_domains_lookup() {
         echo ""
 
         if command -v curl &>/dev/null; then
-            echo "📊 Reverse IP lookup (passive, via HackerTarget API):"
+            echo "[REPORT] Reverse IP lookup (passive, via HackerTarget API):"
             echo "────────────────────────────────────────────────────────────────"
             local reverse_result
             reverse_result=$(curl -s --max-time 20 "https://api.hackertarget.com/reverseiplookup/?q=$ip" 2>/dev/null || true)
@@ -219,7 +219,7 @@ related_domains_lookup() {
             fi
 
             echo ""
-            echo "📊 ASN / Organization lookup (passive, via HackerTarget API):"
+            echo "[REPORT] ASN / Organization lookup (passive, via HackerTarget API):"
             echo "────────────────────────────────────────────────────────────────"
             local asn_result
             asn_result=$(curl -s --max-time 20 "https://api.hackertarget.com/aslookup/?q=$ip" 2>/dev/null || true)
@@ -229,14 +229,14 @@ related_domains_lookup() {
                 echo "No ASN data returned or API limit reached."
             fi
         else
-            echo "❌ curl command not found. Reverse lookups require curl."
+            echo "[ERROR] curl command not found. Reverse lookups require curl."
         fi
 
         echo ""
-        echo "💡 Tip: Use the CIDR blocks from ip_ranges.txt to scan the entire netblock."
+        echo "[TIP] Tip: Use the CIDR blocks from ip_ranges.txt to scan the entire netblock."
     } | tee "$output_file"
 
-    log_whois "✅ Related domains saved to $output_file"
+    log_whois "[OK] Related domains saved to $output_file"
 }
 
 # ─── SUMMARY ─────────────────────────────────────────────────────
@@ -255,7 +255,7 @@ generate_summary() {
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
         echo "Output files:"
-        ls -1 "$WHOIS_OUTPUT" 2>/dev/null | sed 's/^/  • /'
+        ls -1 "$WHOIS_OUTPUT" 2>/dev/null | sed 's/^/  - /'
         echo ""
         echo "Next steps:"
         echo "  1. Review ip_ranges.txt for CIDR/netblocks to scan."
@@ -263,7 +263,7 @@ generate_summary() {
         echo "  3. Feed discovered IP ranges into option 2 (Scan Specific Host) or option 5 (Batch)."
     } | tee "$output_file"
 
-    log_whois "✅ Summary saved to $output_file"
+    log_whois "[OK] Summary saved to $output_file"
 }
 
 # ─── MAIN ────────────────────────────────────────────────────────
@@ -277,15 +277,15 @@ fi
 
 if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
     if ! is_valid_ip "$TARGET" && ! is_valid_domain "$TARGET"; then
-        echo "❌ Invalid target format. Must be a valid IP address or domain name."
-        echo "🛑 Aborting without running any scan. No output saved."
+        echo "[ERROR] Invalid target format. Must be a valid IP address or domain name."
+        echo "[STOP] Aborting without running any scan. No output saved."
         exit 1
     fi
 fi
 
 mkdir -p logs output "$WHOIS_OUTPUT"
 
-log_whois "🎯 WHOIS & Reverse Lookup module initialized for: $TARGET (mode: $MODE)"
+log_whois "[TARGET] WHOIS & Reverse Lookup module initialized for: $TARGET (mode: $MODE)"
 
 case "$MODE" in
     domain)
@@ -332,7 +332,7 @@ esac
 generate_summary "$TARGET"
 
 echo ""
-echo "✅ WHOIS & Reverse Lookup recon complete!"
-echo "📁 Results saved to: $WHOIS_OUTPUT/"
-echo "📋 Session log: $WHOIS_LOG"
-log_whois "🏁 WHOIS & Reverse Lookup recon complete. Results in $WHOIS_OUTPUT/"
+echo "[OK] WHOIS & Reverse Lookup recon complete!"
+echo "[DIR] Results saved to: $WHOIS_OUTPUT/"
+echo "[LIST] Session log: $WHOIS_LOG"
+log_whois "[DONE] WHOIS & Reverse Lookup recon complete. Results in $WHOIS_OUTPUT/"

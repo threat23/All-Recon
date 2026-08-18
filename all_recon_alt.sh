@@ -7,7 +7,7 @@ clear
 # Dependency checks
 for cmd in toilet lolcat; do
     command -v $cmd &>/dev/null || {
-        echo "❌ $cmd is not installed. Install it first."
+        echo "[ERROR] $cmd is not installed. Install it first."
         [[ $cmd == "lolcat" ]] && echo "    sudo gem install lolcat"
         [[ $cmd == "toilet" ]] && echo "    sudo apt install toilet"
         exit 1
@@ -61,8 +61,8 @@ fi
 
 # Show them to user
 echo ""
-echo -e "$(tput bold)📡 Internal IP  : $internal_ip$(tput sgr0)"
-echo -e "$(tput bold)🌐 External IP  : $external_ip$(tput sgr0)"
+echo -e "$(tput bold)[IP] Internal IP  : $internal_ip$(tput sgr0)"
+echo -e "$(tput bold)[IP] External IP  : $external_ip$(tput sgr0)"
 echo ""
 
 # ─── MENU ─────────────────────────────────────────────
@@ -93,7 +93,7 @@ if [[ "$choice" == "1" ]]; then
         echo "[*] Starting full nmap scans..."
 
         while read ip; do
-            echo "🔎 Scanning $ip ..."
+            echo "[SCAN] Scanning $ip ..."
             nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $ip | tee "scan_$ip.txt"
             echo ""
         done < "$tmpfile"
@@ -106,12 +106,12 @@ if [[ "$choice" == "1" ]]; then
 elif [[ "$choice" == "2" ]]; then
     # ─── OPTION 2: REMOTE TARGET SCAN ─────────────────────
     read -p "Enter the target IP or domain: " target
-    echo "🔎 Scanning $target ..."
+    echo "[SCAN] Scanning $target ..."
     nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $target | tee "scan_${target//[^a-zA-Z0-9]/_}.txt"
 
 elif [[ "$choice" == "3" ]]; then
     # ─── OPTION 3: EXIT ───────────────────────────────────
-    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
+    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. [SAFE]$(tput sgr0)"
     exit 0
 
 else

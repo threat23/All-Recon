@@ -89,6 +89,6 @@ cleanup_tmp_files() {
 
 # Standard signal handler trap
 setup_signal_traps() {
-    trap 'cleanup_tmp_files; echo -e "\n\n⚠️ Scan interrupted by user or signal. Cleaning up..."; exit 130' SIGINT SIGTERM
+    trap 'cleanup_tmp_files; echo -e "\n\n[WARN] Scan interrupted by user or signal. Cleaning up..."; exit 130' SIGINT SIGTERM
     trap 'cleanup_tmp_files' EXIT
 }

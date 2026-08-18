@@ -10,26 +10,26 @@
 
 ### Core Philosophy
 
-- **Automate the Boring** → Routine scans, data collection, report generation—all hands-off
-- **Focus on the Interesting** → Deep analysis, attack sequences, novel findings
-- **Smooth Workflow** → Minimal friction. Minimal interruptions. Maximum productivity
-- **Get Stuff Done** → Quick wins. Fast turnaround. Observable results
+- **Automate the Boring** -> Routine scans, data collection, report generation—all hands-off
+- **Focus on the Interesting** -> Deep analysis, attack sequences, novel findings
+- **Smooth Workflow** -> Minimal friction. Minimal interruptions. Maximum productivity
+- **Get Stuff Done** -> Quick wins. Fast turnaround. Observable results
 
 ---
 
 ## Features
 
-✅ **Local Network Reconnaissance** - Automated ping sweep + comprehensive port scanning  
-✅ **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
-✅ **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
-✅ **Passive OSINT** - crt.sh, Wayback, and RDAP lookups for target intelligence without active probes  
-✅ **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
-✅ **IP Detection** - Automatic internal & external IP discovery  
-✅ **Dependency Management** - Smart pre-flight checks for required tools  
-✅ **Beautiful Output** - ASCII art + colored logging for quick visual parsing  
-✅ **Modular Architecture** - Easy to extend with custom recon modules  
-✅ **Automated Reporting** - Scan results captured for later analysis  
-✅ **Background Processing** - Parallel scanning to maximize throughput  
+[OK] **Local Network Reconnaissance** - Automated ping sweep + comprehensive port scanning  
+[OK] **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
+[OK] **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
+[OK] **Passive OSINT** - crt.sh, Wayback, and RDAP lookups for target intelligence without active probes  
+[OK] **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
+[OK] **IP Detection** - Automatic internal & external IP discovery  
+[OK] **Dependency Management** - Smart pre-flight checks for required tools  
+[OK] **Beautiful Output** - ASCII art + colored logging for quick visual parsing  
+[OK] **Modular Architecture** - Easy to extend with custom recon modules  
+[OK] **Automated Reporting** - Scan results captured for later analysis  
+[OK] **Background Processing** - Parallel scanning to maximize throughput  
 
 ---
 
@@ -88,11 +88,11 @@ Comprehensive subdomain reconnaissance using multiple methods:
 **After Discovery - Automatic Cleaning:**
 ```
 Option: Clean results (Y/N)
-→ Removes duplicates
-→ Resolves IP addresses
-→ Filters invalid entries
-→ Organizes by IP
-→ Exports CSV/JSON
+-> Removes duplicates
+-> Resolves IP addresses
+-> Filters invalid entries
+-> Organizes by IP
+-> Exports CSV/JSON
 ```
 
 **Or Clean Manually:**
@@ -177,16 +177,16 @@ Project/
 ## Workflow Philosophy
 
 ### Before ALL-RECON
-❌ Open terminal → Run manual nmap → Wait for results → Parse output → Switch context → Repeat 50 times  
-❌ Mental energy wasted on routine tasks  
-❌ Disorganized results scattered across terminal  
-❌ Slow iteration cycle
+[ERROR] Open terminal -> Run manual nmap -> Wait for results -> Parse output -> Switch context -> Repeat 50 times  
+[ERROR] Mental energy wasted on routine tasks  
+[ERROR] Disorganized results scattered across terminal  
+[ERROR] Slow iteration cycle
 
 ### With ALL-RECON
-✅ Run once → Everything runs in parallel → Results auto-captured → Focus on analysis  
-✅ Mental energy reserved for interesting findings  
-✅ Organized, structured output ready for deep-dive  
-✅ Fast iteration cycle—test hypotheses, spot patterns
+[OK] Run once -> Everything runs in parallel -> Results auto-captured -> Focus on analysis  
+[OK] Mental energy reserved for interesting findings  
+[OK] Organized, structured output ready for deep-dive  
+[OK] Fast iteration cycle—test hypotheses, spot patterns
 
 ---
 
@@ -204,7 +204,7 @@ Project/
 
 ## Key Benefits for Your Workflow
 
-1. **Uninterrupted Focus** - Start scan → automation handles it → you analyze findings
+1. **Uninterrupted Focus** - Start scan -> automation handles it -> you analyze findings
 2. **Smooth Workflow** - No context switching. No manual command repetition
 3. **Mind Stays Sharp** - Energy preserved for the interesting attack sequences
 4. **Productivity Boost** - Measurable results. Visible progress. Momentum
@@ -263,7 +263,7 @@ output/
 
 After reconnaissance identifies targets, vulnerability testing uncovers exploitable issues. Comprehensive guide included:
 
-📖 **[WEB_VULNERABILITIES.md](./WEB_VULNERABILITIES.md)** — Complete reference for:
+[NEXT] **[WEB_VULNERABILITIES.md](./WEB_VULNERABILITIES.md)** — Complete reference for:
 - **SQL Injection (SQLi)** - Detection methods, payloads, automated testing
 - **Cross-Site Scripting (XSS)** - Stored, reflected, DOM-based + bypass techniques
 - **OS Command Injection** - Shell metacharacters, data exfiltration, reverse shells
@@ -274,10 +274,10 @@ After reconnaissance identifies targets, vulnerability testing uncovers exploita
 - **XXE & BOLA** - XML attacks, object-level authorization bypass
 
 Quick reference with:
-✅ Testing payloads for each vulnerability class  
-✅ Automated tool integration (SQLMap, Commix, OWASP ZAP, Burp)  
-✅ Detection workflows and remediation indicators  
-✅ OWASP Top 10 reference matrix
+[OK] Testing payloads for each vulnerability class  
+[OK] Automated tool integration (SQLMap, Commix, OWASP ZAP, Burp)  
+[OK] Detection workflows and remediation indicators  
+[OK] OWASP Top 10 reference matrix
 
 ---
 
@@ -312,7 +312,7 @@ grep -E "open|filtered" output/*.txt | grep -E "22|445|3389|5985"
 - Run during off-peak hours for stealth
 - Use `-T4` (Aggressive) for fast networks
 - Use `-T1` (Paranoid) for evasion requirements
-- Increase `MAX_PARALLEL_SCANS` for larger subnets (⚠️ may trigger IDS)
+- Increase `MAX_PARALLEL_SCANS` for larger subnets ([WARN] may trigger IDS)
 - Combine with proxies/VPN for anonymous reconnaissance
 
 ---
@@ -383,4 +383,4 @@ Internal Use Only | Security Professionals
 
 **Remember:** The best pentester is a productive pentester. Automation is not laziness—it's **professional efficiency**.
 
-*Your perimeter just became my playground.* 🎯
+*Your perimeter just became my playground.* [TARGET]

@@ -181,9 +181,9 @@ MOCK_DIR="output/test_mock_subdomains_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$MOCK_DIR"
 
 cat <<'EOF' > "$MOCK_DIR/common_subdomains_test.txt"
-✅ FOUND: www.example.com
-✅ FOUND: api.example.com
-✅ FOUND: mail.example.com
+[OK] FOUND: www.example.com
+[OK] FOUND: api.example.com
+[OK] FOUND: mail.example.com
 EOF
 
 cat <<'EOF' > "$MOCK_DIR/dns_enum_test.txt"
@@ -280,9 +280,9 @@ echo -e "Skipped         : ${YELLOW}$SKIPPED_TESTS${NC}"
 echo -e "${BLUE}====================================================${NC}\n"
 
 if [[ $FAILED_TESTS -eq 0 ]]; then
-    echo -e "${GREEN}🎉 ALL TESTS PASSED SUCCESSFULLY!${NC}"
+    echo -e "${GREEN}[PASS] ALL TESTS PASSED SUCCESSFULLY!${NC}"
     exit 0
 else
-    echo -e "${RED}❌ SOME TESTS FAILED. PLEASE REVIEW LOGS ABOVE.${NC}"
+    echo -e "${RED}[ERROR] SOME TESTS FAILED. PLEASE REVIEW LOGS ABOVE.${NC}"
     exit 1
 fi

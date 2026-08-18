@@ -19,7 +19,7 @@ log_recon() {
 # Function: DNS Reconnaissance
 dns_recon() {
     local target=$1
-    log_recon "🔍 Starting DNS reconnaissance on $target..."
+    log_recon "[SCAN] Starting DNS reconnaissance on $target..."
     
     mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/dns.txt"
@@ -44,13 +44,13 @@ dns_recon() {
     echo "TXT RECORDS:" | tee -a "$RECON_OUTPUT/dns.txt"
     dig TXT "$target" +short | tee -a "$RECON_OUTPUT/dns.txt"
     
-    log_recon "✅ DNS reconnaissance complete"
+    log_recon "[OK] DNS reconnaissance complete"
 }
 
 # Function: Whois Information
 whois_recon() {
     local target=$1
-    log_recon "🔍 Gathering WHOIS information for $target..."
+    log_recon "[SCAN] Gathering WHOIS information for $target..."
     
     mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/whois.txt"
@@ -59,13 +59,13 @@ whois_recon() {
     
     whois "$target" 2>/dev/null | tee -a "$RECON_OUTPUT/whois.txt" || echo "WHOIS tool not available"
     
-    log_recon "✅ WHOIS reconnaissance complete"
+    log_recon "[OK] WHOIS reconnaissance complete"
 }
 
 # Function: Port Service Mapping
 service_mapping() {
     local target=$1
-    log_recon "🔍 Mapping services on $target..."
+    log_recon "[SCAN] Mapping services on $target..."
     
     mkdir -p "$RECON_OUTPUT"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
@@ -74,7 +74,7 @@ service_mapping() {
     
     nmap -sV -T4 --top-ports 1000 "$target" | tee -a "$RECON_OUTPUT/services.txt"
     
-    log_recon "✅ Service mapping complete"
+    log_recon "[OK] Service mapping complete"
 }
 
 # Main execution
@@ -89,8 +89,8 @@ RECON_TYPE=$2
 
 if type is_valid_ip &>/dev/null && type is_valid_domain &>/dev/null; then
     if ! is_valid_ip "$TARGET" && ! is_valid_domain "$TARGET"; then
-        echo "❌ Invalid target format (must be valid IP or Domain): '$TARGET'"
-        log_recon "❌ Invalid target provided: $TARGET"
+        echo "[ERROR] Invalid target format (must be valid IP or Domain): '$TARGET'"
+        log_recon "[ERROR] Invalid target provided: $TARGET"
         exit 1
     fi
 fi
@@ -119,7 +119,7 @@ case $RECON_TYPE in
 esac
 
 echo ""
-echo "✅ Reconnaissance complete!"
-echo "📁 Results saved to: $RECON_OUTPUT/"
-echo "📋 Log file: $RECON_LOG"
+echo "[OK] Reconnaissance complete!"
+echo "[DIR] Results saved to: $RECON_OUTPUT/"
+echo "[LIST] Log file: $RECON_LOG"
 

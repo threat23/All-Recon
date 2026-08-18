@@ -2,7 +2,7 @@
 
 # ALL-RECON SUBDOMAIN DISCOVERY QUICK REFERENCE
 
-echo "🔍 ALL-RECON - SUBDOMAIN DISCOVERY MODULE"
+echo "[SCAN] ALL-RECON - SUBDOMAIN DISCOVERY MODULE"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
 
@@ -46,21 +46,21 @@ echo "  Logs:     logs/subdomain_YYYYMMDD_HHMMSS.log"
 echo ""
 
 echo "WHAT IT DISCOVERS:"
-echo "  ✅ DNS zone transfers"
-echo "  ✅ Reverse DNS records"
-echo "  ✅ Common subdomain variations"
-echo "  ✅ Mail servers (MX records)"
-echo "  ✅ Name servers (NS records)"
-echo "  ✅ Text records (TXT, SPF, DMARC)"
-echo "  ✅ CNAME records"
-echo "  ✅ SSL/TLS certificates"
+echo "  [OK] DNS zone transfers"
+echo "  [OK] Reverse DNS records"
+echo "  [OK] Common subdomain variations"
+echo "  [OK] Mail servers (MX records)"
+echo "  [OK] Name servers (NS records)"
+echo "  [OK] Text records (TXT, SPF, DMARC)"
+echo "  [OK] CNAME records"
+echo "  [OK] SSL/TLS certificates"
 echo ""
 
 echo "CONFIGURATION:"
 echo "  Edit: config/subdomain_discovery.conf"
-echo "  • Enable/disable methods"
-echo "  • Adjust timeout values"
-echo "  • Customize alert thresholds"
+echo "  - Enable/disable methods"
+echo "  - Adjust timeout values"
+echo "  - Customize alert thresholds"
 echo ""
 
 echo "═══════════════════════════════════════════════════════════"

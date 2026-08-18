@@ -6,23 +6,23 @@ The philosophy behind ALL-RECON is simple: **eliminate routine, maximize focus.*
 
 ---
 
-## 📊 Workflow Overview
+## [REPORT] Workflow Overview
 
 ```
 Start Tool
     ↓
-    ├─→ Network Scan (or Specific Host)
-    │   ├─→ Parallel ping sweep
-    │   ├─→ Auto-capture results
-    │   └─→ Generate findings
+    ├─-> Network Scan (or Specific Host)
+    │   ├─-> Parallel ping sweep
+    │   ├─-> Auto-capture results
+    │   └─-> Generate findings
     │
-    ├─→ [WHILE AUTOMATION RUNS → YOU ANALYZE]
+    ├─-> [WHILE AUTOMATION RUNS -> YOU ANALYZE]
     │   ├─ Review high-risk ports
     │   ├─ Identify attack vectors
     │   ├─ Plan exploitation chains
     │   └─ Document interesting findings
     │
-    └─→ Review organized results
+    └─-> Review organized results
         ├─ Auto-timestamped output
         ├─ Ready for reporting
         └─ Next target or deep-dive
@@ -30,7 +30,7 @@ Start Tool
 
 ---
 
-## ⚡ Quick Start Workflow (5 Minutes)
+## [FAST] Quick Start Workflow (5 Minutes)
 
 ### Scenario: You have 30 minutes to assess a client network
 
@@ -57,33 +57,33 @@ Start Tool
 
 ---
 
-## 🎯 Smooth Workflow Characteristics
+## [TARGET] Smooth Workflow Characteristics
 
 ### Before ALL-RECON (Fragmented)
-- ❌ Manual nmap commands for each target
-- ❌ Copy/paste results into files
-- ❌ Mental overhead on command syntax
-- ❌ Context switching between terminals
-- ❌ Disorganized outputs scattered everywhere
-- ❌ Time wasted on routine tasks
-- ❌ Energy reserved for remembering what to type next
+- [ERROR] Manual nmap commands for each target
+- [ERROR] Copy/paste results into files
+- [ERROR] Mental overhead on command syntax
+- [ERROR] Context switching between terminals
+- [ERROR] Disorganized outputs scattered everywhere
+- [ERROR] Time wasted on routine tasks
+- [ERROR] Energy reserved for remembering what to type next
 
 **Result:** Exhausted. Productive time cut in half.
 
 ### With ALL-RECON (Streamlined)
-- ✅ Select scan type (parallel runs automatically)
-- ✅ Results auto-captured with timestamps
-- ✅ No thinking about command syntax
-- ✅ Single integrated interface
-- ✅ Organized output in `output/` directory
-- ✅ Time spent on analysis
-- ✅ Energy reserved for interesting findings
+- [OK] Select scan type (parallel runs automatically)
+- [OK] Results auto-captured with timestamps
+- [OK] No thinking about command syntax
+- [OK] Single integrated interface
+- [OK] Organized output in `output/` directory
+- [OK] Time spent on analysis
+- [OK] Energy reserved for interesting findings
 
 **Result:** Sharp. Productive. Happy.
 
 ---
 
-## 🧠 Mental Model: Automation Frees Your Mind
+## [BRAIN] Mental Model: Automation Frees Your Mind
 
 ### Cognitive Load Reduction
 
@@ -98,18 +98,18 @@ Start Tool
 
 ---
 
-## 🔍 Deep Analysis Phase
+## [SCAN] Deep Analysis Phase
 
 Once automation handles data collection, you're free to:
 
-### ✨ Interesting Work
+### [READY] Interesting Work
 - Analyze service versions for known exploits
 - Chain vulnerabilities into attack paths
 - Identify non-obvious misconfigurations
 - Spot insider threat signals
 - Create custom exploitation sequences
 
-### 📈 High-Value Activities
+### [STATS] High-Value Activities
 - Report writing (with pre-captured data)
 - Vulnerability prioritization
 - Risk assessment
@@ -118,7 +118,7 @@ Once automation handles data collection, you're free to:
 
 ---
 
-## 🎮 Interactive Workflow Example
+## [INPUT] Interactive Workflow Example
 
 ### Session: 30-minute site assessment
 
@@ -159,7 +159,7 @@ Professional report. Organized findings. Client-ready.
 
 ---
 
-## 💡 Pro Tips for Smooth Workflow
+## [TIP] Pro Tips for Smooth Workflow
 
 ### 1. Customize Profiles
 Edit `config/nmap_profiles.conf` to match your typical engagements.
@@ -195,7 +195,7 @@ grep "open" output/*.txt | cut -d: -f1 | sort | uniq
 
 ---
 
-## 📈 Productivity Metrics
+## [STATS] Productivity Metrics
 
 ### Your Improved Workflow
 
@@ -209,46 +209,46 @@ Breakdown:
 
 Result: 40 minutes of high-value pentesting work per hour
 vs. Manual workflow: 20 minutes of actual pentesting work per hour
-Productivity Gain: 2x ⚡
+Productivity Gain: 2x [FAST]
 ```
 
 ---
 
-## 🎯 Success Indicators
+## [TARGET] Success Indicators
 
 You know ALL-RECON is working when:
 
-- ✅ You're not typing the same commands twice
-- ✅ Results are organized and easy to find
-- ✅ You have time to think about vulnerabilities
-- ✅ Reports generate automatically
-- ✅ You finish assessments ahead of schedule
-- ✅ You feel less mentally exhausted
-- ✅ Finding interesting attack chains is easier
-- ✅ You want to run more assessments
+- [OK] You're not typing the same commands twice
+- [OK] Results are organized and easy to find
+- [OK] You have time to think about vulnerabilities
+- [OK] Reports generate automatically
+- [OK] You finish assessments ahead of schedule
+- [OK] You feel less mentally exhausted
+- [OK] Finding interesting attack chains is easier
+- [OK] You want to run more assessments
 
 ---
 
-## 🛠️ Troubleshooting the Workflow
+## [TOOLS] Troubleshooting the Workflow
 
 ### "I'm spending too much time managing tools"
-→ You're using the tool wrong. Let it run. Step away.
+-> You're using the tool wrong. Let it run. Step away.
 
 ### "I keep forgetting what targets I scanned"
-→ Check `output/` or `logs/` directories. Everything's timestamped.
+-> Check `output/` or `logs/` directories. Everything's timestamped.
 
 ### "I need results in a different format"
-→ Edit `config/automation_rules.conf` → `REPORT_FORMAT`
+-> Edit `config/automation_rules.conf` -> `REPORT_FORMAT`
 
 ### "Scans aren't running fast enough"
-→ Edit `config/nmap_profiles.conf` → use PROFILE_QUICK
+-> Edit `config/nmap_profiles.conf` -> use PROFILE_QUICK
 
 ### "I need to add custom reconnaissance"
-→ Create custom scripts in `modules/`
+-> Create custom scripts in `modules/`
 
 ---
 
-## 🎓 Learning & Mastery
+##  Learning & Mastery
 
 ### Phase 1: Setup (Day 1)
 - Run `./install.sh`
@@ -268,7 +268,7 @@ You know ALL-RECON is working when:
 
 ---
 
-## 🚀 Pushing Further
+## -> Pushing Further
 
 Once you're comfortable:
 
@@ -287,15 +287,15 @@ Once you're comfortable:
 
 ### Automation Cascade
 ```
-Scan → Extract interesting ports →
-Auto-fingerprint → Check for exploits →
-Generate attack plan → Run safe payloads →
+Scan -> Extract interesting ports ->
+Auto-fingerprint -> Check for exploits ->
+Generate attack plan -> Run safe payloads ->
 Auto-report findings
 ```
 
 ---
 
-## 💫 The Pentester's Mindset
+##  The Pentester's Mindset
 
 **What makes a good day:**
 
@@ -303,16 +303,16 @@ Auto-report findings
 
 **ALL-RECON enables exactly this.**
 
-- Smooth workflow? ✅ Automated scans run in parallel
-- Uninterrupted focus? ✅ No command syntax to remember
-- Routine tasks backgrounded? ✅ Set and forget
-- Mind freed for interesting findings? ✅ Analysis, not mechanics
-- Attack sequences? ✅ Time to think creatively
-- Stuff getting done? ✅ 2x faster assessments
+- Smooth workflow? [OK] Automated scans run in parallel
+- Uninterrupted focus? [OK] No command syntax to remember
+- Routine tasks backgrounded? [OK] Set and forget
+- Mind freed for interesting findings? [OK] Analysis, not mechanics
+- Attack sequences? [OK] Time to think creatively
+- Stuff getting done? [OK] 2x faster assessments
 
 ---
 
-## 🎯 Your Next Assessment
+## [TARGET] Your Next Assessment
 
 Ready to try it out?
 
@@ -334,4 +334,4 @@ bash QUICKSTART.sh
 
 **Remember:** The best tool is one you don't think about. ALL-RECON should fade into the background so you can shine in the foreground.
 
-*Your perimeter just became my playground.* 🎯
+*Your perimeter just became my playground.* [TARGET]

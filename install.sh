@@ -15,13 +15,13 @@ echo ""
 
 # Detect OS
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    echo "✅ Detected: Linux"
+    echo "[OK] Detected: Linux"
     OS="linux"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "✅ Detected: macOS"
+    echo "[OK] Detected: macOS"
     OS="macos"
 else
-    echo "❌ Unsupported OS: $OSTYPE"
+    echo "[ERROR] Unsupported OS: $OSTYPE"
     exit 1
 fi
 
@@ -33,7 +33,7 @@ echo ""
 
 install_deps() {
     if [[ "$OS" == "linux" ]]; then
-        echo "🔧 Installing dependencies (Ubuntu/Debian)..."
+        echo "[SETUP] Installing dependencies (Ubuntu/Debian)..."
         echo "   Note: You may be prompted for your password"
         echo ""
         
@@ -42,57 +42,57 @@ install_deps() {
         deps=("nmap" "curl" "dnsutils" "toilet" "python3" "python3-pip")
         for dep in "${deps[@]}"; do
             if ! dpkg -l | grep -q "^ii  $dep"; then
-                echo "   📦 Installing $dep..."
+                echo "   [INSTALL] Installing $dep..."
                 sudo apt install "$dep" -y -qq
             else
-                echo "   ✅ $dep already installed"
+                echo "   [OK] $dep already installed"
             fi
         done
 
         if [[ -f "requirements.txt" ]]; then
-            echo "   📦 Installing Python dependencies from requirements.txt..."
+            echo "   [INSTALL] Installing Python dependencies from requirements.txt..."
             python3 -m pip install --break-system-packages -r requirements.txt 2>/dev/null || pip3 install -r requirements.txt
         fi
         
         # Install lolcat via gem (may not be available in apt)
         if ! command -v lolcat &> /dev/null; then
-            echo "   📦 Installing lolcat (Ruby gem)..."
+            echo "   [INSTALL] Installing lolcat (Ruby gem)..."
             if command -v gem &> /dev/null; then
-                sudo gem install lolcat -q 2>/dev/null || echo "   ⚠️  gem not available, trying apt..."
-                sudo apt install lolcat -y -qq 2>/dev/null || echo "   ⚠️  lolcat not available via apt"
+                sudo gem install lolcat -q 2>/dev/null || echo "   [WARN]  gem not available, trying apt..."
+                sudo apt install lolcat -y -qq 2>/dev/null || echo "   [WARN]  lolcat not available via apt"
             fi
         else
-            echo "   ✅ lolcat already installed"
+            echo "   [OK] lolcat already installed"
         fi
         
     elif [[ "$OS" == "macos" ]]; then
-        echo "🔧 Installing dependencies (macOS with Homebrew)..."
+        echo "[SETUP] Installing dependencies (macOS with Homebrew)..."
         
         if ! command -v brew &> /dev/null; then
-            echo "❌ Homebrew not found. Install from: https://brew.sh"
+            echo "[ERROR] Homebrew not found. Install from: https://brew.sh"
             exit 1
         fi
         
         deps=("nmap" "curl" "bind" "figlet" "python3")
         for dep in "${deps[@]}"; do
             if brew list "$dep" &>/dev/null 2>&1; then
-                echo "   ✅ $dep already installed"
+                echo "   [OK] $dep already installed"
             else
-                echo "   📦 Installing $dep..."
+                echo "   [INSTALL] Installing $dep..."
                 brew install "$dep" -q
             fi
         done
 
         if [[ -f "requirements.txt" ]]; then
-            echo "   📦 Installing Python dependencies from requirements.txt..."
+            echo "   [INSTALL] Installing Python dependencies from requirements.txt..."
             python3 -m pip install -r requirements.txt 2>/dev/null || pip3 install -r requirements.txt
         fi
 
         if ! command -v lolcat &> /dev/null; then
-            echo "   📦 Installing lolcat..."
+            echo "   [INSTALL] Installing lolcat..."
             brew install lolcat -q || gem install lolcat -q
         else
-            echo "   ✅ lolcat already installed"
+            echo "   [OK] lolcat already installed"
         fi
     fi
 }
@@ -111,9 +111,9 @@ create_structure() {
     for dir in "${dirs[@]}"; do
         if [[ ! -d "$dir" ]]; then
             mkdir -p "$dir"
-            echo "   📁 Created: $dir/"
+            echo "   [DIR] Created: $dir/"
         else
-            echo "   ✅ $dir/ exists"
+            echo "   [OK] $dir/ exists"
         fi
     done
 }
@@ -127,7 +127,7 @@ echo "────────────────────────�
 echo ""
 
 chmod +x ./*.sh modules/*.sh 2>/dev/null || true
-echo "   ✅ Scripts are executable"
+echo "   [OK] Scripts are executable"
 
 echo ""
 echo "─────────────────────────────────────────────────────────────────"
@@ -141,22 +141,22 @@ verify_setup() {
     for tool in "${tools[@]}"; do
         if command -v "$tool" &> /dev/null; then
             version=$(command -v "$tool" 2>&1)
-            echo "   ✅ $tool available"
+            echo "   [OK] $tool available"
         else
-            echo "   ❌ $tool NOT FOUND"
+            echo "   [ERROR] $tool NOT FOUND"
         fi
     done
 
     if python3 -m pip --version &> /dev/null; then
-        echo "   ✅ pip available"
+        echo "   [OK] pip available"
     else
-        echo "   ❌ pip NOT FOUND"
+        echo "   [ERROR] pip NOT FOUND"
     fi
     
     if [[ -f "all_recon.sh" ]]; then
-        echo "   ✅ Main script ready"
+        echo "   [OK] Main script ready"
     else
-        echo "   ❌ Main script not found"
+        echo "   [ERROR] Main script not found"
     fi
 }
 
@@ -164,11 +164,11 @@ verify_setup
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║  ✨ SETUP COMPLETE                                             ║"
+echo "║  [READY] SETUP COMPLETE                                             ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
-echo "🎯 Next Steps:"
+echo "[TARGET] Next Steps:"
 echo ""
 echo "   1. Run the main tool:"
 echo "      ./all_recon.sh"
@@ -179,12 +179,12 @@ echo ""
 echo "   3. Read full documentation:"
 echo "      cat README.md"
 echo ""
-echo "📋 Project structure:"
-echo "   • all_recon.sh    - Main automation engine"
-echo "   • config/                - Configuration files"
-echo "   • modules/               - Extended functionality"
-echo "   • output/                - Scan results (auto-organized)"
-echo "   • logs/                  - Session logs"
+echo "[LIST] Project structure:"
+echo "   - all_recon.sh    - Main automation engine"
+echo "   - config/                - Configuration files"
+echo "   - modules/               - Extended functionality"
+echo "   - output/                - Scan results (auto-organized)"
+echo "   - logs/                  - Session logs"
 echo ""
-echo "💡 Pro tip: Customize config/nmap_profiles.conf for your workflow"
+echo "[TIP] Pro tip: Customize config/nmap_profiles.conf for your workflow"
 echo ""

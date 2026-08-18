@@ -28,7 +28,7 @@ extract_subdomains() {
     local input_dir=$1
     local output_file="$CLEAN_OUTPUT/extracted_subdomains_$TIMESTAMP.txt"
     
-    log_clean "🔍 Extracting subdomains from results..."
+    log_clean "[SCAN] Extracting subdomains from results..."
     
     {
         echo "═══════════════════════════════════════════════════════════════"
@@ -38,8 +38,8 @@ extract_subdomains() {
         echo ""
         
         # Extract from common_subdomains file
-        grep -h "^✅ FOUND:" "$input_dir"/common_subdomains_*.txt 2>/dev/null | \
-        sed 's/✅ FOUND: //' | sed 's/ *$//' | sort -u
+        grep -h "^[OK] FOUND:" "$input_dir"/common_subdomains_*.txt 2>/dev/null | \
+        sed 's/[OK] FOUND: //' | sed 's/ *$//' | sort -u
         
         # Extract from other sources
         grep -hE "^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" "$input_dir"/*.txt 2>/dev/null | sort -u
@@ -47,7 +47,7 @@ extract_subdomains() {
     } | sort -u > "$output_file"
     
     local count=$(wc -l < "$output_file")
-    log_clean "✅ Extracted $count subdomains"
+    log_clean "[OK] Extracted $count subdomains"
     
     echo "$output_file"
 }
@@ -57,7 +57,7 @@ deduplicate_and_resolve() {
     local input_file=$1
     local output_file="$CLEAN_OUTPUT/deduplicated_${TIMESTAMP}.txt"
     
-    log_clean "🧹 Deduplicating and resolving IPs..."
+    log_clean "[CLEAN] Deduplicating and resolving IPs..."
     
     {
         echo "═══════════════════════════════════════════════════════════════"
@@ -88,10 +88,10 @@ deduplicate_and_resolve() {
             ip=$(dig +short "$subdomain" A 2>/dev/null | grep -E '^[0-9.]+$' | head -1)
             
             if [[ -n "$ip" ]]; then
-                printf "%-35s | %-18s | ✅ ACTIVE\n" "$subdomain" "$ip"
+                printf "%-35s | %-18s | [OK] ACTIVE\n" "$subdomain" "$ip"
                 ((resolved++))
             else
-                printf "%-35s | %-18s | ⚠️  UNRESOLVED\n" "$subdomain" "N/A"
+                printf "%-35s | %-18s | [WARN]  UNRESOLVED\n" "$subdomain" "N/A"
                 ((unresolved++))
             fi
         done < "$input_file"
@@ -99,13 +99,13 @@ deduplicate_and_resolve() {
         echo ""
         echo "───────────────────────────────────┴────────────────────┴──────────"
         echo "Summary:"
-        echo "  ✅ Resolved:     $resolved"
-        echo "  ⚠️  Unresolved:   $unresolved"
-        echo "  🗑️  Duplicates:   $duplicates"
+        echo "  [OK] Resolved:     $resolved"
+        echo "  [WARN]  Unresolved:   $unresolved"
+        echo "  [DELETE]  Duplicates:   $duplicates"
         
     } | tee "$output_file"
     
-    log_clean "✅ Deduplication complete"
+    log_clean "[OK] Deduplication complete"
     echo "$output_file"
 }
 
@@ -114,7 +114,7 @@ filter_active_only() {
     local input_file=$1
     local output_file="$CLEAN_OUTPUT/active_subdomains_${TIMESTAMP}.txt"
     
-    log_clean "🎯 Filtering for active hosts only..."
+    log_clean "[TARGET] Filtering for active hosts only..."
     
     {
         echo "═══════════════════════════════════════════════════════════════"
@@ -127,7 +127,7 @@ filter_active_only() {
         
         local active_count=0
         
-        grep "✅ ACTIVE" "$input_file" | while read -r line; do
+        grep "[OK] ACTIVE" "$input_file" | while read -r line; do
             subdomain=$(echo "$line" | awk '{print $1}')
             ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
             
@@ -142,7 +142,7 @@ filter_active_only() {
         
     } | tee "$output_file"
     
-    log_clean "✅ Active filter complete"
+    log_clean "[OK] Active filter complete"
     echo "$output_file"
 }
 
@@ -151,7 +151,7 @@ group_by_ip() {
     local input_file=$1
     local output_file="$CLEAN_OUTPUT/grouped_by_ip_${TIMESTAMP}.txt"
     
-    log_clean "🔗 Grouping subdomains by IP address..."
+    log_clean "[LINK] Grouping subdomains by IP address..."
     
     {
         echo "═══════════════════════════════════════════════════════════════"
@@ -161,7 +161,7 @@ group_by_ip() {
         echo ""
         
         # Extract unique IPs
-        grep "✅ ACTIVE" "$input_file" | \
+        grep "[OK] ACTIVE" "$input_file" | \
         awk -F'|' '{print $2}' | xargs | sort -u | while read -r ip; do
             [[ -z "$ip" || "$ip" == "N/A" ]] && continue
             
@@ -169,7 +169,7 @@ group_by_ip() {
             echo "IP: $ip"
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             
-            grep "✅ ACTIVE" "$input_file" | \
+            grep "[OK] ACTIVE" "$input_file" | \
             awk -v target_ip="$ip" -F'|' '$2 ~ target_ip {print $1}' | \
             sed 's/^ */  /'
             
@@ -178,7 +178,7 @@ group_by_ip() {
         
     } | tee "$output_file"
     
-    log_clean "✅ Grouping complete"
+    log_clean "[OK] Grouping complete"
     echo "$output_file"
 }
 
@@ -187,12 +187,12 @@ export_to_csv() {
     local input_file=$1
     local output_file="$CLEAN_OUTPUT/subdomains_${TIMESTAMP}.csv"
     
-    log_clean "📊 Exporting to CSV format..."
+    log_clean "[REPORT] Exporting to CSV format..."
     
     {
         echo "subdomain,ip_address,status,resolved_date"
         
-        grep "✅ ACTIVE\|⚠️" "$input_file" | while read -r line; do
+        grep "[OK] ACTIVE\|[WARN]" "$input_file" | while read -r line; do
             subdomain=$(echo "$line" | awk '{print $1}')
             ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
             status=$(echo "$line" | awk -F'|' '{print $3}' | xargs)
@@ -202,7 +202,7 @@ export_to_csv() {
         
     } | tee "$output_file"
     
-    log_clean "✅ CSV export complete: $output_file"
+    log_clean "[OK] CSV export complete: $output_file"
     echo "$output_file"
 }
 
@@ -211,14 +211,14 @@ export_to_json() {
     local input_file=$1
     local output_file="$CLEAN_OUTPUT/subdomains_${TIMESTAMP}.json"
     
-    log_clean "📊 Exporting to JSON format..."
+    log_clean "[REPORT] Exporting to JSON format..."
     
     {
         echo "{"
         echo '  "subdomains": ['
         
         local first=true
-        grep "✅ ACTIVE\|⚠️" "$input_file" | while read -r line; do
+        grep "[OK] ACTIVE\|[WARN]" "$input_file" | while read -r line; do
             subdomain=$(echo "$line" | awk '{print $1}')
             ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
             status=$(echo "$line" | awk -F'|' '{print $3}' | xargs)
@@ -241,7 +241,7 @@ export_to_json() {
         
     } | tee "$output_file"
     
-    log_clean "✅ JSON export complete: $output_file"
+    log_clean "[OK] JSON export complete: $output_file"
     echo "$output_file"
 }
 
@@ -249,7 +249,7 @@ export_to_json() {
 comprehensive_clean() {
     local input_dir=$1
     
-    log_clean "🧹 Starting comprehensive subdomain cleaning pipeline..."
+    log_clean "[CLEAN] Starting comprehensive subdomain cleaning pipeline..."
     
     # Step 1: Extract
     extracted=$(extract_subdomains "$input_dir")
@@ -275,27 +275,27 @@ comprehensive_clean() {
         echo "Cleaned: $(date)"
         echo "═══════════════════════════════════════════════════════════════"
         echo ""
-        echo "📁 Input Directory: $input_dir"
+        echo "[DIR] Input Directory: $input_dir"
         echo ""
-        echo "📋 Generated Files:"
-        echo "  • extracted_subdomains_*.txt - All unique subdomains"
-        echo "  • deduplicated_*.txt         - With IP resolution"
-        echo "  • active_subdomains_*.txt    - Only resolved hosts"
-        echo "  • grouped_by_ip_*.txt        - Organized by IP"
-        echo "  • subdomains_*.csv           - CSV format"
-        echo "  • subdomains_*.json          - JSON format"
+        echo "[LIST] Generated Files:"
+        echo "  - extracted_subdomains_*.txt - All unique subdomains"
+        echo "  - deduplicated_*.txt         - With IP resolution"
+        echo "  - active_subdomains_*.txt    - Only resolved hosts"
+        echo "  - grouped_by_ip_*.txt        - Organized by IP"
+        echo "  - subdomains_*.csv           - CSV format"
+        echo "  - subdomains_*.json          - JSON format"
         echo ""
-        echo "📊 Statistics:"
+        echo "[REPORT] Statistics:"
         echo "  Total extracted: $(wc -l < "$extracted")"
-        echo "  After dedup: $(grep -c "✅\|⚠️" "$deduplicated" 2>/dev/null || echo "0")"
-        echo "  Active hosts: $(grep -c "✅ ACTIVE" "$deduplicated" 2>/dev/null || echo "0")"
+        echo "  After dedup: $(grep -c "[OK]\|[WARN]" "$deduplicated" 2>/dev/null || echo "0")"
+        echo "  Active hosts: $(grep -c "[OK] ACTIVE" "$deduplicated" 2>/dev/null || echo "0")"
         echo ""
-        echo "💾 All results in: $CLEAN_OUTPUT/"
-        echo "📋 Log file: $CLEAN_LOG"
+        echo "[SAVE] All results in: $CLEAN_OUTPUT/"
+        echo "[LIST] Log file: $CLEAN_LOG"
         
     } | tee "$summary_file"
     
-    log_clean "✅ Comprehensive cleaning complete!"
+    log_clean "[OK] Comprehensive cleaning complete!"
 }
 
 # Main execution
@@ -322,7 +322,7 @@ INPUT_DIR=$1
 ACTION=${2:-all}
 
 if [[ ! -d "$INPUT_DIR" ]]; then
-    echo "❌ Input directory not found: $INPUT_DIR"
+    echo "[ERROR] Input directory not found: $INPUT_DIR"
     exit 1
 fi
 
@@ -330,41 +330,41 @@ case $ACTION in
     extract)
         extract=$(extract_subdomains "$INPUT_DIR")
         echo ""
-        echo "✅ Extraction complete: $extract"
+        echo "[OK] Extraction complete: $extract"
         ;;
     deduplicate)
         extracted=$(extract_subdomains "$INPUT_DIR")
         deduplicated=$(deduplicate_and_resolve "$extracted")
         echo ""
-        echo "✅ Deduplication complete: $deduplicated"
+        echo "[OK] Deduplication complete: $deduplicated"
         ;;
     active)
         extracted=$(extract_subdomains "$INPUT_DIR")
         deduplicated=$(deduplicate_and_resolve "$extracted")
         active=$(filter_active_only "$deduplicated")
         echo ""
-        echo "✅ Filtering complete: $active"
+        echo "[OK] Filtering complete: $active"
         ;;
     group)
         extracted=$(extract_subdomains "$INPUT_DIR")
         deduplicated=$(deduplicate_and_resolve "$extracted")
         grouped=$(group_by_ip "$deduplicated")
         echo ""
-        echo "✅ Grouping complete: $grouped"
+        echo "[OK] Grouping complete: $grouped"
         ;;
     csv)
         extracted=$(extract_subdomains "$INPUT_DIR")
         deduplicated=$(deduplicate_and_resolve "$extracted")
         csv=$(export_to_csv "$deduplicated")
         echo ""
-        echo "✅ CSV export complete: $csv"
+        echo "[OK] CSV export complete: $csv"
         ;;
     json)
         extracted=$(extract_subdomains "$INPUT_DIR")
         deduplicated=$(deduplicate_and_resolve "$extracted")
         json=$(export_to_json "$deduplicated")
         echo ""
-        echo "✅ JSON export complete: $json"
+        echo "[OK] JSON export complete: $json"
         ;;
     all)
         comprehensive_clean "$INPUT_DIR"
@@ -376,5 +376,5 @@ case $ACTION in
 esac
 
 echo ""
-echo "📁 Results saved to: $CLEAN_OUTPUT/"
-echo "📋 Log file: $CLEAN_LOG"
+echo "[DIR] Results saved to: $CLEAN_OUTPUT/"
+echo "[LIST] Log file: $CLEAN_LOG"

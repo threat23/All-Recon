@@ -19,7 +19,7 @@ mkdir -p "$REPORT_DIR"
 generate_report() {
     local scan_dir=${1:-output}
     if [[ ! -d "$scan_dir" ]]; then
-        echo "❌ Scan directory does not exist: $scan_dir"
+        echo "[ERROR] Scan directory does not exist: $scan_dir"
         exit 1
     fi
     local report_file="$REPORT_DIR/report_$(date +%Y%m%d_%H%M%S).txt"
@@ -53,7 +53,7 @@ generate_report() {
         for scanfile in "$scan_dir"/host_*.txt; do
             if [[ -f "$scanfile" ]]; then
                 found_scans=1
-                echo "📊 $(basename "$scanfile")"
+                echo "[REPORT] $(basename "$scanfile")"
                 echo "---"
                 grep -E "^[0-9]+/.*open" "$scanfile" 2>/dev/null | head -10
                 echo ""
@@ -73,7 +73,7 @@ generate_report() {
         for scanfile in "$scan_dir"/host_*.txt; do
             if [[ -f "$scanfile" ]]; then
                 grep -E "^(22|445|3389|5985|5986)/.*open" "$scanfile" 2>/dev/null && \
-                    echo "⚠️  HIGH RISK SERVICE FOUND IN: $scanfile"
+                    echo "[WARN]  HIGH RISK SERVICE FOUND IN: $scanfile"
             fi
         done
         
@@ -84,13 +84,13 @@ generate_report() {
         
     } > "$report_file"
     
-    echo "✅ Report generated: $report_file"
+    echo "[OK] Report generated: $report_file"
     cat "$report_file"
 }
 
 # List existing reports
 list_reports() {
-    echo "📁 Available Reports:"
+    echo "[DIR] Available Reports:"
     ls -1t "$REPORT_DIR"/*.txt 2>/dev/null | head -10 || echo "No reports found"
 }
 

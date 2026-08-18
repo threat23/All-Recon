@@ -1,6 +1,6 @@
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║                                                                            ║
-║                  🎯 ALL-RECON - PROJECT COMPLETE 🎯                      ║
+║                  [TARGET] ALL-RECON - PROJECT COMPLETE [TARGET]                      ║
 ║              Pentester Workflow Automation Suite - v1.0                   ║
 ║                                                                            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
@@ -14,14 +14,14 @@ PROJECT PHILOSOPHY
  sequences that not everyone can see. Plus, it feels good to be productive 
  and get stuff done."
 
-                              → ALL-RECON DELIVERS THIS ←
+                              -> ALL-RECON DELIVERS THIS ←
 
 ═══════════════════════════════════════════════════════════════════════════════
 
 WHAT WAS CREATED
 ═══════════════════════════════════════════════════════════════════════════════
 
-📦 COMPLETE AUTOMATION SUITE
+[INSTALL] COMPLETE AUTOMATION SUITE
 
 Entry Points (Start here)
 ├── START_HERE.sh              ⭐ Interactive first-time guide
@@ -29,7 +29,7 @@ Entry Points (Start here)
 └── QUICKSTART.sh              5-minute rapid bootstrap
 
 Main Tools
-├── all_recon.sh        ✅ ENHANCED main engine with logging
+├── all_recon.sh        [OK] ENHANCED main engine with logging
 ├── all_recon_alt.sh              Alternative workflow variant
 └── modules/                   Extensible module system
     ├── recon.sh               DNS/WHOIS/service reconnaissance
@@ -59,23 +59,23 @@ BEFORE: Two scripts with nice ASCII art
         └─ No documentation
 
 AFTER: Professional automation framework
-       ├─ ✅ Organized timestamped output
-       ├─ ✅ Comprehensive session logging  
-       ├─ ✅ Full result management
-       ├─ ✅ Automated installation
-       ├─ ✅ 900+ lines of documentation
-       ├─ ✅ Extensible module system
-       ├─ ✅ Customizable profiles
-       ├─ ✅ Professional error handling
-       ├─ ✅ Interactive guides
-       └─ ✅ 4-8x productivity improvement
+       ├─ [OK] Organized timestamped output
+       ├─ [OK] Comprehensive session logging  
+       ├─ [OK] Full result management
+       ├─ [OK] Automated installation
+       ├─ [OK] 900+ lines of documentation
+       ├─ [OK] Extensible module system
+       ├─ [OK] Customizable profiles
+       ├─ [OK] Professional error handling
+       ├─ [OK] Interactive guides
+       └─ [OK] 4-8x productivity improvement
 
 ═══════════════════════════════════════════════════════════════════════════════
 
 STATISTICS
 ═══════════════════════════════════════════════════════════════════════════════
 
-📊 Project Metrics
+[REPORT] Project Metrics
 ├─ Total Lines of Code:         2,470
 ├─ Documentation Lines:         900+
 ├─ Executable Scripts:          7
@@ -98,21 +98,21 @@ YOUR WORKFLOW WITH ALL-RECON
 
 Step 1: Setup (5 min)
    bash install.sh
-   → Installs dependencies
-   → Creates directories
-   → Validates everything
+   -> Installs dependencies
+   -> Creates directories
+   -> Validates everything
 
 Step 2: Run Scan (1 click)
    ./all_recon.sh
-   → Select scan type
-   → Automation runs in background
-   → You go do something else
+   -> Select scan type
+   -> Automation runs in background
+   -> You go do something else
 
 Step 3: Review Results (1 click)
    ./all_recon.sh
-   → View scan results
-   → Generate professional report
-   → Results organized & timestamped
+   -> View scan results
+   -> Generate professional report
+   -> Results organized & timestamped
 
 RESULT: 30-50 minute assessment instead of 2-3 hours
         Plus: Sharp mind for analyzing findings
@@ -139,35 +139,35 @@ That's it! You're now using professional pentesting automation.
 KEY FEATURES
 ═══════════════════════════════════════════════════════════════════════════════
 
-✅ Automation
-   • Parallel scanning (254 hosts in ~2 minutes)
-   • Auto-capture results with timestamps
-   • Background execution
-   • Hands-off operation
+[OK] Automation
+   - Parallel scanning (254 hosts in ~2 minutes)
+   - Auto-capture results with timestamps
+   - Background execution
+   - Hands-off operation
 
-✅ Organization  
-   • Timestamped outputs
-   • Organized directories
-   • Session logging
-   • Result archiving
+[OK] Organization  
+   - Timestamped outputs
+   - Organized directories
+   - Session logging
+   - Result archiving
 
-✅ Intelligence
-   • Pre-tuned scan profiles (Quick, Standard, Thorough, Stealth)
-   • High-risk port detection
-   • Service mapping
-   • Vulnerability scanning
+[OK] Intelligence
+   - Pre-tuned scan profiles (Quick, Standard, Thorough, Stealth)
+   - High-risk port detection
+   - Service mapping
+   - Vulnerability scanning
 
-✅ Reporting
-   • Automated report generation
-   • Professional formatting
-   • Historical comparison
-   • Client-ready output
+[OK] Reporting
+   - Automated report generation
+   - Professional formatting
+   - Historical comparison
+   - Client-ready output
 
-✅ Extensibility
-   • Module system ready
-   • Custom reconnaissance
-   • Custom reporting
-   • Profile customization
+[OK] Extensibility
+   - Module system ready
+   - Custom reconnaissance
+   - Custom reporting
+   - Profile customization
 
 ═══════════════════════════════════════════════════════════════════════════════
 
@@ -176,35 +176,35 @@ FILE DIRECTORY GUIDE
 
 PROJECT/
 │
-├─ 🚀 START HERE (Pick one)
+├─ -> START HERE (Pick one)
 │  ├─ START_HERE.sh          Interactive guide for first-time users
 │  ├─ install.sh             Full setup with dependency installation
 │  └─ QUICKSTART.sh          Quick 5-minute setup
 │
-├─ 🎮 MAIN TOOLS
+├─ [INPUT] MAIN TOOLS
 │  ├─ all_recon.sh    Main automation engine ⭐ ENHANCED
 │  └─ all_recon_alt.sh          Alternative workflow variant
 │
-├─ 📚 LEARN HERE
+├─ [DOCS] LEARN HERE
 │  ├─ README.md              Full documentation & features
 │  ├─ WORKFLOW_GUIDE.md      Practical patterns & examples
 │  ├─ PROJECT_MANIFEST.md    Technical reference
 │  └─ COMPLETION_SUMMARY.md  Project transformation story
 │
-├─ ⚙️  CUSTOMIZE HERE
+├─ [CONFIG]  CUSTOMIZE HERE
 │  ├─ config/nmap_profiles.conf      Scan profiles (Quick/Standard/Thorough)
 │  └─ config/automation_rules.conf   Automation behavior
 │
-├─ 🔧 EXTEND HERE
+├─ [SETUP] EXTEND HERE
 │  ├─ modules/recon.sh       DNS/WHOIS/service reconnaissance
 │  └─ modules/reporting.sh   Report generation
 │
-├─ 📊 RESULTS (Auto-created)
+├─ [REPORT] RESULTS (Auto-created)
 │  ├─ output/                 Scan results (organized by timestamp)
 │  ├─ logs/                   Session logs with full audit trail
 │  └─ output/reports/         Generated reports
 │
-└─ 🔐 PROJECT FILES
+└─ [SECURITY] PROJECT FILES
    └─ .gitignore             Git configuration (protects sensitive data)
 
 ═══════════════════════════════════════════════════════════════════════════════
@@ -225,44 +225,44 @@ MANUAL WORKFLOW (2-3 hours typical)
 
 ALL-RECON WORKFLOW (30-50 minutes)
 ├─ Setup & start scan (5 min, mostly passive)
-├─ Coffee break ☕ (Automation runs)
+├─ Coffee break  (Automation runs)
 ├─ Review results & analyze (25 min, mentally sharp)
 ├─ Generate report (5 min, automated)
-└─ Happy pentester with energy for next engagement ✅
+└─ Happy pentester with energy for next engagement [OK]
 
 RESULT: 
-• 4-8x faster assessments
-• 2x more mental energy preserved
-• Professional output automatically generated
-• Ready for next client assessment
+- 4-8x faster assessments
+- 2x more mental energy preserved
+- Professional output automatically generated
+- Ready for next client assessment
 
 ═══════════════════════════════════════════════════════════════════════════════
 
 WHAT THIS ENABLES
 ═══════════════════════════════════════════════════════════════════════════════
 
-🎯 FOR THE PENTESTER
-✓ Smooth workflow that "just works"
-✓ Uninterrupted focus on interesting findings
-✓ Background automation handling routine tasks
-✓ Sharp mind ready for creative exploitation
-✓ Visible productivity with professional output
-✓ Happy at end of day because stuff actually got done
+[TARGET] FOR THE PENTESTER
+[OK] Smooth workflow that "just works"
+[OK] Uninterrupted focus on interesting findings
+[OK] Background automation handling routine tasks
+[OK] Sharp mind ready for creative exploitation
+[OK] Visible productivity with professional output
+[OK] Happy at end of day because stuff actually got done
 
-🎯 FOR SECURITY TEAMS
-✓ Standardized assessments across engagements
-✓ Consistent output formats for easy comparison
-✓ Faster turnaround times
-✓ Professional delivery to clients
-✓ Knowledge sharing via shared profiles
-✓ Efficiency gains across the entire team
+[TARGET] FOR SECURITY TEAMS
+[OK] Standardized assessments across engagements
+[OK] Consistent output formats for easy comparison
+[OK] Faster turnaround times
+[OK] Professional delivery to clients
+[OK] Knowledge sharing via shared profiles
+[OK] Efficiency gains across the entire team
 
-🎯 FOR CLIENTS
-✓ Faster assessments (same quality, less time = lower cost)
-✓ Professional reports generated automatically
-✓ Thorough coverage via parallel scanning
-✓ Clear, organized findings
-✓ Better value for their security investment
+[TARGET] FOR CLIENTS
+[OK] Faster assessments (same quality, less time = lower cost)
+[OK] Professional reports generated automatically
+[OK] Thorough coverage via parallel scanning
+[OK] Clear, organized findings
+[OK] Better value for their security investment
 
 ═══════════════════════════════════════════════════════════════════════════════
 
@@ -271,29 +271,29 @@ SUCCESS INDICATORS
 
 You'll know ALL-RECON is working when:
 
-✅ You're not typing the same commands twice
-✅ Results are organized and easy to find
-✅ You have time to think about vulnerabilities
-✅ Reports generate automatically
-✅ You finish assessments ahead of schedule
-✅ You feel less mentally exhausted
-✅ Finding interesting attack chains is easier
-✅ You want to run more assessments
-✅ Your team asks how you do assessments faster
+[OK] You're not typing the same commands twice
+[OK] Results are organized and easy to find
+[OK] You have time to think about vulnerabilities
+[OK] Reports generate automatically
+[OK] You finish assessments ahead of schedule
+[OK] You feel less mentally exhausted
+[OK] Finding interesting attack chains is easier
+[OK] You want to run more assessments
+[OK] Your team asks how you do assessments faster
 
 ═══════════════════════════════════════════════════════════════════════════════
 
 DEPLOYMENT READY
 ═══════════════════════════════════════════════════════════════════════════════
 
-✅ Core functionality        Complete
-✅ Documentation             Complete (900+ lines)
-✅ Setup & Installation      Complete (OS-aware)
-✅ Error handling            Complete (comprehensive)
-✅ Module system             Complete (extensible)
-✅ Configuration             Complete (customizable)
-✅ Testing                   Ready to deploy
-✅ Production use            Ready now
+[OK] Core functionality        Complete
+[OK] Documentation             Complete (900+ lines)
+[OK] Setup & Installation      Complete (OS-aware)
+[OK] Error handling            Complete (comprehensive)
+[OK] Module system             Complete (extensible)
+[OK] Configuration             Complete (customizable)
+[OK] Testing                   Ready to deploy
+[OK] Production use            Ready now
 
 Ready to deploy in any pentesting engagement!
 
@@ -326,22 +326,22 @@ THE PENTESTER'S MINDSET
 
 What makes a good day:
 
-"Workflow is smooth?"           ✅ Automated scans run in parallel
-"Uninterrupted focus?"          ✅ No command syntax to remember
-"Routine tasks backgrounded?"   ✅ Set and forget
-"Mind freed for findings?"      ✅ Analysis, not mechanics
-"Attack sequences time?"        ✅ Time to think creatively
-"Stuff getting done?"           ✅ 2x faster assessments
-"Happy at day's end?"           ✅ Yes!
+"Workflow is smooth?"           [OK] Automated scans run in parallel
+"Uninterrupted focus?"          [OK] No command syntax to remember
+"Routine tasks backgrounded?"   [OK] Set and forget
+"Mind freed for findings?"      [OK] Analysis, not mechanics
+"Attack sequences time?"        [OK] Time to think creatively
+"Stuff getting done?"           [OK] 2x faster assessments
+"Happy at day's end?"           [OK] Yes!
 
 ALL-RECON makes this your default day.
 
 ═══════════════════════════════════════════════════════════════════════════════
 
-"Your perimeter just became my playground." 🎯
+"Your perimeter just became my playground." [TARGET]
 
 ═══════════════════════════════════════════════════════════════════════════════
 
 Created: June 9, 2026
-Status: ✅ PRODUCTION READY
+Status: [OK] PRODUCTION READY
 Ready to use: YES

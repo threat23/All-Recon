@@ -1,12 +1,12 @@
-# 🧹 SUBDOMAIN CLEANING FEATURE - COMPLETE INTEGRATION
+# [CLEAN] SUBDOMAIN CLEANING FEATURE - COMPLETE INTEGRATION
 
-**Status:** ✅ **PRODUCTION READY**  
+**Status:** [OK] **PRODUCTION READY**  
 **Date Added:** June 9, 2026  
 **Integration:** Complete with auto-cleaning workflow
 
 ---
 
-## 🎉 What Was Added
+## [PASS] What Was Added
 
 ### **1. Subdomain Cleaner Module** (15 KB)
 ```
@@ -14,13 +14,13 @@ modules/subdomain_cleaner.sh
 ```
 
 **7 Cleaning Operations:**
-- 🧹 **Extract** - Find all unique subdomains
-- 🧹 **Deduplicate** - Remove duplicates, resolve IPs
-- 🧹 **Filter** - Keep only active/valid hosts
-- 🧹 **Group** - Organize subdomains by IP
-- 🧹 **CSV Export** - Spreadsheet-ready format
-- 🧹 **JSON Export** - Programmatic format
-- 🧹 **Comprehensive** - All steps in one command
+- [CLEAN] **Extract** - Find all unique subdomains
+- [CLEAN] **Deduplicate** - Remove duplicates, resolve IPs
+- [CLEAN] **Filter** - Keep only active/valid hosts
+- [CLEAN] **Group** - Organize subdomains by IP
+- [CLEAN] **CSV Export** - Spreadsheet-ready format
+- [CLEAN] **JSON Export** - Programmatic format
+- [CLEAN] **Comprehensive** - All steps in one command
 
 ### **2. Main Tool Integration**
 ```
@@ -28,9 +28,9 @@ all_recon.sh (ENHANCED - Option 3 Expanded)
 ```
 
 **New Workflow:**
-- Run Discovery → Auto-clean option
-- Clean existing results → Choose method
-- View cleaned results → Browse organized data
+- Run Discovery -> Auto-clean option
+- Clean existing results -> Choose method
+- View cleaned results -> Browse organized data
 
 ### **3. Configuration System** (2.7 KB)
 ```
@@ -50,7 +50,7 @@ CLEANER_GUIDE.sh              - Quick reference
 
 ---
 
-## 📊 Complete Workflow
+## [REPORT] Complete Workflow
 
 ```
 DISCOVERY PHASE (2 minutes)
@@ -75,7 +75,7 @@ ANALYSIS PHASE (Your Work)
 
 ---
 
-## 🚀 Quick Start
+## -> Quick Start
 
 ### **Automatic Cleaning (Easiest)**
 ```bash
@@ -87,7 +87,7 @@ Option: 1 (Run Discovery)
 Answer: Y
 ```
 
-**Result:** Everything cleaned automatically! ✨
+**Result:** Everything cleaned automatically! [READY]
 
 ### **Manual Cleaning**
 ```bash
@@ -119,7 +119,7 @@ Option: 2 (Clean & Deduplicate Results)
 
 ---
 
-## 📁 Output Files Generated
+## [DIR] Output Files Generated
 
 ### **Text Formats**
 ```
@@ -138,7 +138,7 @@ subdomains_*.json                 JSON (programmatic use)
 
 ---
 
-## 📊 Data Transformation Example
+## [REPORT] Data Transformation Example
 
 ### **Raw Results (Messy)**
 ```
@@ -158,57 +158,57 @@ www.example.com      ← Duplicate
 ```
 SUBDOMAIN                          | IP ADDRESS         | STATUS
 ───────────────────────────────────┼────────────────────┼──────────
-example.com                       | 93.184.216.34      | ✅ ACTIVE
-www.example.com                   | 93.184.216.34      | ✅ ACTIVE
-ftp.example.com                   | 93.184.216.35      | ✅ ACTIVE
-admin.example.com                 | 93.184.216.36      | ✅ ACTIVE
-mail.example.com                  | 93.184.216.37      | ✅ ACTIVE
+example.com                       | 93.184.216.34      | [OK] ACTIVE
+www.example.com                   | 93.184.216.34      | [OK] ACTIVE
+ftp.example.com                   | 93.184.216.35      | [OK] ACTIVE
+admin.example.com                 | 93.184.216.36      | [OK] ACTIVE
+mail.example.com                  | 93.184.216.37      | [OK] ACTIVE
 
 Summary:
-  ✅ Resolved:     5
-  ⚠️  Unresolved:   1 (fake.example.com)
-  🗑️  Duplicates:   3 removed
+  [OK] Resolved:     5
+  [WARN]  Unresolved:   1 (fake.example.com)
+  [DELETE]  Duplicates:   3 removed
 ```
 
 ---
 
-## ✨ Key Features
+## [READY] Key Features
 
 ### **Smart Deduplication**
 ```bash
-✅ Removes duplicate entries
-✅ Keeps unique records
-✅ Case-insensitive matching
-✅ Handles FQDNs correctly
+[OK] Removes duplicate entries
+[OK] Keeps unique records
+[OK] Case-insensitive matching
+[OK] Handles FQDNs correctly
 ```
 
 ### **IP Resolution**
 ```bash
-✅ Resolves A records
-✅ Resolves AAAA records
-✅ Identifies active hosts
-✅ Groups co-hosted domains
+[OK] Resolves A records
+[OK] Resolves AAAA records
+[OK] Identifies active hosts
+[OK] Groups co-hosted domains
 ```
 
 ### **Intelligent Filtering**
 ```bash
-✅ Removes unresolved entries
-✅ Filters invalid formats
-✅ Removes false positives
-✅ Keeps only actionable data
+[OK] Removes unresolved entries
+[OK] Filters invalid formats
+[OK] Removes false positives
+[OK] Keeps only actionable data
 ```
 
 ### **Multiple Export Formats**
 ```bash
-✅ Text (human readable)
-✅ CSV (spreadsheet ready)
-✅ JSON (programmatic)
-✅ Grouped by IP (infrastructure view)
+[OK] Text (human readable)
+[OK] CSV (spreadsheet ready)
+[OK] JSON (programmatic)
+[OK] Grouped by IP (infrastructure view)
 ```
 
 ---
 
-## 💡 Real-World Usage
+## [TIP] Real-World Usage
 
 ### **Scenario 1: Quick Assessment**
 ```
@@ -236,16 +236,16 @@ Summary:
 
 ---
 
-## 🎯 What Gets Cleaned
+## [TARGET] What Gets Cleaned
 
-### **Removes** ❌
+### **Removes** [ERROR]
 - Duplicate subdomains (same domain listed multiple times)
 - Failed DNS lookups (entries with no IP)
 - Invalid formats (malformed entries)
 - Unresolved entries (no A/AAAA records)
 - False positives (common patterns that don't exist)
 
-### **Keeps** ✅
+### **Keeps** [OK]
 - Unique, valid subdomains
 - Resolved IP addresses
 - Active, responding hosts
@@ -254,7 +254,7 @@ Summary:
 
 ---
 
-## 📈 Productivity Impact
+## [STATS] Productivity Impact
 
 | Task | Before | After | Saved |
 |------|--------|-------|-------|
@@ -266,13 +266,13 @@ Summary:
 
 ---
 
-## 🧪 Testing the Feature
+## [TEST] Testing the Feature
 
 ### **Quick Test (5 minutes)**
 ```bash
 # 1. Run discovery + auto-clean
 ./all_recon.sh
-Select: 3 → 1 → example.com → 6 → Y
+Select: 3 -> 1 -> example.com -> 6 -> Y
 
 # 2. Review results
 cat output/clean_subdomains_*/active_subdomains_*.txt
@@ -295,7 +295,7 @@ cat output/clean_subdomains_*/subdomains_*.csv
 
 ---
 
-## 📚 Documentation
+## [DOCS] Documentation
 
 | Document | Purpose |
 |----------|---------|
@@ -306,7 +306,7 @@ cat output/clean_subdomains_*/subdomains_*.csv
 
 ---
 
-## 🔧 Configuration Options
+## [SETUP] Configuration Options
 
 Edit `config/subdomain_cleaner.conf`:
 
@@ -333,22 +333,22 @@ DNS_RESOLUTION_TIMEOUT=5
 
 ---
 
-## ✅ Verification Checklist
+## [OK] Verification Checklist
 
-- ✅ Cleaner module created (15 KB, full-featured)
-- ✅ Integrated into main tool (Option 3 workflow)
-- ✅ Auto-clean option after discovery
-- ✅ Manual cleaning available
-- ✅ Configuration system ready
-- ✅ Multiple output formats (TXT, CSV, JSON)
-- ✅ Syntax verified (no errors)
-- ✅ Documentation complete
-- ✅ Quick guide provided
-- ✅ Production ready
+- [OK] Cleaner module created (15 KB, full-featured)
+- [OK] Integrated into main tool (Option 3 workflow)
+- [OK] Auto-clean option after discovery
+- [OK] Manual cleaning available
+- [OK] Configuration system ready
+- [OK] Multiple output formats (TXT, CSV, JSON)
+- [OK] Syntax verified (no errors)
+- [OK] Documentation complete
+- [OK] Quick guide provided
+- [OK] Production ready
 
 ---
 
-## 📊 Project Update
+## [REPORT] Project Update
 
 ### **Files Added**
 - `modules/subdomain_cleaner.sh` (15 KB)
@@ -367,13 +367,13 @@ DNS_RESOLUTION_TIMEOUT=5
 
 ---
 
-## 🎯 Integration Summary
+## [TARGET] Integration Summary
 
 ```
 DISCOVERY                  CLEANING                 ANALYSIS
 ┌──────────────────┐      ┌──────────────────┐      ┌──────────┐
 │  Subdomain       │      │  Subdomain       │      │ Your     │
-│  Finder Module   │─────→│  Cleaner Module  │─────→│ Analysis │
+│  Finder Module   │─────->│  Cleaner Module  │─────->│ Analysis │
 │                  │      │                  │      │          │
 │ 6 methods       │      │ 7 operations     │      │ Port     │
 │ DNS, Brute,     │      │ Extract,         │      │ Scan,    │
@@ -385,12 +385,12 @@ DISCOVERY                  CLEANING                 ANALYSIS
 
 ---
 
-## 🚀 Next Steps
+## -> Next Steps
 
 ### **1. Test It** (5 minutes)
 ```bash
 ./all_recon.sh
-Select: 3 → 1 → example.com → 6 → Y
+Select: 3 -> 1 -> example.com -> 6 -> Y
 ```
 
 ### **2. Use It** (Start now)
@@ -412,21 +412,21 @@ edit config/subdomain_cleaner.conf
 
 ---
 
-## 💬 Summary
+##  Summary
 
 ALL-RECON now includes an **integrated subdomain cleaning pipeline** that:
 
-- ✅ Removes 90%+ of duplicate/invalid data
-- ✅ Organizes results automatically
-- ✅ Exports to multiple formats
-- ✅ Runs automatically after discovery
-- ✅ Can be customized via config file
-- ✅ Saves 15-20 minutes per assessment
+- [OK] Removes 90%+ of duplicate/invalid data
+- [OK] Organizes results automatically
+- [OK] Exports to multiple formats
+- [OK] Runs automatically after discovery
+- [OK] Can be customized via config file
+- [OK] Saves 15-20 minutes per assessment
 
 **Result:** Clean, actionable intelligence ready for the next phase of your assessment.
 
 ---
 
-**Clean data. Sharp analysis. Better results.** 🧹✨
+**Clean data. Sharp analysis. Better results.** [CLEAN][READY]
 
 *From discovery to cleaned results in 3 minutes. That's the ALL-RECON difference.*
