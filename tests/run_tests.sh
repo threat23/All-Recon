@@ -76,6 +76,7 @@ script_files=(
     "modules/subdomain_finder.sh"
     "modules/subdomain_cleaner.sh"
     "modules/web_vulnerabilities.sh"
+    "modules/netcat_shells.sh"
     "modules/reporting.sh"
     "modules/batch_runner.sh"
     "modules/whois_recon.sh"
@@ -168,6 +169,16 @@ assert_exit_code 0 $? "subdomain_finder: Aggregated Passive OSINT scan mode succ
 
 bash modules/subdomain_finder.sh "example.com" hackertarget &>/dev/null
 assert_exit_code 0 $? "subdomain_finder: HackerTarget OSINT scan mode succeeded"
+
+# Test netcat shell generator usage
+bash modules/netcat_shells.sh list &>/dev/null
+assert_exit_code 0 $? "netcat_shells: list mode succeeded"
+
+bash modules/netcat_shells.sh bind 4444 /bin/bash &>/dev/null
+assert_exit_code 0 $? "netcat_shells: bind mode succeeded"
+
+bash modules/netcat_shells.sh reverse 127.0.0.1 4444 /bin/bash &>/dev/null
+assert_exit_code 0 $? "netcat_shells: reverse mode succeeded"
 
 echo ""
 

