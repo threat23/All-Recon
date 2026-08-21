@@ -1,4 +1,0 @@
-[16:31:05] 🎯 Web Vulnerability Scanner initialized for: https://www.kmu.ac.zm
-[16:31:08] 🔍 Starting OS Command Injection tests on https://www.kmu.ac.zm...
-[16:31:21] ✅ Command Injection scan complete
-[16:31:21] 🏁 All scans complete. Results in output/web_vulns_20260624_163105/
