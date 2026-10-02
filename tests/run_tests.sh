@@ -1,0 +1,312 @@
+#!/bin/bash
+
+# ═══════════════════════════════════════════════════════════════════
+# ALL-RECON AUTOMATED TEST SUITE
+# Framework for unit and integration testing of all modules & scripts
+# ═══════════════════════════════════════════════════════════════════
+
+TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$TEST_DIR/.." && pwd)"
+
+cd "$PROJECT_ROOT" || exit 1
+
+# Color definitions
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+PASSED_TESTS=0
+FAILED_TESTS=0
+SKIPPED_TESTS=0
+
+log_pass() {
+    echo -e "  [${GREEN}PASS${NC}] $1"
+    ((PASSED_TESTS++))
+}
+
+log_fail() {
+    echo -e "  [${RED}FAIL${NC}] $1"
+    ((FAILED_TESTS++))
+}
+
+log_skip() {
+    echo -e "  [${YELLOW}SKIP${NC}] $1"
+    ((SKIPPED_TESTS++))
+}
+
+assert_equals() {
+    local expected="$1"
+    local actual="$2"
+    local msg="$3"
+    if [[ "$expected" == "$actual" ]]; then
+        log_pass "$msg"
+    else
+        log_fail "$msg (Expected: '$expected', Actual: '$actual')"
+    fi
+}
+
+assert_exit_code() {
+    local expected_code="$1"
+    local actual_code="$2"
+    local msg="$3"
+    if [[ "$expected_code" -eq "$actual_code" ]]; then
+        log_pass "$msg"
+    else
+        log_fail "$msg (Expected exit code: $expected_code, Actual: $actual_code)"
+    fi
+}
+
+echo -e "${BLUE}====================================================${NC}"
+echo -e "${BLUE}       ALL-RECON AUTOMATED TEST RUNNER              ${NC}"
+echo -e "${BLUE}====================================================${NC}\n"
+
+# -------------------------------------------------------------------
+# TEST SUITE 1: BASH SYNTAX VALIDATION
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 1: Bash Syntax Validation (bash -n)${NC}"
+
+script_files=(
+    "all_recon.sh"
+    "install.sh"
+    "QUICKSTART.sh"
+    "START_HERE.sh"
+    "modules/validation.sh"
+    "modules/recon.sh"
+    "modules/subdomain_finder.sh"
+    "modules/subdomain_cleaner.sh"
+    "modules/web_vulnerabilities.sh"
+    "modules/reporting.sh"
+    "modules/batch_runner.sh"
+    "modules/whois_recon.sh"
+    "modules/passive.sh"
+)
+
+for file in "${script_files[@]}"; do
+    if [[ -f "$file" ]]; then
+        bash -n "$file" &>/dev/null
+        assert_exit_code 0 $? "Syntax check: $file"
+    else
+        log_skip "File not found for syntax check: $file"
+    fi
+done
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 2: INPUT VALIDATION MODULE (modules/validation.sh)
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 2: Input Validation Helper Unit Tests${NC}"
+
+if [[ -f "modules/validation.sh" ]]; then
+    source "modules/validation.sh"
+
+    # Test IP Validation
+    is_valid_ip "192.168.1.1"
+    assert_exit_code 0 $? "is_valid_ip: 192.168.1.1 should be valid"
+
+    is_valid_ip "8.8.8.8"
+    assert_exit_code 0 $? "is_valid_ip: 8.8.8.8 should be valid"
+
+    is_valid_ip "999.999.999.999"
+    assert_exit_code 1 $? "is_valid_ip: 999.999.999.999 should be invalid"
+
+    is_valid_ip "not_an_ip"
+    assert_exit_code 1 $? "is_valid_ip: 'not_an_ip' should be invalid"
+
+    # Test Domain Validation
+    is_valid_domain "example.com"
+    assert_exit_code 0 $? "is_valid_domain: example.com should be valid"
+
+    is_valid_domain "sub.domain.co.uk"
+    assert_exit_code 0 $? "is_valid_domain: sub.domain.co.uk should be valid"
+
+    is_valid_domain "invalid..domain"
+    assert_exit_code 1 $? "is_valid_domain: invalid..domain should be invalid"
+
+    is_valid_domain "http://example.com"
+    assert_exit_code 1 $? "is_valid_domain: http://example.com (with scheme) should be invalid"
+
+    # Test URL Validation
+    is_valid_url "http://example.com"
+    assert_exit_code 0 $? "is_valid_url: http://example.com should be valid"
+
+    is_valid_url "https://sub.target.org:8080/path?arg=1"
+    assert_exit_code 0 $? "is_valid_url: https://sub.target.org:8080/path should be valid"
+
+    is_valid_url "ftp://example.com"
+    assert_exit_code 1 $? "is_valid_url: ftp:// scheme should be invalid"
+
+    # Test Path Sanitization
+    clean_path=$(sanitize_path "../../../etc/passwd")
+    assert_equals "etc/passwd" "$clean_path" "sanitize_path should strip relative directory traversal"
+
+    clean_nested=$(sanitize_path "....//....//etc/passwd")
+    assert_equals "etc/passwd" "$clean_nested" "sanitize_path should strip nested directory traversal bypasses"
+else
+    log_fail "modules/validation.sh missing"
+fi
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 3: SUBDOMAIN FINDER MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 3: Subdomain Finder Module Integration Tests${NC}"
+
+# Test invalid domain rejection
+bash modules/subdomain_finder.sh "invalid_domain_format" all &>/dev/null
+assert_exit_code 1 $? "subdomain_finder: Rejects invalid domain format"
+
+# Test missing parameters
+bash modules/subdomain_finder.sh &>/dev/null
+assert_exit_code 1 $? "subdomain_finder: Rejects missing arguments"
+
+# Test OSINT scan types
+bash modules/subdomain_finder.sh "example.com" osint &>/dev/null
+assert_exit_code 0 $? "subdomain_finder: Aggregated Passive OSINT scan mode succeeded"
+
+bash modules/subdomain_finder.sh "example.com" hackertarget &>/dev/null
+assert_exit_code 0 $? "subdomain_finder: HackerTarget OSINT scan mode succeeded"
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 4: SUBDOMAIN CLEANER MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 4: Subdomain Cleaner Integration Tests${NC}"
+
+# Create mock subdomain discovery output directory
+MOCK_DIR="output/test_mock_subdomains_$(date +%Y%m%d_%H%M%S)"
+mkdir -p "$MOCK_DIR"
+
+cat <<'EOF' > "$MOCK_DIR/common_subdomains_test.txt"
+✅ FOUND: www.example.com
+✅ FOUND: api.example.com
+✅ FOUND: mail.example.com
+EOF
+
+cat <<'EOF' > "$MOCK_DIR/dns_enum_test.txt"
+test.example.com
+admin.example.com
+EOF
+
+# Run extraction test
+bash modules/subdomain_cleaner.sh "$MOCK_DIR" extract &>/dev/null
+assert_exit_code 0 $? "subdomain_cleaner: extract action succeeded"
+
+# Run JSON export test
+bash modules/subdomain_cleaner.sh "$MOCK_DIR" json &>/dev/null
+assert_exit_code 0 $? "subdomain_cleaner: json export action succeeded"
+
+# Run CSV export test
+bash modules/subdomain_cleaner.sh "$MOCK_DIR" csv &>/dev/null
+assert_exit_code 0 $? "subdomain_cleaner: csv export action succeeded"
+
+# Clean up mock directory
+rm -rf "$MOCK_DIR"
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 5: WEB VULNERABILITIES MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 5: Web Vulnerabilities Module Integration Tests${NC}"
+
+# Test invalid URL rejection
+bash modules/web_vulnerabilities.sh "not_a_valid_url" 1 &>/dev/null
+assert_exit_code 1 $? "web_vulnerabilities: Rejects invalid URL format"
+
+# Test non-interactive execution with valid URL
+bash modules/web_vulnerabilities.sh "http://127.0.0.1" 1 &>/dev/null
+assert_exit_code 0 $? "web_vulnerabilities: Runs SQLi scan in non-interactive mode"
+
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 6: WHOIS RECONNAISSANCE MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 6: WHOIS Reconnaissance Module Tests${NC}"
+
+bash modules/whois_recon.sh &>/dev/null
+assert_exit_code 1 $? "whois_recon: Rejects missing target argument"
+
+bash modules/whois_recon.sh "invalid_target_!@#" domain &>/dev/null
+assert_exit_code 1 $? "whois_recon: Rejects invalid target format"
+
+bash modules/whois_recon.sh "127.0.0.1" ip &>/dev/null
+assert_exit_code 0 $? "whois_recon: Executes IP lookup on 127.0.0.1"
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 7: MULTI-TARGET BATCH SCANNER MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 7: Multi-Target Batch Scanner Integration Tests${NC}"
+
+# Create mock targets file with local loopback addresses (fast, safe for tests)
+MOCK_TARGETS_FILE="output/test_mock_targets.txt"
+cat <<'EOF' > "$MOCK_TARGETS_FILE"
+# Sample Test Targets File
+127.0.0.1
+127.0.0.2
+EOF
+
+# Test batch runner execution
+bash modules/batch_runner.sh "$MOCK_TARGETS_FILE" whois 2 &>/dev/null
+assert_exit_code 0 $? "batch_runner: Executed multi-target batch scan successfully"
+
+# Test missing file error code
+bash modules/batch_runner.sh "non_existent_file.txt" whois &>/dev/null
+assert_exit_code 1 $? "batch_runner: Rejects non-existent targets file"
+
+rm -f "$MOCK_TARGETS_FILE"
+rm -rf output/batch_*
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 8: MAIN CLI ARGUMENT & AUTOMATION MODE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 8: Main CLI Automation & Flag Tests${NC}"
+
+bash all_recon.sh -h &>/dev/null
+assert_exit_code 0 $? "all_recon: -h shows help text"
+
+bash all_recon.sh -q -m report &>/dev/null
+assert_exit_code 0 $? "all_recon: -q -m report runs non-interactively in quiet mode"
+echo ""
+
+# -------------------------------------------------------------------
+# TEST SUITE 9: PASSIVE OSINT MODULE
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 9: Passive OSINT Module Tests${NC}"
+
+if [[ -f "modules/passive.py" ]]; then
+    python3 modules/passive.py &>/dev/null
+    assert_exit_code 1 $? "passive.py: Rejects missing target argument"
+
+    python3 -c "import modules.passive as p; assert p.is_ip('127.0.0.1'); assert p.is_domain('example.com')" &>/dev/null
+    assert_exit_code 0 $? "passive.py: Validation logic passes unit tests"
+else
+    log_skip "modules/passive.py not found"
+fi
+echo ""
+
+# -------------------------------------------------------------------
+# SUMMARY REPORT
+# -------------------------------------------------------------------
+TOTAL_TESTS=$((PASSED_TESTS + FAILED_TESTS + SKIPPED_TESTS))
+echo -e "${BLUE}====================================================${NC}"
+echo -e "${BLUE}                   TEST SUMMARY                     ${NC}"
+echo -e "${BLUE}====================================================${NC}"
+echo -e "Total Tests Run : $TOTAL_TESTS"
+echo -e "Passed          : ${GREEN}$PASSED_TESTS${NC}"
+echo -e "Failed          : ${RED}$FAILED_TESTS${NC}"
+echo -e "Skipped         : ${YELLOW}$SKIPPED_TESTS${NC}"
+echo -e "${BLUE}====================================================${NC}\n"
+
+if [[ $FAILED_TESTS -eq 0 ]]; then
+    echo -e "${GREEN}🎉 ALL TESTS PASSED SUCCESSFULLY!${NC}"
+    exit 0
+else
+    echo -e "${RED}❌ SOME TESTS FAILED. PLEASE REVIEW LOGS ABOVE.${NC}"
+    exit 1
+fi

@@ -46,24 +46,40 @@ sudo gem install lolcat  # or: sudo apt install lolcat
 ### Quick Start
 
 ```bash
-cd /home/threat23/Desktop/Project
 chmod +x all_recon.sh
 ./all_recon.sh
 ```
+
+### CLI Automation & Pipeline Mode
+ALL-RECON supports full non-interactive execution with customizable scan profiles:
+```bash
+./all_recon.sh -t 192.168.1.1 -m host -p quick
+./all_recon.sh -t example.com -m subdomain
+./all_recon.sh -t http://example.com -m web
+./all_recon.sh -t targets.txt -m batch
+./all_recon.sh -q -m report
+```
+**Flags:**
+* `-t <target>` - Target IP, domain, URL, or target list file
+* `-m <mode>` - Scan mode (`network`, `host`, `subdomain`, `web`, `batch`, `whois`, `passive`, `report`)
+* `-p <profile>` - Nmap profile (`quick`, `standard`, `thorough`, `stealth` defined in `config/nmap_profiles.conf`)
+* `-o <dir>` - Custom output directory (default: `output/`)
+* `-q` - Quiet mode (suppresses ASCII banners and interactive pauses for scripts/cron)
+* `-h` - Display help and usage information
 
 ---
 
 ## Usage
 
 ### 1. Local Network Scan
-Discovers all active hosts on your network and performs aggressive nmap scans:
+Discovers all active hosts on your network using fast CIDR detection (`nmap -sn`) and runs tuned port scans:
 ```bash
 ./all_recon.sh
 # Select option: 1
 ```
 
 ### 2. Specific Host Analysis
-Deep reconnaissance on a single target:
+Deep reconnaissance on a single target with selectable Nmap profiles:
 ```bash
 ./all_recon.sh
 # Select option: 2
@@ -80,10 +96,10 @@ Comprehensive subdomain reconnaissance using multiple methods:
 
 **Subdomain Discovery Methods:**
 - DNS zone transfer attempts
-- Common subdomain brute force (60+ wordlist)
+- Parallel common subdomain brute force (60+ wordlist)
 - Reverse IP lookup
 - Public DNS records scan (A, AAAA, MX, NS, TXT, SPF, etc.)
-- SSL/TLS certificate transparency logs
+- SSL/TLS certificate transparency logs (SAN extraction from crt.sh)
 
 **After Discovery - Automatic Cleaning:**
 ```
@@ -92,7 +108,7 @@ Option: Clean results (Y/N)
 → Resolves IP addresses
 → Filters invalid entries
 → Organizes by IP
-→ Exports CSV/JSON
+→ Exports clean CSV/JSON
 ```
 
 **Or Clean Manually:**
@@ -110,7 +126,7 @@ Option: Clean results (Y/N)
 ```
 
 ### 4. Passive OSINT Targets
-Collect passive intelligence from public data sources without a scan:
+Collect passive intelligence from public data sources without an active scan:
 ```bash
 ./all_recon.sh
 # Select option: 7
@@ -158,18 +174,31 @@ Scan multiple targets in parallel from a target list file:
 ## Project Structure
 
 ```
-Project/
-├── all_recon.sh         # Main automation engine
-├── all_recon_alt.sh               # Alternative workflow variant
+All-Recon/
+├── all_recon.sh            # Main automation engine (CLI flags + interactive menu)
 ├── config/
-│   ├── nmap_profiles.conf      # Pre-tuned scan profiles
-│   └── automation_rules.conf   # Custom automation settings
+│   ├── nmap_profiles.conf  # Pre-tuned scan profiles (quick, standard, thorough, stealth)
+│   └── automation_rules.conf # Automation thresholds and settings
 ├── modules/
-│   ├── recon.sh                # Reconnaissance module
-│   ├── exploits.sh             # Exploitation tracking
-│   └── reporting.sh            # Report generation
-├── output/                      # Auto-generated scan results
-└── README.md                    # This file
+│   ├── validation.sh       # Input validation & directory traversal sanitization
+│   ├── recon.sh            # Port, DNS & service mapping (profile-driven)
+│   ├── whois_recon.sh      # WHOIS, reverse DNS & CIDR discovery
+│   ├── subdomain_finder.sh # Subdomain discovery (parallel brute-force + crt.sh SANs)
+│   ├── subdomain_cleaner.sh# Subdomain deduplication, IP grouping & JSON/CSV export
+│   ├── web_vulnerabilities.sh# Web vulnerability scanner (SQLi error detection, XSS, etc.)
+│   ├── batch_runner.sh     # Multi-target parallel runner with worker pools
+│   ├── passive.py          # Python async OSINT collection engine
+│   ├── passive.sh          # Passive OSINT shell wrapper
+│   └── reporting.sh        # Summary scan report generator
+├── tests/
+│   └── run_tests.sh        # Automated 9-suite unit & integration test runner
+├── docs/                   # In-depth reference guides and workflows
+│   ├── WORKFLOW_GUIDE.md
+│   ├── WEB_VULNERABILITIES.md
+│   ├── SUBDOMAIN_FEATURE.md
+│   └── PROJECT_MANIFEST.md
+├── output/                 # Timestamped scan results
+└── README.md               # Documentation & quick start guide
 ```
 
 ---
@@ -263,7 +292,7 @@ output/
 
 After reconnaissance identifies targets, vulnerability testing uncovers exploitable issues. Comprehensive guide included:
 
-📖 **[WEB_VULNERABILITIES.md](./WEB_VULNERABILITIES.md)** — Complete reference for:
+📖 **[WEB_VULNERABILITIES.md](./docs/WEB_VULNERABILITIES.md)** — Complete reference for:
 - **SQL Injection (SQLi)** - Detection methods, payloads, automated testing
 - **Cross-Site Scripting (XSS)** - Stored, reflected, DOM-based + bypass techniques
 - **OS Command Injection** - Shell metacharacters, data exfiltration, reverse shells

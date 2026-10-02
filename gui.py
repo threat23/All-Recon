@@ -21,6 +21,8 @@ does not add or remove any safety logic.
 """
 
 import os
+import re
+import time
 import queue
 import threading
 import subprocess
@@ -53,11 +55,23 @@ def require_modules_dir():
 # Reusable output + process-runner panel
 # ──────────────────────────────────────────────────────────────────
 class OutputPanel(ttk.Frame):
-    """Scrolling log area with a background subprocess runner."""
+    """Scrolling log area with a background subprocess runner.
+
+    Supports two modes:
+      .run(cmd)       — one subprocess, for simple one-shot tab actions.
+      .run_job(fn)     — fn(panel) runs in a worker thread and can call
+                         panel._run_single(cmd, save_to=...) any number of
+                         times in sequence (e.g. ping-sweep, then scan each
+                         live host). fn should check panel.stop_event
+                         between steps so Stop can cancel a multi-step job,
+                         not just the current subprocess.
+    """
 
     def __init__(self, parent):
         super().__init__(parent)
         self.process = None
+        self.busy = False
+        self.stop_event = threading.Event()
         self.msg_queue = queue.Queue()
         self.log = scrolledtext.ScrolledText(
             self, height=20, bg=BG, fg=FG, insertbackground=FG,
@@ -77,29 +91,76 @@ class OutputPanel(ttk.Frame):
         self.log.delete("1.0", "end")
         self.log.configure(state="disabled")
 
+    def _run_single(self, cmd, save_to=None):
+        """Run one subprocess to completion, streaming output to the queue
+        (and optionally to a file). Must be called from a worker thread.
+        Returns the exit code, or None if skipped because stop was requested."""
+        if self.stop_event.is_set():
+            return None
+        self.msg_queue.put(f"\n$ {' '.join(cmd)}\n")
+        self.process = subprocess.Popen(
+            cmd, cwd=PROJECT_ROOT,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, bufsize=1,
+        )
+        fh = open(save_to, "w", encoding="utf-8") if save_to else None
+        try:
+            for line in self.process.stdout:
+                self.msg_queue.put(line)
+                if fh:
+                    fh.write(line)
+                if self.stop_event.is_set():
+                    self.process.terminate()
+                    break
+        finally:
+            if fh:
+                fh.close()
+        self.process.wait()
+        return self.process.returncode
+
     def run(self, cmd):
-        if self.process and self.process.poll() is None:
+        """One-shot single command."""
+        if self.busy:
             messagebox.showwarning("Busy", "A scan is already running in this tab.\n"
                                             "Stop it first, or wait for it to finish.")
             return
         self.clear()
-        self.write(f"$ {' '.join(cmd)}\n\n")
+        self.stop_event.clear()
+        self.busy = True
 
         def worker():
             try:
-                self.process = subprocess.Popen(
-                    cmd, cwd=PROJECT_ROOT,
-                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                    text=True, bufsize=1,
-                )
-                for line in self.process.stdout:
-                    self.msg_queue.put(line)
-                self.process.wait()
-                self.msg_queue.put(f"\n[process exited with code {self.process.returncode}]\n")
+                rc = self._run_single(cmd)
+                if rc is not None:
+                    self.msg_queue.put(f"\n[process exited with code {rc}]\n")
             except FileNotFoundError as e:
                 self.msg_queue.put(f"\n[error] {e}\n")
             except Exception as e:  # noqa: BLE001
                 self.msg_queue.put(f"\n[unexpected error] {e}\n")
+            finally:
+                self.busy = False
+
+        threading.Thread(target=worker, daemon=True).start()
+        self.after(100, self._poll)
+
+    def run_job(self, job_fn):
+        """Multi-step job: job_fn(panel) drives one or more _run_single() calls."""
+        if self.busy:
+            messagebox.showwarning("Busy", "A scan is already running in this tab.\n"
+                                            "Stop it first, or wait for it to finish.")
+            return
+        self.clear()
+        self.stop_event.clear()
+        self.busy = True
+
+        def worker():
+            try:
+                job_fn(self)
+            except Exception as e:  # noqa: BLE001
+                self.msg_queue.put(f"\n[unexpected error] {e}\n")
+            finally:
+                self.msg_queue.put("\n[job finished]\n")
+                self.busy = False
 
         threading.Thread(target=worker, daemon=True).start()
         self.after(100, self._poll)
@@ -110,14 +171,15 @@ class OutputPanel(ttk.Frame):
                 self.write(self.msg_queue.get_nowait())
         except queue.Empty:
             pass
-        if self.process and self.process.poll() is None:
+        if self.busy:
             self.after(100, self._poll)
 
     def stop(self):
+        self.stop_event.set()
         if self.process and self.process.poll() is None:
             self.process.terminate()
-            self.write("\n[scan terminated by user]\n")
-        else:
+            self.write("\n[stop requested — finishing current step]\n")
+        elif not self.busy:
             messagebox.showinfo("Idle", "Nothing is running in this tab.")
 
 
@@ -158,13 +220,90 @@ def require(var, field_name):
 # ──────────────────────────────────────────────────────────────────
 # Tab builders — each wires simple inputs to a module script
 # ──────────────────────────────────────────────────────────────────
+def full_host_scan_cmd(target, use_sudo):
+    cmd = ["nmap", "-sS", "-O", "--osscan-guess", "--osscan-limit",
+           "--max-os-tries", "1", "-T4", "-Pn", "-p-", target]
+    return (["sudo"] + cmd) if use_sudo else cmd
+
+
+def sweep_and_scan_job(panel, subnet, use_sudo):
+    """Replicates all_recon.sh option 1: ping-sweep the /24, then run a
+    full nmap scan against every host that answered, one at a time,
+    writing each host's results to output/host_<ip>_<timestamp>.txt —
+    same naming convention as the bash tool so both front-ends share
+    the same output/ directory cleanly."""
+    out_dir = os.path.join(PROJECT_ROOT, "output")
+    os.makedirs(out_dir, exist_ok=True)
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+
+    cidr = f"{subnet}.0/24"
+    panel.msg_queue.put(f"[*] Ping sweeping {cidr} ...\n")
+    sweep_cmd = (["sudo"] if use_sudo else []) + ["nmap", "-sn", cidr]
+
+    # Capture sweep output ourselves (not via _run_single) so we can parse
+    # live hosts out of it once it's done, while still streaming it live.
+    if panel.stop_event.is_set():
+        return
+    panel.msg_queue.put(f"\n$ {' '.join(sweep_cmd)}\n")
+    proc = subprocess.Popen(
+        sweep_cmd, cwd=PROJECT_ROOT,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+    )
+    panel.process = proc
+    collected = []
+    for line in proc.stdout:
+        panel.msg_queue.put(line)
+        collected.append(line)
+        if panel.stop_event.is_set():
+            proc.terminate()
+            break
+    proc.wait()
+    if panel.stop_event.is_set():
+        panel.msg_queue.put("\n[*] Stopped during ping sweep.\n")
+        return
+
+    hosts = re.findall(
+        r"Nmap scan report for (?:\S+ \()?((?:\d{1,3}\.){3}\d{1,3})\)?",
+        "".join(collected),
+    )
+    hosts = sorted(set(hosts), key=lambda ip: tuple(int(p) for p in ip.split(".")))
+
+    if not hosts:
+        panel.msg_queue.put("\n[*] No hosts responded to the ping sweep.\n")
+        return
+
+    panel.msg_queue.put(f"\n[+] {len(hosts)} host(s) up: {', '.join(hosts)}\n")
+    panel.msg_queue.put("[*] Starting full nmap scans (sequential, one host at a time) ...\n")
+
+    for i, host in enumerate(hosts, 1):
+        if panel.stop_event.is_set():
+            panel.msg_queue.put(f"\n[*] Stopped before scanning remaining hosts ({len(hosts) - i + 1} left).\n")
+            break
+        panel.msg_queue.put(f"\n🔎 [{i}/{len(hosts)}] Scanning {host} ...\n")
+        out_file = os.path.join(out_dir, f"host_{host.replace('.', '_')}_{timestamp}.txt")
+        rc = panel._run_single(full_host_scan_cmd(host, use_sudo), save_to=out_file)
+        if rc is None:
+            break
+        panel.msg_queue.put(f"✅ Scan complete for {host} (results: output/{os.path.basename(out_file)})\n")
+
+    panel.msg_queue.put(f"\n📁 All results saved to: output/\n")
+
+
 def build_host_scan_tab(nb):
     tab = ttk.Frame(nb)
     nb.add(tab, text="Host / Network Scan")
 
     row = control_row(tab)
-    target = labeled_entry(row, "Target (IP, domain, or subnet e.g. 10.0.0):", width=28)
-    mode = labeled_combo(row, "Mode:", ["Full TCP scan (single host)", "Ping sweep (subnet)"])
+    target = labeled_entry(
+        row,
+        "Target — full IP/domain for single-host mode, or subnet prefix (e.g. 10.0.0) for sweep modes:",
+        width=40,
+    )
+    mode = labeled_combo(row, "Mode:", [
+        "Full TCP scan (single host)",
+        "Ping sweep only (subnet)",
+        "Full sweep + scan every live host (subnet)",
+    ], width=38)
     sudo_var = tk.BooleanVar(value=False)
     ttk.Checkbutton(row, text="Run with sudo (needed for -sS/-O)", variable=sudo_var).pack(side="left", padx=8)
 
@@ -175,14 +314,24 @@ def build_host_scan_tab(nb):
         t = require(target, "Target")
         if not t:
             return
-        if mode.get().startswith("Full"):
-            cmd = ["nmap", "-sS", "-O", "--osscan-guess", "--osscan-limit",
-                   "--max-os-tries", "1", "-T4", "-Pn", "-p-", t]
+        selected = mode.get()
+        use_sudo = sudo_var.get()
+
+        if selected.startswith("Full TCP"):
+            panel.run(full_host_scan_cmd(t, use_sudo))
+        elif selected.startswith("Ping sweep only"):
+            cmd = (["sudo"] if use_sudo else []) + ["nmap", "-sn", f"{t}.0/24"]
+            panel.run(cmd)
         else:
-            cmd = ["nmap", "-sn", f"{t}.0/24"]
-        if sudo_var.get():
-            cmd = ["sudo"] + cmd
-        panel.run(cmd)
+            if not messagebox.askyesno(
+                "Confirm subnet scan",
+                f"This will ping-sweep {t}.0/24 and then run a full TCP port "
+                f"scan (-p-) against every host that responds, one after another. "
+                f"On a /24 this can take a long time.\n\nOnly run this against "
+                f"networks you're authorized to scan. Continue?",
+            ):
+                return
+            panel.run_job(lambda p: sweep_and_scan_job(p, t, use_sudo))
 
     buttons = control_row(tab)
     run_stop_buttons(buttons, on_run, panel.stop)

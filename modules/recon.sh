@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Source validation module if available
+# Source validation and config if available
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$SCRIPT_DIR/validation.sh" ]]; then
     source "$SCRIPT_DIR/validation.sh"
     setup_signal_traps
+fi
+if [[ -f "$SCRIPT_DIR/../config/nmap_profiles.conf" ]]; then
+    source "$SCRIPT_DIR/../config/nmap_profiles.conf"
 fi
 
 RECON_LOG="logs/recon_$(date +%Y%m%d_%H%M%S).log"
@@ -72,7 +75,8 @@ service_mapping() {
     echo "SERVICE MAPPING: $target" | tee -a "$RECON_OUTPUT/services.txt"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | tee -a "$RECON_OUTPUT/services.txt"
     
-    nmap -sV -T4 --top-ports 1000 "$target" | tee -a "$RECON_OUTPUT/services.txt"
+    local flags="${PROFILE_QUICK:--sV -T4 --top-ports 1000}"
+    nmap $flags "$target" | tee -a "$RECON_OUTPUT/services.txt"
     
     log_recon "✅ Service mapping complete"
 }

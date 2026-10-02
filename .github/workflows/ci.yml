@@ -1,0 +1,38 @@
+name: ALL-RECON CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y nmap curl dnsutils toilet ruby whois
+        sudo gem install lolcat || sudo apt-get install -y lolcat || true
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run ALL-RECON Test Suite
+      run: |
+        chmod +x *.sh modules/*.sh tests/*.sh
+        bash tests/run_tests.sh

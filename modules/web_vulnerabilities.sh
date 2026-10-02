@@ -112,11 +112,16 @@ sqli_scan() {
             "1' AND 1=2 UNION SELECT NULL,NULL --"
         )
 
+        # Common database error patterns for SQLi error-based detection
+        local sqli_error_pattern="you have an error in your sql syntax|warning: mysql|unclosed quotation mark|quoted string not properly terminated|pg_query\(\)|sqlite3\.operationalerror|ora-[0-9]{5}|syntax error in query"
+
         for payload in "${sqli_payloads[@]}"; do
             encoded_payload=$(urlencode "$payload")
             echo "[*] Testing payload: $payload"
-            response=$(curl -s "$url?id=$encoded_payload" 2>/dev/null | head -c 200)
-            if [[ ! -z "$response" ]]; then
+            response=$(curl -s --max-time 10 "$url?id=$encoded_payload" 2>/dev/null)
+            if echo "$response" | grep -qiE "$sqli_error_pattern"; then
+                echo "    ⚠️  POTENTIAL SQL INJECTION: Database error signature detected in response!"
+            elif [[ -n "$response" ]]; then
                 echo "    Response received (first 50 chars): ${response:0:50}..."
             fi
         done
@@ -190,7 +195,7 @@ xss_scan() {
         for payload in "${xss_payloads[@]}"; do
             encoded_payload=$(urlencode "$payload")
             echo "[*] Testing: $payload"
-            response=$(curl -s "$url?search=$encoded_payload" 2>/dev/null)
+            response=$(curl -s --max-time 10 "$url?search=$encoded_payload" 2>/dev/null)
             if echo "$response" | grep -q "<script>alert" || echo "$response" | grep -q "onerror"; then
                 echo "    ⚠️  Potential XSS found! Payload reflected in response"
             fi
@@ -269,10 +274,13 @@ command_injection_scan() {
 
         echo "[*] Testing common parameters: ${cmd_params[*]}"
         for param in "${cmd_params[@]}"; do
-            payload="${param}=$(echo%20test)"
-            response=$(curl -s "$url?$payload" 2>/dev/null | head -c 200)
-            if [[ ! -z "$response" ]]; then
-                echo "[*] Parameter '$param' returned response"
+            encoded_payload=$(urlencode "; echo ALL_RECON_CMD_TEST")
+            payload="${param}=${encoded_payload}"
+            response=$(curl -s --max-time 10 "$url?$payload" 2>/dev/null)
+            if echo "$response" | grep -q "ALL_RECON_CMD_TEST"; then
+                echo "    ⚠️  Potential Command Injection detected on parameter '$param'!"
+            elif [[ -n "$response" ]]; then
+                echo "    [*] Parameter '$param' responded"
             fi
         done
 

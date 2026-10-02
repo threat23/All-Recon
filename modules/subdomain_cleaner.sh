@@ -71,21 +71,22 @@ deduplicate_and_resolve() {
         local resolved=0
         local unresolved=0
         local duplicates=0
-        local processed=()
+        declare -A seen=()
         
         while IFS= read -r subdomain; do
+            subdomain=$(echo "$subdomain" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
             [[ -z "$subdomain" ]] && continue
             
             # Check if already processed (dedup)
-            if [[ " ${processed[@]} " =~ " ${subdomain} " ]]; then
+            if [[ -n "${seen[$subdomain]:-}" ]]; then
                 ((duplicates++))
                 continue
             fi
             
-            processed+=("$subdomain")
+            seen["$subdomain"]=1
             
             # Attempt DNS resolution
-            ip=$(dig +short "$subdomain" A 2>/dev/null | grep -E '^[0-9.]+$' | head -1)
+            ip=$(dig +short "$subdomain" A 2>/dev/null | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$' | head -1)
             
             if [[ -n "$ip" ]]; then
                 printf "%-35s | %-18s | ✅ ACTIVE\n" "$subdomain" "$ip"
@@ -129,7 +130,7 @@ filter_active_only() {
         
         grep "✅ ACTIVE" "$input_file" | while read -r line; do
             subdomain=$(echo "$line" | awk '{print $1}')
-            ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
+            ip=$(echo "$line" | awk -F'|' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
             
             if [[ -n "$ip" && "$ip" != "N/A" ]]; then
                 printf "%-35s | %-18s\n" "$subdomain" "$ip"
@@ -162,16 +163,19 @@ group_by_ip() {
         
         # Extract unique IPs
         grep "✅ ACTIVE" "$input_file" | \
-        awk -F'|' '{print $2}' | xargs | sort -u | while read -r ip; do
-            [[ -z "$ip" || "$ip" == "N/A" ]] && continue
+        awk -F'|' '{gsub(/^[ \t]+|[ \t]+$/, "", $2); if ($2 != "" && $2 != "N/A") print $2}' | sort -u | while read -r ip; do
+            [[ -z "$ip" ]] && continue
             
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "IP: $ip"
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             
             grep "✅ ACTIVE" "$input_file" | \
-            awk -v target_ip="$ip" -F'|' '$2 ~ target_ip {print $1}' | \
-            sed 's/^ */  /'
+            awk -v target_ip="$ip" -F'|' '{
+                subdom=$1; gsub(/^[ \t]+|[ \t]+$/, "", subdom);
+                ip_field=$2; gsub(/^[ \t]+|[ \t]+$/, "", ip_field);
+                if (ip_field == target_ip) print "  " subdom;
+            }'
             
             echo ""
         done
@@ -192,12 +196,16 @@ export_to_csv() {
     {
         echo "subdomain,ip_address,status,resolved_date"
         
-        grep "✅ ACTIVE\|⚠️" "$input_file" | while read -r line; do
+        grep -E "✅ ACTIVE|⚠️  UNRESOLVED" "$input_file" | while read -r line; do
             subdomain=$(echo "$line" | awk '{print $1}')
-            ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
-            status=$(echo "$line" | awk -F'|' '{print $3}' | xargs)
+            ip=$(echo "$line" | awk -F'|' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+            status_raw=$(echo "$line" | awk -F'|' '{print $3}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
             
-            echo "$subdomain,$ip,$status,$(date)"
+            status="UNKNOWN"
+            if [[ "$status_raw" =~ ACTIVE ]]; then status="ACTIVE"; fi
+            if [[ "$status_raw" =~ UNRESOLVED ]]; then status="UNRESOLVED"; fi
+            
+            echo "\"$subdomain\",\"$ip\",\"$status\",\"$(date '+%Y-%m-%d %H:%M:%S')\""
         done
         
     } | tee "$output_file"
@@ -218,29 +226,30 @@ export_to_json() {
         echo '  "subdomains": ['
         
         local first=true
-        grep "✅ ACTIVE\|⚠️" "$input_file" | while read -r line; do
+        while read -r line; do
+            [[ -z "$line" ]] && continue
             subdomain=$(echo "$line" | awk '{print $1}')
-            ip=$(echo "$line" | awk -F'|' '{print $2}' | xargs)
-            status=$(echo "$line" | awk -F'|' '{print $3}' | xargs)
+            ip=$(echo "$line" | awk -F'|' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+            status_raw=$(echo "$line" | awk -F'|' '{print $3}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
             
-            if [[ "$first" == "false" ]]; then
+            status="UNKNOWN"
+            if [[ "$status_raw" =~ ACTIVE ]]; then status="ACTIVE"; fi
+            if [[ "$status_raw" =~ UNRESOLVED ]]; then status="UNRESOLVED"; fi
+            
+            if [[ "$first" == "true" ]]; then
+                first=false
+            else
                 echo ","
             fi
-            first=false
             
-            echo -n '    {'
-            echo -n "\"subdomain\": \"$subdomain\", "
-            echo -n "\"ip\": \"$ip\", "
-            echo -n "\"status\": \"$status\""
-            echo -n '}'
-        done
+            printf '    {"subdomain": "%s", "ip": "%s", "status": "%s"}' "$subdomain" "$ip" "$status"
+        done < <(grep -E "✅ ACTIVE|⚠️  UNRESOLVED" "$input_file" 2>/dev/null)
         
         echo ""
         echo "  ]"
         echo "}"
-        
     } | tee "$output_file"
-    
+        
     log_clean "✅ JSON export complete: $output_file"
     echo "$output_file"
 }

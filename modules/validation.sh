@@ -65,9 +65,14 @@ is_valid_number() {
 # Sanitize path to prevent directory traversal
 sanitize_path() {
     local user_path="$1"
-    # Remove leading dots or slashes attempting traversal
-    local clean_path
-    clean_path=$(echo "$user_path" | sed -E 's/\.\.\///g' | sed -E 's/^\/+//g')
+    local clean_path="$user_path"
+    # Repeatedly remove any '..' or '../' components to prevent nested bypasses (e.g. ....//)
+    while [[ "$clean_path" == *".."* ]]; do
+        clean_path="${clean_path//..\//}"
+        clean_path="${clean_path//..\\/}"
+        clean_path="${clean_path//../}"
+    done
+    clean_path=$(echo "$clean_path" | sed -E 's/^[/\\]+//g')
     echo "$clean_path"
 }
 

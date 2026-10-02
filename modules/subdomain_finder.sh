@@ -106,17 +106,35 @@ common_subdomains_bruteforce() {
         echo ""
         
         local found_count=0
-        
+        local tmp_results
+        tmp_results=$(mktemp)
+        if type register_tmp_file &>/dev/null; then register_tmp_file "$tmp_results"; fi
+
+        local active_jobs=0
+        local max_jobs=10
+
         for sub in "${subdomains[@]}"; do
-            target="$sub.$domain"
-            result=$(dig +short "$target" A 2>/dev/null | grep -v "^$")
-            
-            if [[ -n "$result" ]]; then
-                echo "✅ FOUND: $target"
-                echo "   IP: $result"
-                ((found_count++))
+            (
+                target="$sub.$domain"
+                result=$(dig +short "$target" A 2>/dev/null | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$' | head -1)
+                if [[ -n "$result" ]]; then
+                    echo "✅ FOUND: $target" >> "$tmp_results"
+                    echo "   IP: $result" >> "$tmp_results"
+                fi
+            ) &
+            ((active_jobs++))
+            if [[ $active_jobs -ge $max_jobs ]]; then
+                wait -n 2>/dev/null || wait
+                ((active_jobs--))
             fi
         done
+        wait
+
+        if [[ -s "$tmp_results" ]]; then
+            cat "$tmp_results"
+            found_count=$(grep -c "^✅ FOUND:" "$tmp_results" || echo 0)
+        fi
+        rm -f "$tmp_results"
         
         echo ""
         echo "────────────────────────────────────────────────────────────────"
@@ -241,10 +259,19 @@ cert_transparency_scan() {
         echo "Using crt.sh API for Certificate Transparency logs..."
         echo "────────────────────────────────────────────────────────────────"
         
-        # Query crt.sh for SSL certificates
-        curl -s "https://crt.sh/?q=%25.$domain&output=json" 2>/dev/null | \
-        grep -oP '"common_name":"[^"]*"' | cut -d'"' -f4 | sort -u | grep -v "^$" || \
-        echo "Could not reach crt.sh or no results found"
+        # Query crt.sh for SSL certificates (extracting both common_name and name_value SANs)
+        local raw_crt
+        raw_crt=$(curl -s --max-time 20 "https://crt.sh/?q=%25.$domain&output=json" 2>/dev/null)
+        if [[ -n "$raw_crt" && "$raw_crt" =~ "[" ]]; then
+            echo "$raw_crt" | grep -oP '("common_name"|"name_value"):\s*"[^"]+"' | \
+                cut -d'"' -f4 | \
+                sed 's/\\n/\n/g' | \
+                sed 's/^\*\.//' | \
+                grep -iE "([a-zA-Z0-9.-]+\.)?${domain//./\\.}$" | \
+                sort -u | grep -v "^$" || echo "No subdomains extracted from crt.sh"
+        else
+            echo "Could not reach crt.sh or no results found (API rate limited or unreachable)"
+        fi
         
         echo ""
         echo "💡 Tip: Visit https://crt.sh for web interface"
