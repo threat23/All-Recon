@@ -130,7 +130,10 @@ def collect(url, timeout):
     match = re.search(r"charset=([A-Za-z0-9._-]+)", content_type, re.I)
     if match:
         charset = match.group(1)
-    body = final_body.decode(charset, errors="replace")
+    try:
+        body = final_body.decode(charset, errors="replace")
+    except LookupError:
+        body = final_body.decode("utf-8", errors="replace")
     title_match = re.search(r"<title\b[^>]*>(.*?)</title\s*>", body, re.I | re.S)
     title = html.unescape(re.sub(r"\s+", " ", title_match.group(1))).strip() if title_match else None
 
@@ -142,13 +145,15 @@ def collect(url, timeout):
             pass
     cookie_findings = []
     for cookie in set_cookie:
-        flags = cookie.lower()
+        # Only attributes after the first semicolon count; a cookie name such
+        # as "secure_session" must not be mistaken for the Secure flag.
+        attributes = [part.strip().lower() for part in cookie.split(";")[1:]]
         missing = []
-        if "secure" not in flags:
+        if "secure" not in attributes:
             missing.append("Secure")
-        if "httponly" not in flags:
+        if "httponly" not in attributes:
             missing.append("HttpOnly")
-        if "samesite" not in flags:
+        if not any(attribute.startswith("samesite=") for attribute in attributes):
             missing.append("SameSite")
         if missing:
             cookie_findings.append({"cookie_name": cookie.split("=", 1)[0].strip(), "missing_flags": missing})
