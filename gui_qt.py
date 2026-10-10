@@ -582,7 +582,7 @@ def build_batch_tab(nb):
     row.addSpacing(12)
     
     row2 = control_row(tab)
-    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "all"], default="recon")
+    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "asn", "http", "email", "all"], default="recon")
     concurrency = labeled_entry(row2, "Max workers:", width=4, default="5")
     
     panel = OutputPanel(tab)
