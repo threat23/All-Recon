@@ -212,7 +212,7 @@ Scan multiple targets in parallel from a target list file:
 ./all_recon.sh
 # Select option: 5
 # Enter target list file (e.g., targets.txt)
-# Select scan mode (recon, whois, subdomain, passive, web, all)
+# Select scan mode (recon, whois, subdomain, passive, web, asn, http, email, all)
 # Specify max worker concurrency (e.g., 5)
 ```
 
@@ -257,7 +257,7 @@ All-Recon/
 │   ├── dns_email_audit.py   # DNS and email security posture audit
 │   └── reporting.sh        # Summary scan report generator
 ├── tests/
-│   └── run_tests.sh        # Automated 9-suite unit & integration test runner
+│   └── run_tests.sh        # Automated unit & integration test runner
 ├── docs/                   # In-depth reference guides and workflows
 │   ├── WORKFLOW_GUIDE.md
 │   ├── WEB_VULNERABILITIES.md
