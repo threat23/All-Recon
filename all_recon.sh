@@ -477,7 +477,10 @@ elif [[ "$choice" == "5" ]]; then
         echo "4. Passive OSINT (crt.sh + Wayback + RDAP)"
         echo "5. Web Vulnerabilities"
         echo "6. Comprehensive Scan (All Modules)"
-        read -p "Enter mode choice [1/2/3/4/5/6]: " batch_mode_choice
+        echo "7. ASN / IP Mapping"
+        echo "8. HTTP / TLS Fingerprinting"
+        echo "9. DNS & Email Security Audit"
+        read -p "Enter mode choice [1-9]: " batch_mode_choice
 
         case $batch_mode_choice in
             1) mode="recon" ;;
@@ -486,6 +489,9 @@ elif [[ "$choice" == "5" ]]; then
             4) mode="passive" ;;
             5) mode="web" ;;
             6) mode="all" ;;
+            7) mode="asn" ;;
+            8) mode="http" ;;
+            9) mode="email" ;;
             *) mode="recon" ;;
         esac
 
