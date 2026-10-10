@@ -33,7 +33,10 @@ usage() {
     echo "  subdomain   - Subdomain Discovery & OSINT"
     echo "  passive     - Passive OSINT (crt.sh, Wayback, RDAP)"
     echo "  web         - Web Vulnerability Scanning"
-    echo "  all         - Comprehensive scan (recon + subdomain + passive + web + whois)"
+    echo "  asn         - Passive ASN / IP-prefix enrichment"
+    echo "  http        - HTTP / TLS fingerprinting"
+    echo "  email       - DNS and email security audit (domain targets)"
+    echo "  all         - Comprehensive scan including expanded recon modules"
     echo ""
     echo "Parameters:"
     echo "  targets_file    - Path to text file containing target IPs, domains, or URLs"
@@ -127,6 +130,15 @@ run_target_scan() {
             fi
             bash "$SCRIPT_DIR/web_vulnerabilities.sh" "$url" 10 &> "$target_out/web_vulns.log"
             ;;
+        asn)
+            python3 "$SCRIPT_DIR/asn_recon.py" "$target" --output-dir "$target_out" &> "$target_out/asn.log"
+            ;;
+        http)
+            python3 "$SCRIPT_DIR/http_fingerprint.py" "$target" --output-dir "$target_out" &> "$target_out/http.log"
+            ;;
+        email)
+            python3 "$SCRIPT_DIR/dns_email_audit.py" "$target" --output-dir "$target_out" &> "$target_out/email.log"
+            ;;
         all)
             bash "$SCRIPT_DIR/recon.sh" "$target" all &> "$target_out/recon.log"
             bash "$SCRIPT_DIR/whois_recon.sh" "$target" all &> "$target_out/whois.log"
@@ -139,6 +151,14 @@ run_target_scan() {
                 url="http://$target"
             fi
             bash "$SCRIPT_DIR/web_vulnerabilities.sh" "$url" 10 &> "$target_out/web_vulns.log"
+            python3 "$SCRIPT_DIR/asn_recon.py" "$target" --output-dir "$target_out" &> "$target_out/asn.log"
+            python3 "$SCRIPT_DIR/http_fingerprint.py" "$target" --output-dir "$target_out" &> "$target_out/http.log"
+            domain_candidate=$(printf '%s' "$target" | sed -E 's|^https?://||; s|/.*$||; s|:[0-9]+$||')
+            if type is_valid_domain &>/dev/null && is_valid_domain "$domain_candidate"; then
+                python3 "$SCRIPT_DIR/dns_email_audit.py" "$domain_candidate" --output-dir "$target_out" &> "$target_out/email.log"
+            else
+                echo "[!] DNS/email audit requires a domain target; skipped." > "$target_out/email.log"
+            fi
             ;;
         *)
             echo "Unknown mode: $mode" > "$target_out/error.log"

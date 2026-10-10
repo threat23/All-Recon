@@ -26,6 +26,7 @@ import time
 import queue
 import threading
 import subprocess
+import sys
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTabWidget, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton,
@@ -517,6 +518,40 @@ def build_passive_tab(nb):
     run_stop_buttons(buttons, on_run, panel.stop)
 
 
+
+def build_enrichment_tab(nb):
+    """UI for the new ASN, HTTP/TLS, and DNS/email recon modules."""
+    tab = QWidget()
+    tab.setLayout(QVBoxLayout())
+    nb.addTab(tab, "Recon Enrichment")
+
+    row = control_row(tab)
+    target = labeled_entry(row, "Authorized target (domain, IP, or URL):", width=34)
+    tool_map = {
+        "ASN / IP Mapping": "asn_recon.py",
+        "HTTP / TLS Fingerprinting": "http_fingerprint.py",
+        "DNS & Email Security": "dns_email_audit.py",
+    }
+    tool = labeled_combo(row, "Module:", list(tool_map.keys()),
+                         default="ASN / IP Mapping", width=30)
+
+    panel = OutputPanel(tab)
+    tab.layout().addWidget(panel)
+
+    def on_run():
+        value = require(target, "Target")
+        if not value:
+            return
+        module = tool_map[tool.currentText()]
+        panel.run([
+            sys.executable, module_path(module), value,
+            "--output-dir", os.path.join(PROJECT_ROOT, "output")
+        ])
+
+    buttons = control_row(tab)
+    run_stop_buttons(buttons, on_run, panel.stop)
+
+
 def build_batch_tab(nb):
     tab = QWidget()
     tab.setLayout(QVBoxLayout())
@@ -547,7 +582,7 @@ def build_batch_tab(nb):
     row.addSpacing(12)
     
     row2 = control_row(tab)
-    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "all"], default="recon")
+    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "asn", "http", "email", "all"], default="recon")
     concurrency = labeled_entry(row2, "Max workers:", width=4, default="5")
     
     panel = OutputPanel(tab)
@@ -701,6 +736,7 @@ class AllReconGUI(QMainWindow):
         build_web_vuln_tab(self.nb)
         build_whois_tab(self.nb)
         build_passive_tab(self.nb)
+        build_enrichment_tab(self.nb)
         build_batch_tab(self.nb)
         build_reports_tab(self.nb)
         

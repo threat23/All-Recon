@@ -291,6 +291,22 @@ fi
 echo ""
 
 # -------------------------------------------------------------------
+# TEST SUITE 10: EXPANDED RECON MODULES (OFFLINE UNIT TESTS)
+# -------------------------------------------------------------------
+echo -e "${YELLOW}▶ TEST SUITE 10: ASN / HTTP / DNS-email offline unit tests${NC}"
+
+if [[ -f "tests/test_recon_modules.py" ]]; then
+    if python3 -m unittest discover -s tests -p 'test_recon_modules.py' -v; then
+        log_pass "Expanded recon module unit tests"
+    else
+        log_fail "Expanded recon module unit tests"
+    fi
+else
+    log_skip "tests/test_recon_modules.py not found"
+fi
+echo ""
+
+# -------------------------------------------------------------------
 # SUMMARY REPORT
 # -------------------------------------------------------------------
 TOTAL_TESTS=$((PASSED_TESTS + FAILED_TESTS + SKIPPED_TESTS))

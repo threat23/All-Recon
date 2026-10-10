@@ -23,6 +23,9 @@
 ✅ **Targeted Host Analysis** - Deep-dive scanning for specific IPs/domains  
 ✅ **Subdomain Discovery** - Comprehensive subdomain enumeration & DNS analysis  
 ✅ **Passive OSINT** - crt.sh, Wayback, and RDAP lookups for target intelligence without active probes  
+✅ **ASN / IP Mapping** - Public ASN, network holder, and announced-prefix enrichment  
+✅ **HTTP / TLS Fingerprinting** - HTTP status, headers, technology clues, cookie flags, security headers, and TLS certificate metadata  
+✅ **DNS & Email Security Audit** - SPF, DMARC, common DKIM selector hints, DNSSEC signals, CAA, MTA-STS, and SMTP TLS reporting  
 ✅ **Subdomain Cleaning** - Remove duplicates, deduplicate, organize & export results  
 ✅ **IP Detection** - Automatic internal & external IP discovery  
 ✅ **Dependency Management** - Smart pre-flight checks for required tools  
@@ -69,11 +72,14 @@ ALL-RECON supports full non-interactive execution with customizable scan profile
 ./all_recon.sh -t example.com -m subdomain
 ./all_recon.sh -t http://example.com -m web
 ./all_recon.sh -t targets.txt -m batch
+./all_recon.sh -t example.com -m asn
+./all_recon.sh -t https://example.com -m http
+./all_recon.sh -t example.com -m email
 ./all_recon.sh -q -m report
 ```
 **Flags:**
 * `-t <target>` - Target IP, domain, URL, or target list file
-* `-m <mode>` - Scan mode (`network`, `host`, `subdomain`, `web`, `batch`, `whois`, `passive`, `report`)
+* `-m <mode>` - Scan mode (`network`, `host`, `subdomain`, `web`, `batch`, `whois`, `passive`, `asn`, `http`, `email`, `report`)
 * `-p <profile>` - Nmap profile (`quick`, `standard`, `thorough`, `stealth` defined in `config/nmap_profiles.conf`)
 * `-o <dir>` - Custom output directory (default: `output/`)
 * `-q` - Quiet mode (suppresses ASCII banners and interactive pauses for scripts/cron)
@@ -181,13 +187,32 @@ This writes JSON output to `output/passive_<target>_timestamp.json` and includes
 - RDAP registration / network metadata
 - Shodan placeholder status (not enabled by default)
 
-### 5. Multi-Target Batch Scanner
+### 5. Expanded Reconnaissance
+
+The new modules are available in CLI mode, interactive menu options 11–13, the PyQt6 GUI's **Recon Enrichment** tab, and batch mode.
+
+```bash
+# Passive routing context for a domain or IP
+./all_recon.sh -t example.com -m asn
+
+# HTTP headers, cookie flags, technology clues, and TLS certificate details
+./all_recon.sh -t https://example.com -m http
+
+# Read-only DNS and email-authentication posture (requires dig/dnsutils)
+./all_recon.sh -t example.com -m email
+```
+
+ASN enrichment uses public RIPEstat data and does not probe announced prefixes. HTTP fingerprinting requests only the supplied URL, records redirects without following them, and caps body reads at 1 MB. DNS/email auditing sends no email and tests only a small list of common DKIM selectors. Results are triage hints, not proof of exploitability or complete standards validation. Only assess authorized assets.
+
+The reports are written to timestamped text and JSON files under `output/`, or the directory supplied with `-o`.
+
+### 6. Multi-Target Batch Scanner
 Scan multiple targets in parallel from a target list file:
 ```bash
 ./all_recon.sh
 # Select option: 5
 # Enter target list file (e.g., targets.txt)
-# Select scan mode (recon, whois, subdomain, passive, web, all)
+# Select scan mode (recon, whois, subdomain, passive, web, asn, http, email, all)
 # Specify max worker concurrency (e.g., 5)
 ```
 
@@ -198,7 +223,7 @@ Scan multiple targets in parallel from a target list file:
 ./modules/batch_runner.sh targets.txt all 3
 ```
 
-### 6. View Results & Generate Reports
+### 7. View Results & Generate Reports
 ```bash
 ./all_recon.sh
 # Select option: 8 (View Last Results)
@@ -227,9 +252,12 @@ All-Recon/
 │   ├── batch_runner.sh     # Multi-target parallel runner with worker pools
 │   ├── passive.py          # Python async OSINT collection engine
 │   ├── passive.sh          # Passive OSINT shell wrapper
+│   ├── asn_recon.py         # Public ASN / announced-prefix enrichment
+│   ├── http_fingerprint.py # HTTP / cookie / TLS fingerprinting
+│   ├── dns_email_audit.py   # DNS and email security posture audit
 │   └── reporting.sh        # Summary scan report generator
 ├── tests/
-│   └── run_tests.sh        # Automated 9-suite unit & integration test runner
+│   └── run_tests.sh        # Automated unit & integration test runner
 ├── docs/                   # In-depth reference guides and workflows
 │   ├── WORKFLOW_GUIDE.md
 │   ├── WEB_VULNERABILITIES.md
