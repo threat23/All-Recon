@@ -27,7 +27,15 @@ def normalize_target(value):
     if "://" in value:
         value = urlsplit(value).hostname or ""
     else:
-        value = value.split("/", 1)[0].split(":", 1)[0]
+        candidate = value.split("/", 1)[0].strip()
+        try:
+            return str(ipaddress.ip_address(candidate))
+        except ValueError:
+            pass
+        # Permit host:port for domain input, but do not split IPv6 literals.
+        if candidate.count(":") == 1:
+            candidate = candidate.rsplit(":", 1)[0]
+        value = candidate
     if not value:
         raise ValueError("Target is empty.")
     try:
