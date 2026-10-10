@@ -12,6 +12,33 @@ mkdir -p "$OUTPUT_DIR" "$LOGS_DIR"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Expanded recon modes dispatch directly to their isolated Python modules.
+EARLY_ARGS=("$@")
+EARLY_TARGET=""
+EARLY_MODE=""
+EARLY_OUTPUT="output"
+for ((i=0; i<${#EARLY_ARGS[@]}; i++)); do
+    case "${EARLY_ARGS[$i]}" in
+        -t|--target) ((i+=1)); EARLY_TARGET="${EARLY_ARGS[$i]:-}" ;;
+        -m|--mode) ((i+=1)); EARLY_MODE="${EARLY_ARGS[$i]:-}" ;;
+        -o|--output-dir) ((i+=1)); EARLY_OUTPUT="${EARLY_ARGS[$i]:-output}" ;;
+    esac
+done
+case "$EARLY_MODE" in
+    asn|http|email|dns-email|dns_email)
+        if [[ -z "$EARLY_TARGET" ]]; then
+            echo "Error: -t <target> is required for mode '$EARLY_MODE'." >&2
+            exit 2
+        fi
+        case "$EARLY_MODE" in
+            asn) RECON_MODULE="asn_recon.py" ;;
+            http) RECON_MODULE="http_fingerprint.py" ;;
+            email|dns-email|dns_email) RECON_MODULE="dns_email_audit.py" ;;
+        esac
+        exec python3 "$SCRIPT_DIR/modules/$RECON_MODULE" "$EARLY_TARGET" --output-dir "$EARLY_OUTPUT"
+        ;;
+esac
+
 # Source validation module if available
 if [[ -f "$SCRIPT_DIR/modules/validation.sh" ]]; then
     source "$SCRIPT_DIR/modules/validation.sh"
@@ -53,7 +80,7 @@ usage() {
     echo ""
     echo "Options:"
     echo "  -t <target>       Target IP, domain, URL, or target file"
-    echo "  -m <mode>         Scan mode: network, host, subdomain, web, batch, whois, passive, report"
+    echo "  -m <mode>         Scan mode: network, host, subdomain, web, batch, whois, passive, asn, http, email, report"
     echo "  -p <profile>      Nmap profile: quick, standard, thorough, stealth (default: standard)"
     echo "  -o <output_dir>   Output directory (default: output)"
     echo "  -q                Quiet mode (suppress visual banner & animations for automation)"
@@ -64,6 +91,9 @@ usage() {
     echo "  $0 -t example.com -m subdomain"
     echo "  $0 -t http://example.com -m web"
     echo "  $0 -t targets.txt -m batch"
+    echo "  $0 -t example.com -m asn"
+    echo "  $0 -t https://example.com -m http"
+    echo "  $0 -t example.com -m email"
     echo "  $0 -q -m report"
     echo "  $0                (Interactive menu mode)"
     exit 0
@@ -171,7 +201,10 @@ else
     echo "8. View Last Results"
     echo "9. Generate Report"
     echo "10. Exit / Cancel"
-    read -p "Enter choice [1/2/3/4/5/6/7/8/9/10]: " choice
+    echo "11. ASN / IP Range Mapping (passive public data)"
+    echo "12. HTTP / TLS Fingerprinting"
+    echo "13. DNS & Email Security Audit"
+    read -p "Enter choice [1-13]: " choice
     echo ""
 fi
 
@@ -587,6 +620,26 @@ elif [[ "$choice" == "10" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
     log_output "🛑 Session ended"
     exit 0
+
+elif [[ "$choice" == "11" || "$choice" == "12" || "$choice" == "13" ]]; then
+    target_recon="${CLI_TARGET}"
+    if [[ -z "$target_recon" ]]; then
+        read -p "Enter the authorized target domain, IP, or URL: " target_recon
+    fi
+    if [[ -z "$target_recon" ]]; then
+        echo "[!] Target cannot be empty."
+        exit 2
+    fi
+    case "$choice" in
+        11) recon_module="asn_recon.py" ;;
+        12) recon_module="http_fingerprint.py" ;;
+        13) recon_module="dns_email_audit.py" ;;
+    esac
+    log_output "Expanded reconnaissance initiated: $recon_module target=$target_recon"
+    python3 "$SCRIPT_DIR/modules/$recon_module" "$target_recon" --output-dir "$OUTPUT_DIR"
+    recon_status=$?
+    log_output "Expanded reconnaissance completed with status $recon_status"
+    exit "$recon_status"
 
 else
     echo -e "$(tput bold)[!] Invalid choice. Exiting.$(tput sgr0)"
