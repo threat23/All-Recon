@@ -30,6 +30,7 @@
 ✅ **Modular Architecture** - Easy to extend with custom recon modules  
 ✅ **Automated Reporting** - Scan results captured for later analysis  
 ✅ **Background Processing** - Parallel scanning to maximize throughput  
+✅ **Modern GUI (PyQt6)** - Enhanced dark theme interface with system icons and professional styling  
 
 ---
 
@@ -39,15 +40,26 @@
 
 ```bash
 sudo apt update
-sudo apt install nmap toilet git curl dnsutils -y
+sudo apt install nmap toilet git curl dnsutils python3-pyqt6 -y
 sudo gem install lolcat  # or: sudo apt install lolcat
 ```
 
 ### Quick Start
 
+**CLI Mode:**
 ```bash
 chmod +x all_recon.sh
 ./all_recon.sh
+```
+
+**GUI Mode (Tkinter - Legacy):**
+```bash
+python3 gui.py
+```
+
+**GUI Mode (PyQt6 - Enhanced):**
+```bash
+python3 gui_qt.py
 ```
 
 ### CLI Automation & Pipeline Mode
@@ -70,6 +82,30 @@ ALL-RECON supports full non-interactive execution with customizable scan profile
 ---
 
 ## Usage
+
+### GUI Mode (Recommended)
+
+For a modern, professional interface with dark theme and system icons:
+
+**Enhanced PyQt6 GUI:**
+```bash
+python3 gui_qt.py
+```
+
+Features:
+- Dark theme with cyberpunk-inspired color scheme
+- System-standard icons (play, stop, file, directory, etc.)
+- Professional tabbed interface
+- Real-time output streaming
+- Threaded background operations
+- Cross-platform consistent look
+
+**Legacy Tkinter GUI:**
+```bash
+python3 gui.py
+```
+
+The Tkinter version is maintained for compatibility but uses a simpler widget set.
 
 ### 1. Local Network Scan
 Discovers all active hosts on your network using fast CIDR detection (`nmap -sn`) and runs tuned port scans:
@@ -176,6 +212,8 @@ Scan multiple targets in parallel from a target list file:
 ```
 All-Recon/
 ├── all_recon.sh            # Main automation engine (CLI flags + interactive menu)
+├── gui.py                  # Legacy Tkinter GUI
+├── gui_qt.py               # Enhanced PyQt6 GUI with dark theme and icons
 ├── config/
 │   ├── nmap_profiles.conf  # Pre-tuned scan profiles (quick, standard, thorough, stealth)
 │   └── automation_rules.conf # Automation thresholds and settings
@@ -358,6 +396,13 @@ sudo apt install lolcat
 ### "nmap: command not found"
 ```bash
 sudo apt install nmap
+```
+
+### "PyQt6 not installed" (GUI mode)
+```bash
+sudo apt install python3-pyqt6
+# or if not available in repos:
+pip install PyQt6
 ```
 
 ### Permission Denied
