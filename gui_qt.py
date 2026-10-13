@@ -606,24 +606,40 @@ def build_reports_tab(nb):
     tab = QWidget()
     tab.setLayout(QVBoxLayout())
     nb.addTab(tab, "Reports")
-    
+
     row = control_row(tab)
     scan_dir = labeled_entry(row, "Scan directory:", width=24, default="output")
-    
+    report_format = labeled_combo(row, "Format:", ["text", "json", "csv", "html", "all"], default="all", width=15)
+
     panel = OutputPanel(tab)
     tab.layout().addWidget(panel)
-    
+
     def on_generate():
         d = require(scan_dir, "Scan directory")
         if not d:
             return
-        panel.run(["bash", module_path("reporting.sh"), d])
-    
+        fmt = report_format.currentText()
+        panel.run(["bash", module_path("reporting.sh"), fmt, d])
+
     def on_list():
         panel.run(["bash", module_path("reporting.sh"), "list"])
-    
+
+    def on_open_html():
+        d = require(scan_dir, "Scan directory")
+        if not d:
+            return
+        # Generate HTML report and open in browser
+        import subprocess
+        panel.run(["bash", module_path("reporting.sh"), "html", d])
+        # Find the latest HTML report
+        import glob
+        html_files = glob.glob(os.path.join(PROJECT_ROOT, "output", "reports", "*.html"))
+        if html_files:
+            latest_html = max(html_files, key=os.path.getctime)
+            subprocess.run(["xdg-open", latest_html] if os.name != "nt" else ["start", latest_html], shell=True)
+
     buttons = control_row(tab)
-    
+
     gen_btn = QPushButton("Generate Report")
     gen_btn.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap.SP_FileIcon))
     gen_btn.setStyleSheet("""
@@ -641,7 +657,7 @@ def build_reports_tab(nb):
     """)
     gen_btn.clicked.connect(on_generate)
     buttons.addWidget(gen_btn)
-    
+
     list_btn = QPushButton("List Reports")
     list_btn.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogDetailedView))
     list_btn.setStyleSheet("""
@@ -658,7 +674,24 @@ def build_reports_tab(nb):
     """)
     list_btn.clicked.connect(on_list)
     buttons.addWidget(list_btn)
-    
+
+    open_btn = QPushButton("Open HTML")
+    open_btn.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap.SP_BrowserReload))
+    open_btn.setStyleSheet("""
+        QPushButton {
+            background-color: #1a222c;
+            color: #39ff14;
+            border: 1px solid #1f6feb;
+            border-radius: 4px;
+            padding: 6px 16px;
+        }
+        QPushButton:hover {
+            background-color: #2a333c;
+        }
+    """)
+    open_btn.clicked.connect(on_open_html)
+    buttons.addWidget(open_btn)
+
     stop_btn = QPushButton("Stop")
     stop_btn.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MediaStop))
     stop_btn.setStyleSheet("""

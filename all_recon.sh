@@ -55,6 +55,7 @@ if [[ -f "$CONFIG_DIR/automation_rules.conf" ]]; then
 fi
 
 # Pre-tuned Nmap profiles with defaults
+PROFILE_ULTRA=${PROFILE_ULTRA:-"-T4 --top-ports 20 -sS"}
 PROFILE_QUICK=${PROFILE_QUICK:-"-T4 -p 1-1000 -sS"}
 PROFILE_STANDARD=${PROFILE_STANDARD:-"-sS -O --osscan-guess --osscan-limit -T4 -p- -Pn"}
 PROFILE_THOROUGH=${PROFILE_THOROUGH:-"-sS -sU -O --osscan-guess -T3 -A -p- --script default,discovery"}
@@ -81,12 +82,13 @@ usage() {
     echo "Options:"
     echo "  -t <target>       Target IP, domain, URL, or target file"
     echo "  -m <mode>         Scan mode: network, host, subdomain, web, batch, whois, passive, asn, http, email, report"
-    echo "  -p <profile>      Nmap profile: quick, standard, thorough, stealth (default: standard)"
+    echo "  -p <profile>      Nmap profile: ultra, quick, standard, thorough, stealth (default: standard)"
     echo "  -o <output_dir>   Output directory (default: output)"
     echo "  -q                Quiet mode (suppress visual banner & animations for automation)"
     echo "  -h                Display this help message"
     echo ""
     echo "Examples:"
+    echo "  $0 -t 192.168.1.50 -m host -p ultra"
     echo "  $0 -t 192.168.1.50 -m host -p quick"
     echo "  $0 -t example.com -m subdomain"
     echo "  $0 -t http://example.com -m web"
@@ -115,6 +117,7 @@ done
 resolve_nmap_flags() {
     local prof="${1:-standard}"
     case "$prof" in
+        ultra|discovery) echo "$PROFILE_ULTRA" ;;
         quick|fast) echo "$PROFILE_QUICK" ;;
         standard) echo "$PROFILE_STANDARD" ;;
         thorough|deep) echo "$PROFILE_THOROUGH" ;;
@@ -603,24 +606,50 @@ elif [[ "$choice" == "8" ]]; then
     fi
 
 elif [[ "$choice" == "9" ]]; then
-    echo "📊 Generating Report..."
-    report_file="$OUTPUT_DIR/report_$TIMESTAMP.txt"
-    {
-        echo "═════════════════════════════════════════════════════════"
-        echo "ALL-RECON - SCAN REPORT"
-        echo "Generated: $(date)"
-        echo "═════════════════════════════════════════════════════════"
-        echo ""
-        echo "📁 Scans Available:"
-        ls -1 "$OUTPUT_DIR"/*.txt 2>/dev/null | grep -v report || echo "No scans found"
-        echo ""
-        echo "Session Log: $SESSION_LOG"
-        echo ""
-        echo "═════════════════════════════════════════════════════════"
-    } | tee "$report_file"
+    echo "📊 Generating Enhanced Report..."
     echo ""
-    echo "✅ Report saved to: $report_file"
-    log_output "📊 Report generated: $report_file"
+    echo "Select Report Format:"
+    echo "1. Text Report"
+    echo "2. JSON Report"
+    echo "3. CSV Report"
+    echo "4. HTML Report (Interactive)"
+    echo "5. All Formats"
+    read -p "Enter choice [1-5]: " report_choice
+
+    case $report_choice in
+        1)
+            bash modules/reporting.sh text "$OUTPUT_DIR"
+            ;;
+        2)
+            bash modules/reporting.sh json "$OUTPUT_DIR"
+            ;;
+        3)
+            bash modules/reporting.sh csv "$OUTPUT_DIR"
+            ;;
+        4)
+            bash modules/reporting.sh html "$OUTPUT_DIR"
+            # Try to open the HTML report in browser
+            html_file=$(ls -t output/reports/*.html 2>/dev/null | head -1)
+            if [[ -n "$html_file" ]]; then
+                echo "🌐 Opening HTML report in browser..."
+                if command -v xdg-open &>/dev/null; then
+                    xdg-open "$html_file" 2>/dev/null
+                elif command -v open &>/dev/null; then
+                    open "$html_file" 2>/dev/null
+                else
+                    echo "💡 Open manually: $html_file"
+                fi
+            fi
+            ;;
+        5)
+            bash modules/reporting.sh all "$OUTPUT_DIR"
+            ;;
+        *)
+            echo "[!] Invalid choice, generating text report"
+            bash modules/reporting.sh text "$OUTPUT_DIR"
+            ;;
+    esac
+    log_output "📊 Report generation complete"
 
 elif [[ "$choice" == "10" ]]; then
     echo -e "$(tput bold)[*] Exiting ALL-RECON Recon Engine. Stay unseen. 🛡️$(tput sgr0)"
