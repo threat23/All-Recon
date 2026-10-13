@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000">
+  <defs>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
+      .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #374151; }
+      .box { fill: #f8fafc; stroke: #3b82f6; stroke-width: 2.5; rx: 18; }
+      .sub { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; rx: 14; }
+      .arrow { stroke: #475569; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .note { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .store { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1500" height="1000" fill="#ffffff"/>
+  <text x="750" y="60" text-anchor="middle" class="title">Module Interaction Diagram</text>
+
+  <rect x="120" y="130" width="240" height="120" class="box"/>
+  <text x="240" y="180" text-anchor="middle" class="label">Core Dispatcher</text>
+  <text x="240" y="208" text-anchor="middle" class="small">Target management</text>
+
+  <rect x="500" y="130" width="250" height="120" class="box"/>
+  <text x="625" y="180" text-anchor="middle" class="label">Scheduler / Rate Control</text>
+  <text x="625" y="208" text-anchor="middle" class="small">Concurrency + safe delays</text>
+
+  <rect x="900" y="130" width="230" height="120" class="store"/>
+  <text x="1015" y="180" text-anchor="middle" class="label">Results Store</text>
+  <text x="1015" y="208" text-anchor="middle" class="small">output/</text>
+
+  <rect x="220" y="350" width="210" height="120" class="sub"/>
+  <text x="325" y="395" text-anchor="middle" class="label">DNS Module</text>
+  <text x="325" y="422" text-anchor="middle" class="small">A / MX / NS / CNAME</text>
+
+  <rect x="470" y="350" width="220" height="120" class="sub"/>
+  <text x="580" y="395" text-anchor="middle" class="label">Host Scan Module</text>
+  <text x="580" y="422" text-anchor="middle" class="small">Nmap / Masscan</text>
+
+  <rect x="720" y="350" width="220" height="120" class="sub"/>
+  <text x="830" y="395" text-anchor="middle" class="label">HTTP Module</text>
+  <text x="830" y="422" text-anchor="middle" class="small">Headers / banners</text>
+
+  <rect x="970" y="350" width="220" height="120" class="sub"/>
+  <text x="1080" y="395" text-anchor="middle" class="label">OSINT Module</text>
+  <text x="1080" y="422" text-anchor="middle" class="small">WHOIS / ASN / public intel</text>
+
+  <rect x="540" y="610" width="420" height="150" class="note"/>
+  <text x="750" y="670" text-anchor="middle" class="label">Exporter / Report Generator</text>
+  <text x="750" y="700" text-anchor="middle" class="small">Normalize output</text>
+  <text x="750" y="728" text-anchor="middle" class="small">Write JSON, CSV, HTML summary</text>
+
+  <path d="M360 250 L360 350" class="arrow"/>
+  <path d="M625 250 L625 350" class="arrow"/>
+  <path d="M1015 250 L1015 350" class="arrow"/>
+
+  <path d="M240 250 L500 250" class="arrow"/>
+  <path d="M750 250 L900 250" class="arrow"/>
+
+  <path d="M325 470 L325 610 L540 610" class="arrow"/>
+  <path d="M580 470 L580 610" class="arrow"/>
+  <path d="M830 470 L830 610" class="arrow"/>
+  <path d="M1080 470 L1080 610" class="arrow"/>
+
+  <path d="M960 610 L960 810 L760 810" class="arrow"/>
+  <path d="M540 810 L420 810 L420 665 L540 665" class="arrow"/>
+
+  <rect x="1180" y="620" width="220" height="140" class="box"/>
+  <text x="1290" y="675" text-anchor="middle" class="label">Decision Support</text>
+  <text x="1290" y="706" text-anchor="middle" class="small">Threat prioritization</text>
+  <text x="1290" y="734" text-anchor="middle" class="small">Research analysis</text>
+
+  <path d="M960 690 L1180 690" class="arrow"/>
+</svg>
