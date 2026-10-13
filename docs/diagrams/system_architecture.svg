@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880">
+  <defs>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
+      .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #374151; }
+      .box { fill: #f8fafc; stroke: #3b82f6; stroke-width: 2.5; rx: 18; }
+      .sub { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; rx: 14; }
+      .arrow { stroke: #475569; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .storage { fill: #ecfccb; stroke: #65a30d; stroke-width: 2.5; }
+      .secure { fill: #f3e8ff; stroke: #7c3aed; stroke-width: 2.5; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="880" fill="#ffffff"/>
+  <text x="700" y="60" text-anchor="middle" class="title">All-Recon System Architecture</text>
+
+  <rect x="120" y="120" width="220" height="120" class="box"/>
+  <text x="230" y="165" text-anchor="middle" class="label">User / Researcher</text>
+  <text x="230" y="196" text-anchor="middle" class="small">CLI / GUI / Terminal</text>
+
+  <rect x="470" y="120" width="260" height="120" class="box"/>
+  <text x="600" y="165" text-anchor="middle" class="label">Controller / Launcher</text>
+  <text x="600" y="196" text-anchor="middle" class="small">all_recon.sh / input validation</text>
+
+  <rect x="845" y="120" width="260" height="120" class="box"/>
+  <text x="975" y="165" text-anchor="middle" class="label">Core Recon Engine</text>
+  <text x="975" y="196" text-anchor="middle" class="small">Module scheduler + execution</text>
+
+  <rect x="250" y="330" width="240" height="100" class="sub"/>
+  <text x="370" y="370" text-anchor="middle" class="label">DNS / WHOIS</text>
+  <text x="370" y="395" text-anchor="middle" class="small">ASN / NXDOMAIN / records</text>
+
+  <rect x="520" y="330" width="240" height="100" class="sub"/>
+  <text x="640" y="370" text-anchor="middle" class="label">Host Discovery</text>
+  <text x="640" y="395" text-anchor="middle" class="small">Nmap / Masscan / ICMP</text>
+
+  <rect x="790" y="330" width="240" height="100" class="sub"/>
+  <text x="910" y="370" text-anchor="middle" class="label">HTTP / Web</text>
+  <text x="910" y="395" text-anchor="middle" class="small">Headers / TLS / tech clues</text>
+
+  <rect x="1060" y="330" width="220" height="100" class="sub"/>
+  <text x="1170" y="370" text-anchor="middle" class="label">OSINT / Passive</text>
+  <text x="1170" y="395" text-anchor="middle" class="small">ASN / public intel / lookup</text>
+
+  <rect x="420" y="540" width="560" height="140" class="storage"/>
+  <text x="700" y="585" text-anchor="middle" class="label">Results Store</text>
+  <text x="700" y="612" text-anchor="middle" class="small">output/</text>
+  <text x="700" y="638" text-anchor="middle" class="small">JSON / CSV / HTML / logs / deduplicated results</text>
+
+  <rect x="1080" y="560" width="210" height="120" class="secure"/>
+  <text x="1185" y="600" text-anchor="middle" class="label">Safeguards</text>
+  <text x="1185" y="627" text-anchor="middle" class="small">Permission checks</text>
+  <text x="1185" y="650" text-anchor="middle" class="small">Rate limits / audit logs</text>
+
+  <rect x="560" y="740" width="300" height="90" class="box"/>
+  <text x="710" y="780" text-anchor="middle" class="label">Reporting / Analysis</text>
+  <text x="710" y="806" text-anchor="middle" class="small">Summary, export, notes, evaluation</text>
+
+  <path d="M340 240 L340 290 M340 290 L340 330" class="arrow"/>
+  <path d="M600 240 L600 330" class="arrow"/>
+  <path d="M975 240 L975 330" class="arrow"/>
+  <path d="M370 430 L370 540" class="arrow"/>
+  <path d="M640 430 L640 540" class="arrow"/>
+  <path d="M910 430 L910 540" class="arrow"/>
+  <path d="M1170 430 L1170 560" class="arrow"/>
+  <path d="M700 680 L700 740" class="arrow"/>
+  <path d="M980 610 L1080 610" class="arrow"/>
+  <path d="M340 240 L470 240" class="arrow"/>
+  <path d="M730 240 L845 240" class="arrow"/>
+</svg>
