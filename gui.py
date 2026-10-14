@@ -38,6 +38,63 @@ PANEL_BG = "#10161d"
 ACCENT = "#1f6feb"
 
 
+def get_local_ips():
+    """Detect internal and external IP addresses."""
+    import socket
+    internal_ip = None
+    external_ip = None
+
+    # Get internal IP using hostname -I (same as bash script)
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["hostname", "-I"],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            # Get first IP (skip 127.0.0.1)
+            ips = result.stdout.strip().split()
+            for ip in ips:
+                if not ip.startswith("127."):
+                    internal_ip = ip
+                    break
+    except Exception:
+        pass
+
+    # Fallback to socket method if hostname -I fails
+    if not internal_ip:
+        try:
+            internal_ip = socket.gethostbyname(socket.gethostname())
+        except Exception:
+            pass
+
+    # Get external IP using curl or fallback to DNS
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["curl", "-s", "--max-time", "5", "ifconfig.me"],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            external_ip = result.stdout.strip()
+    except Exception:
+        pass
+
+    if not external_ip:
+        try:
+            import subprocess
+            result = subprocess.run(
+                ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"],
+                capture_output=True, text=True, timeout=5
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                external_ip = result.stdout.strip()
+        except Exception:
+            pass
+
+    return internal_ip or "N/A", external_ip or "N/A"
+
+
 def module_path(name):
     return os.path.join(MODULES_DIR, name)
 
@@ -458,6 +515,38 @@ def build_passive_tab(nb):
     run_stop_buttons(buttons, on_run, panel.stop)
 
 
+def build_enrichment_tab(nb):
+    """UI for the new ASN, HTTP/TLS, and DNS/email recon modules."""
+    tab = ttk.Frame(nb)
+    nb.add(tab, text="Recon Enrichment")
+
+    row = control_row(tab)
+    target = labeled_entry(row, "Authorized target (domain, IP, or URL):", width=34)
+    tool_map = {
+        "ASN / IP Mapping": "asn_recon.py",
+        "HTTP / TLS Fingerprinting": "http_fingerprint.py",
+        "DNS & Email Security": "dns_email_audit.py",
+    }
+    tool = labeled_combo(row, "Module:", list(tool_map.keys()),
+                         default="ASN / IP Mapping", width=30)
+
+    panel = OutputPanel(tab)
+    panel.pack(fill="both", expand=True)
+
+    def on_run():
+        value = require(target, "Target")
+        if not value:
+            return
+        module = tool_map[tool.get()]
+        panel.run([
+            "python3", module_path(module), value,
+            "--output-dir", os.path.join(PROJECT_ROOT, "output")
+        ])
+
+    buttons = control_row(tab)
+    run_stop_buttons(buttons, on_run, panel.stop)
+
+
 def build_batch_tab(nb):
     tab = ttk.Frame(nb)
     nb.add(tab, text="Batch Scanner")
@@ -473,7 +562,7 @@ def build_batch_tab(nb):
     ttk.Button(row, text="Browse…", command=browse_file).pack(side="left", padx=(0, 12))
 
     row2 = control_row(tab)
-    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "all"], default="recon")
+    mode = labeled_combo(row2, "Mode:", ["recon", "whois", "subdomain", "passive", "web", "asn", "http", "email", "all"], default="recon")
     concurrency = labeled_entry(row2, "Max workers:", width=4, default="5")
 
     panel = OutputPanel(tab)
@@ -548,6 +637,15 @@ class AllReconGUI(tk.Tk):
             font=("Consolas", 13, "bold"),
         ).pack(side="left", pady=10)
 
+        # Add IP info to header
+        internal_ip, external_ip = get_local_ips()
+        ip_label = ttk.Label(
+            header,
+            text=f"Internal: {internal_ip} | External: {external_ip}",
+            font=("Consolas", 10),
+        )
+        ip_label.pack(side="right", padx=10, pady=10)
+
         nb = ttk.Notebook(self)
         nb.pack(fill="both", expand=True, padx=6, pady=6)
 
@@ -556,6 +654,7 @@ class AllReconGUI(tk.Tk):
         build_web_vuln_tab(nb)
         build_whois_tab(nb)
         build_passive_tab(nb)
+        build_enrichment_tab(nb)
         build_batch_tab(nb)
         build_reports_tab(nb)
 

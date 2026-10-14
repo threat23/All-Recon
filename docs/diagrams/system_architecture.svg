@@ -1,6 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1400"
+   height="880"
+   viewBox="0 0 1400 880"
+   version="1.1"
+   id="svg33"
+   sodipodi:docname="system_architecture.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview33"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.91136364"
+     inkscape:cx="700.04988"
+     inkscape:cy="440"
+     inkscape:window-width="1910"
+     inkscape:window-height="1009"
+     inkscape:window-x="0"
+     inkscape:window-y="35"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg33" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
       .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
       .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
       .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #374151; }
@@ -11,65 +43,291 @@
       .storage { fill: #ecfccb; stroke: #65a30d; stroke-width: 2.5; }
       .secure { fill: #f3e8ff; stroke: #7c3aed; stroke-width: 2.5; }
     </style>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M0,0 L12,6 L0,12 z" fill="#475569"/>
+    <marker
+       id="arrow"
+       markerWidth="12"
+       markerHeight="12"
+       refX="10"
+       refY="6"
+       orient="auto">
+      <path
+         d="M0,0 L12,6 L0,12 z"
+         fill="#475569"
+         id="path1" />
+    </marker>
+    <marker
+       id="arrow-6"
+       markerWidth="12"
+       markerHeight="12"
+       refX="10"
+       refY="6"
+       orient="auto">
+      <path
+         d="M 0,0 12,6 0,12 Z"
+         fill="#475569"
+         id="path1-7" />
     </marker>
   </defs>
-
-  <rect width="1400" height="880" fill="#ffffff"/>
-  <text x="700" y="60" text-anchor="middle" class="title">All-Recon System Architecture</text>
-
-  <rect x="120" y="120" width="220" height="120" class="box"/>
-  <text x="230" y="165" text-anchor="middle" class="label">User / Researcher</text>
-  <text x="230" y="196" text-anchor="middle" class="small">CLI / GUI / Terminal</text>
-
-  <rect x="470" y="120" width="260" height="120" class="box"/>
-  <text x="600" y="165" text-anchor="middle" class="label">Controller / Launcher</text>
-  <text x="600" y="196" text-anchor="middle" class="small">all_recon.sh / input validation</text>
-
-  <rect x="845" y="120" width="260" height="120" class="box"/>
-  <text x="975" y="165" text-anchor="middle" class="label">Core Recon Engine</text>
-  <text x="975" y="196" text-anchor="middle" class="small">Module scheduler + execution</text>
-
-  <rect x="250" y="330" width="240" height="100" class="sub"/>
-  <text x="370" y="370" text-anchor="middle" class="label">DNS / WHOIS</text>
-  <text x="370" y="395" text-anchor="middle" class="small">ASN / NXDOMAIN / records</text>
-
-  <rect x="520" y="330" width="240" height="100" class="sub"/>
-  <text x="640" y="370" text-anchor="middle" class="label">Host Discovery</text>
-  <text x="640" y="395" text-anchor="middle" class="small">Nmap / Masscan / ICMP</text>
-
-  <rect x="790" y="330" width="240" height="100" class="sub"/>
-  <text x="910" y="370" text-anchor="middle" class="label">HTTP / Web</text>
-  <text x="910" y="395" text-anchor="middle" class="small">Headers / TLS / tech clues</text>
-
-  <rect x="1060" y="330" width="220" height="100" class="sub"/>
-  <text x="1170" y="370" text-anchor="middle" class="label">OSINT / Passive</text>
-  <text x="1170" y="395" text-anchor="middle" class="small">ASN / public intel / lookup</text>
-
-  <rect x="420" y="540" width="560" height="140" class="storage"/>
-  <text x="700" y="585" text-anchor="middle" class="label">Results Store</text>
-  <text x="700" y="612" text-anchor="middle" class="small">output/</text>
-  <text x="700" y="638" text-anchor="middle" class="small">JSON / CSV / HTML / logs / deduplicated results</text>
-
-  <rect x="1080" y="560" width="210" height="120" class="secure"/>
-  <text x="1185" y="600" text-anchor="middle" class="label">Safeguards</text>
-  <text x="1185" y="627" text-anchor="middle" class="small">Permission checks</text>
-  <text x="1185" y="650" text-anchor="middle" class="small">Rate limits / audit logs</text>
-
-  <rect x="560" y="740" width="300" height="90" class="box"/>
-  <text x="710" y="780" text-anchor="middle" class="label">Reporting / Analysis</text>
-  <text x="710" y="806" text-anchor="middle" class="small">Summary, export, notes, evaluation</text>
-
-  <path d="M340 240 L340 290 M340 290 L340 330" class="arrow"/>
-  <path d="M600 240 L600 330" class="arrow"/>
-  <path d="M975 240 L975 330" class="arrow"/>
-  <path d="M370 430 L370 540" class="arrow"/>
-  <path d="M640 430 L640 540" class="arrow"/>
-  <path d="M910 430 L910 540" class="arrow"/>
-  <path d="M1170 430 L1170 560" class="arrow"/>
-  <path d="M700 680 L700 740" class="arrow"/>
-  <path d="M980 610 L1080 610" class="arrow"/>
-  <path d="M340 240 L470 240" class="arrow"/>
-  <path d="M730 240 L845 240" class="arrow"/>
+  <rect
+     width="1400"
+     height="880"
+     fill="#ffffff"
+     id="rect1" />
+  <path
+     d="M 298.15212,606.87531 H 409.27285"
+     class="arrow"
+     id="path32-3"
+     style="fill:none;stroke:#475569;stroke-width:2.77362;marker-end:url(#arrow-6)" />
+  <text
+     x="700"
+     y="60"
+     text-anchor="middle"
+     class="title"
+     id="text1">All-Recon System Architecture</text>
+  <rect
+     x="120"
+     y="120"
+     width="220"
+     height="120"
+     class="box"
+     id="rect2" />
+  <text
+     x="230"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text2">User / Researcher</text>
+  <text
+     x="230"
+     y="196"
+     text-anchor="middle"
+     class="small"
+     id="text3">CLI / GUI / Terminal</text>
+  <rect
+     x="470"
+     y="120"
+     width="260"
+     height="120"
+     class="box"
+     id="rect3" />
+  <text
+     x="600"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text4">Controller / Launcher</text>
+  <text
+     x="600"
+     y="196"
+     text-anchor="middle"
+     class="small"
+     id="text5">all_recon.sh / input validation</text>
+  <rect
+     x="845"
+     y="120"
+     width="260"
+     height="120"
+     class="box"
+     id="rect5" />
+  <text
+     x="975"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text6">Core Recon Engine</text>
+  <text
+     x="975"
+     y="196"
+     text-anchor="middle"
+     class="small"
+     id="text7">Module scheduler + execution</text>
+  <rect
+     x="250"
+     y="330"
+     width="240"
+     height="100"
+     class="sub"
+     id="rect7" />
+  <text
+     x="370"
+     y="370"
+     text-anchor="middle"
+     class="label"
+     id="text8">DNS / WHOIS</text>
+  <text
+     x="370"
+     y="395"
+     text-anchor="middle"
+     class="small"
+     id="text9">ASN / NXDOMAIN / records</text>
+  <rect
+     x="520"
+     y="330"
+     width="240"
+     height="100"
+     class="sub"
+     id="rect9" />
+  <text
+     x="640"
+     y="370"
+     text-anchor="middle"
+     class="label"
+     id="text10">Host Discovery</text>
+  <text
+     x="640"
+     y="395"
+     text-anchor="middle"
+     class="small"
+     id="text11">Nmap / Masscan / ICMP</text>
+  <rect
+     x="790"
+     y="330"
+     width="240"
+     height="100"
+     class="sub"
+     id="rect11" />
+  <text
+     x="910"
+     y="370"
+     text-anchor="middle"
+     class="label"
+     id="text12">HTTP / Web</text>
+  <text
+     x="910"
+     y="395"
+     text-anchor="middle"
+     class="small"
+     id="text13">Headers / TLS / tech clues</text>
+  <rect
+     x="1060"
+     y="330"
+     width="220"
+     height="100"
+     class="sub"
+     id="rect13" />
+  <text
+     x="1170"
+     y="370"
+     text-anchor="middle"
+     class="label"
+     id="text14">OSINT / Passive</text>
+  <text
+     x="1170"
+     y="395"
+     text-anchor="middle"
+     class="small"
+     id="text15">ASN / public intel / lookup</text>
+  <rect
+     x="420"
+     y="540"
+     width="560"
+     height="140"
+     class="storage"
+     id="rect15" />
+  <text
+     x="700"
+     y="585"
+     text-anchor="middle"
+     class="label"
+     id="text16">Results Store</text>
+  <text
+     x="700"
+     y="612"
+     text-anchor="middle"
+     class="small"
+     id="text17">output/</text>
+  <text
+     x="700"
+     y="638"
+     text-anchor="middle"
+     class="small"
+     id="text18">JSON / CSV / HTML / logs / deduplicated results</text>
+  <rect
+     x="1080"
+     y="560"
+     width="210"
+     height="120"
+     class="secure"
+     id="rect18" />
+  <text
+     x="1185"
+     y="600"
+     text-anchor="middle"
+     class="label"
+     id="text19">Safeguards</text>
+  <text
+     x="1185"
+     y="627"
+     text-anchor="middle"
+     class="small"
+     id="text20">Permission checks</text>
+  <text
+     x="1185"
+     y="650"
+     text-anchor="middle"
+     class="small"
+     id="text21">Rate limits / audit logs</text>
+  <rect
+     x="560"
+     y="740"
+     width="300"
+     height="90"
+     class="box"
+     id="rect21" />
+  <text
+     x="710"
+     y="780"
+     text-anchor="middle"
+     class="label"
+     id="text22">Reporting / Analysis</text>
+  <text
+     x="710"
+     y="806"
+     text-anchor="middle"
+     class="small"
+     id="text23">Summary, export, notes, evaluation</text>
+  <path
+     d="m 388.2793,189.52619 v 66.00166 m 0,0 v 52.80133"
+     class="arrow"
+     id="path23" />
+  <path
+     d="m 600,240 v 79.71322"
+     class="arrow"
+     id="path24" />
+  <path
+     d="m 975,240 v 66.3404"
+     class="arrow"
+     id="path25" />
+  <path
+     d="M 325.01247,436.58354 V 581.96061"
+     class="arrow"
+     id="path26" />
+  <path
+     d="M640 430 L640 540"
+     class="arrow"
+     id="path27" />
+  <path
+     d="M910 430 L910 540"
+     class="arrow"
+     id="path28" />
+  <path
+     d="M1170 430 L1170 560"
+     class="arrow"
+     id="path29" />
+  <path
+     d="M700 680 L700 740"
+     class="arrow"
+     id="path30" />
+  <path
+     d="M980 610 L1080 610"
+     class="arrow"
+     id="path31" />
+  <path
+     d="m 342.19451,180.74813 h 130"
+     class="arrow"
+     id="path32" />
+  <path
+     d="m 726.70823,175.26185 h 115"
+     class="arrow"
+     id="path33" />
 </svg>

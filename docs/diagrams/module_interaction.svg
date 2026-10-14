@@ -1,6 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1500"
+   height="1000"
+   viewBox="0 0 1500 1000"
+   version="1.1"
+   id="svg30"
+   sodipodi:docname="module_interaction.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview30"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.802"
+     inkscape:cx="763.09227"
+     inkscape:cy="462.59352"
+     inkscape:window-width="1910"
+     inkscape:window-height="1009"
+     inkscape:window-x="0"
+     inkscape:window-y="35"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg30" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
       .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
       .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
       .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #374151; }
@@ -10,66 +42,199 @@
       .note { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
       .store { fill: #dcfce7; stroke: #16a34a; stroke-width: 2.5; }
     </style>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M0,0 L12,6 L0,12 z" fill="#475569"/>
+    <marker
+       id="arrow"
+       markerWidth="12"
+       markerHeight="12"
+       refX="10"
+       refY="6"
+       orient="auto">
+      <path
+         d="M0,0 L12,6 L0,12 z"
+         fill="#475569"
+         id="path1" />
     </marker>
   </defs>
-
-  <rect width="1500" height="1000" fill="#ffffff"/>
-  <text x="750" y="60" text-anchor="middle" class="title">Module Interaction Diagram</text>
-
-  <rect x="120" y="130" width="240" height="120" class="box"/>
-  <text x="240" y="180" text-anchor="middle" class="label">Core Dispatcher</text>
-  <text x="240" y="208" text-anchor="middle" class="small">Target management</text>
-
-  <rect x="500" y="130" width="250" height="120" class="box"/>
-  <text x="625" y="180" text-anchor="middle" class="label">Scheduler / Rate Control</text>
-  <text x="625" y="208" text-anchor="middle" class="small">Concurrency + safe delays</text>
-
-  <rect x="900" y="130" width="230" height="120" class="store"/>
-  <text x="1015" y="180" text-anchor="middle" class="label">Results Store</text>
-  <text x="1015" y="208" text-anchor="middle" class="small">output/</text>
-
-  <rect x="220" y="350" width="210" height="120" class="sub"/>
-  <text x="325" y="395" text-anchor="middle" class="label">DNS Module</text>
-  <text x="325" y="422" text-anchor="middle" class="small">A / MX / NS / CNAME</text>
-
-  <rect x="470" y="350" width="220" height="120" class="sub"/>
-  <text x="580" y="395" text-anchor="middle" class="label">Host Scan Module</text>
-  <text x="580" y="422" text-anchor="middle" class="small">Nmap / Masscan</text>
-
-  <rect x="720" y="350" width="220" height="120" class="sub"/>
-  <text x="830" y="395" text-anchor="middle" class="label">HTTP Module</text>
-  <text x="830" y="422" text-anchor="middle" class="small">Headers / banners</text>
-
-  <rect x="970" y="350" width="220" height="120" class="sub"/>
-  <text x="1080" y="395" text-anchor="middle" class="label">OSINT Module</text>
-  <text x="1080" y="422" text-anchor="middle" class="small">WHOIS / ASN / public intel</text>
-
-  <rect x="540" y="610" width="420" height="150" class="note"/>
-  <text x="750" y="670" text-anchor="middle" class="label">Exporter / Report Generator</text>
-  <text x="750" y="700" text-anchor="middle" class="small">Normalize output</text>
-  <text x="750" y="728" text-anchor="middle" class="small">Write JSON, CSV, HTML summary</text>
-
-  <path d="M360 250 L360 350" class="arrow"/>
-  <path d="M625 250 L625 350" class="arrow"/>
-  <path d="M1015 250 L1015 350" class="arrow"/>
-
-  <path d="M240 250 L500 250" class="arrow"/>
-  <path d="M750 250 L900 250" class="arrow"/>
-
-  <path d="M325 470 L325 610 L540 610" class="arrow"/>
-  <path d="M580 470 L580 610" class="arrow"/>
-  <path d="M830 470 L830 610" class="arrow"/>
-  <path d="M1080 470 L1080 610" class="arrow"/>
-
-  <path d="M960 610 L960 810 L760 810" class="arrow"/>
-  <path d="M540 810 L420 810 L420 665 L540 665" class="arrow"/>
-
-  <rect x="1180" y="620" width="220" height="140" class="box"/>
-  <text x="1290" y="675" text-anchor="middle" class="label">Decision Support</text>
-  <text x="1290" y="706" text-anchor="middle" class="small">Threat prioritization</text>
-  <text x="1290" y="734" text-anchor="middle" class="small">Research analysis</text>
-
-  <path d="M960 690 L1180 690" class="arrow"/>
+  <rect
+     width="1500"
+     height="1000"
+     fill="#ffffff"
+     id="rect1" />
+  <text
+     x="750"
+     y="60"
+     text-anchor="middle"
+     class="title"
+     id="text1">Module Interaction Diagram</text>
+  <rect
+     x="608.77808"
+     y="116.28429"
+     width="240"
+     height="120"
+     class="box"
+     id="rect2" />
+  <text
+     x="723.79053"
+     y="161.29675"
+     text-anchor="middle"
+     class="label"
+     id="text2"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:18px;line-height:normal;font-family:'Segoe UI', Arial, sans-serif">Core Dispatcher</text>
+  <text
+     x="721.29675"
+     y="203.01247"
+     text-anchor="middle"
+     class="small"
+     id="text3"
+     style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:14px;line-height:normal;font-family:'Segoe UI', Arial, sans-serif">Target management</text>
+  <rect
+     x="220"
+     y="350"
+     width="210"
+     height="120"
+     class="sub"
+     id="rect7" />
+  <text
+     x="325"
+     y="395"
+     text-anchor="middle"
+     class="label"
+     id="text8">DNS Module</text>
+  <text
+     x="325"
+     y="422"
+     text-anchor="middle"
+     class="small"
+     id="text9">A / MX / NS / CNAME</text>
+  <rect
+     x="470"
+     y="350"
+     width="220"
+     height="120"
+     class="sub"
+     id="rect9" />
+  <text
+     x="580"
+     y="395"
+     text-anchor="middle"
+     class="label"
+     id="text10">Host Scan Module</text>
+  <text
+     x="580"
+     y="422"
+     text-anchor="middle"
+     class="small"
+     id="text11">Nmap / Masscan</text>
+  <rect
+     x="720"
+     y="350"
+     width="220"
+     height="120"
+     class="sub"
+     id="rect11" />
+  <text
+     x="830"
+     y="395"
+     text-anchor="middle"
+     class="label"
+     id="text12">HTTP Module</text>
+  <text
+     x="830"
+     y="422"
+     text-anchor="middle"
+     class="small"
+     id="text13">Headers / banners</text>
+  <rect
+     x="970"
+     y="350"
+     width="220"
+     height="120"
+     class="sub"
+     id="rect13" />
+  <text
+     x="1080"
+     y="395"
+     text-anchor="middle"
+     class="label"
+     id="text14">OSINT Module</text>
+  <text
+     x="1080"
+     y="422"
+     text-anchor="middle"
+     class="small"
+     id="text15">WHOIS / ASN / public intel</text>
+  <rect
+     x="540"
+     y="610"
+     width="420"
+     height="150"
+     class="note"
+     id="rect15" />
+  <text
+     x="750"
+     y="670"
+     text-anchor="middle"
+     class="label"
+     id="text16">Exporter / Report Generator</text>
+  <text
+     x="750"
+     y="700"
+     text-anchor="middle"
+     class="small"
+     id="text17">Normalize output</text>
+  <text
+     x="750"
+     y="728"
+     text-anchor="middle"
+     class="small"
+     id="text18">Write JSON, CSV, HTML summary</text>
+  <path
+     d="m 720.34912,240.02494 v 69.41609"
+     class="arrow"
+     id="path18" />
+  <path
+     d="M 320.02086,468.51418 V 676.33242 H 538.66839"
+     class="arrow"
+     id="path23" />
+  <path
+     d="M580 470 L580 610"
+     class="arrow"
+     id="path24" />
+  <path
+     d="M830 470 L830 610"
+     class="arrow"
+     id="path25" />
+  <path
+     d="M 1079.3766,470 V 653.04308"
+     class="arrow"
+     id="path26" />
+  <rect
+     x="1180"
+     y="620"
+     width="220"
+     height="140"
+     class="box"
+     id="rect28" />
+  <text
+     x="1290"
+     y="675"
+     text-anchor="middle"
+     class="label"
+     id="text28">Decision Support</text>
+  <text
+     x="1290"
+     y="706"
+     text-anchor="middle"
+     class="small"
+     id="text29">Threat prioritization</text>
+  <text
+     x="1290"
+     y="734"
+     text-anchor="middle"
+     class="small"
+     id="text30">Research analysis</text>
+  <path
+     d="M960 690 L1180 690"
+     class="arrow"
+     id="path30" />
 </svg>

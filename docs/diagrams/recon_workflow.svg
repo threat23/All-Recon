@@ -1,6 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="950" viewBox="0 0 1500 950">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1500"
+   height="950"
+   viewBox="0 0 1500 950"
+   version="1.1"
+   id="svg26"
+   sodipodi:docname="recon_workflow.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview26"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.84421053"
+     inkscape:cx="749.81297"
+     inkscape:cy="475"
+     inkscape:window-width="1910"
+     inkscape:window-height="1009"
+     inkscape:window-x="0"
+     inkscape:window-y="35"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg26" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
       .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
       .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #111827; }
       .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #374151; }
@@ -9,61 +41,235 @@
       .arrow { stroke: #475569; stroke-width: 3; fill: none; marker-end: url(#arrow); }
       .note { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
     </style>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M0,0 L12,6 L0,12 z" fill="#475569"/>
+    <marker
+       id="arrow"
+       markerWidth="12"
+       markerHeight="12"
+       refX="10"
+       refY="6"
+       orient="auto">
+      <path
+         d="M0,0 L12,6 L0,12 z"
+         fill="#475569"
+         id="path1" />
     </marker>
   </defs>
-
-  <rect width="1500" height="950" fill="#ffffff"/>
-  <text x="750" y="55" text-anchor="middle" class="title">Reconnaissance Workflow</text>
-
-  <rect x="100" y="120" width="210" height="110" class="box"/>
-  <text x="205" y="165" text-anchor="middle" class="label">Researcher</text>
-  <text x="205" y="195" text-anchor="middle" class="small">Select target / profile</text>
-
-  <rect x="400" y="120" width="240" height="110" class="box"/>
-  <text x="520" y="165" text-anchor="middle" class="label">Input Validation</text>
-  <text x="520" y="195" text-anchor="middle" class="small">Check IPs, domains, targets</text>
-
-  <rect x="760" y="120" width="260" height="110" class="box"/>
-  <text x="890" y="165" text-anchor="middle" class="label">Module Dispatcher</text>
-  <text x="890" y="195" text-anchor="middle" class="small">Run DNS / scan / web / OSINT</text>
-
-  <rect x="1170" y="120" width="220" height="110" class="box"/>
-  <text x="1280" y="165" text-anchor="middle" class="label">Results</text>
-  <text x="1280" y="195" text-anchor="middle" class="small">JSON / CSV / HTML</text>
-
-  <rect x="230" y="360" width="260" height="130" class="sub"/>
-  <text x="360" y="410" text-anchor="middle" class="label">1. Define Target</text>
-  <text x="360" y="440" text-anchor="middle" class="small">IP, domain, host list, or URL</text>
-
-  <rect x="560" y="360" width="260" height="130" class="sub"/>
-  <text x="690" y="410" text-anchor="middle" class="label">2. Execute Modules</text>
-  <text x="690" y="440" text-anchor="middle" class="small">DNS, host, HTTP, passive routes</text>
-
-  <rect x="890" y="360" width="260" height="130" class="sub"/>
-  <text x="1020" y="410" text-anchor="middle" class="label">3. Parse + Clean</text>
-  <text x="1020" y="440" text-anchor="middle" class="small">Deduplicate, normalize, group</text>
-
-  <rect x="520" y="610" width="430" height="150" class="note"/>
-  <text x="735" y="670" text-anchor="middle" class="label">4. Generate Report</text>
-  <text x="735" y="700" text-anchor="middle" class="small">Summary of risks, services, host exposure, DNS, HTTP data</text>
-  <text x="735" y="730" text-anchor="middle" class="small">Decision support for the researcher</text>
-
-  <path d="M310 230 L400 230" class="arrow"/>
-  <path d="M640 230 L760 230" class="arrow"/>
-  <path d="M1020 230 L1170 230" class="arrow"/>
-
-  <path d="M360 490 L360 560 L560 560" class="arrow"/>
-  <path d="M690 490 L690 610" class="arrow"/>
-  <path d="M1020 490 L1020 560 L950 560" class="arrow"/>
-
-  <path d="M1040 610 L1040 770 L950 770" class="arrow"/>
-  <path d="M560 770 L520 770 L520 620 L560 620" class="arrow"/>
-
-  <rect x="1090" y="660" width="260" height="110" class="box"/>
-  <text x="1220" y="705" text-anchor="middle" class="label">Ethical Safeguards</text>
-  <text x="1220" y="735" text-anchor="middle" class="small">Permission, rate limits, audit logs</text>
-
-  <path d="M950 700 L1090 700" class="arrow"/>
+  <rect
+     width="1500"
+     height="950"
+     fill="#ffffff"
+     id="rect1"
+     x="-2.3690772"
+     y="18.952618" />
+  <text
+     x="750"
+     y="55"
+     text-anchor="middle"
+     class="title"
+     id="text1">Reconnaissance Workflow</text>
+  <rect
+     x="100"
+     y="120"
+     width="210"
+     height="110"
+     class="box"
+     id="rect2" />
+  <text
+     x="205"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text2">Researcher</text>
+  <text
+     x="205"
+     y="195"
+     text-anchor="middle"
+     class="small"
+     id="text3">Select target / profile</text>
+  <rect
+     x="400"
+     y="120"
+     width="240"
+     height="110"
+     class="box"
+     id="rect3" />
+  <text
+     x="520"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text4">Input Validation</text>
+  <text
+     x="520"
+     y="195"
+     text-anchor="middle"
+     class="small"
+     id="text5">Check IPs, domains, targets</text>
+  <rect
+     x="760"
+     y="120"
+     width="260"
+     height="110"
+     class="box"
+     id="rect5" />
+  <text
+     x="890"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text6">Module Dispatcher</text>
+  <text
+     x="890"
+     y="195"
+     text-anchor="middle"
+     class="small"
+     id="text7">Run DNS / scan / web / OSINT</text>
+  <rect
+     x="1170"
+     y="120"
+     width="220"
+     height="110"
+     class="box"
+     id="rect7" />
+  <text
+     x="1280"
+     y="165"
+     text-anchor="middle"
+     class="label"
+     id="text8">Results</text>
+  <text
+     x="1280"
+     y="195"
+     text-anchor="middle"
+     class="small"
+     id="text9">JSON / CSV / HTML</text>
+  <rect
+     x="230"
+     y="360"
+     width="260"
+     height="130"
+     class="sub"
+     id="rect9" />
+  <text
+     x="360"
+     y="410"
+     text-anchor="middle"
+     class="label"
+     id="text10">1. Define Target</text>
+  <text
+     x="360"
+     y="440"
+     text-anchor="middle"
+     class="small"
+     id="text11">IP, domain, host list, or URL</text>
+  <rect
+     x="584.87531"
+     y="363.55362"
+     width="260"
+     height="130"
+     class="sub"
+     id="rect11" />
+  <text
+     x="690"
+     y="410"
+     text-anchor="middle"
+     class="label"
+     id="text12">2. Execute Modules</text>
+  <text
+     x="690"
+     y="440"
+     text-anchor="middle"
+     class="small"
+     id="text13">DNS, host, HTTP, passive routes</text>
+  <rect
+     x="890"
+     y="360"
+     width="260"
+     height="130"
+     class="sub"
+     id="rect13" />
+  <text
+     x="1020"
+     y="410"
+     text-anchor="middle"
+     class="label"
+     id="text14">3. Parse + Clean</text>
+  <text
+     x="1020"
+     y="440"
+     text-anchor="middle"
+     class="small"
+     id="text15">Deduplicate, normalize, group</text>
+  <rect
+     x="520"
+     y="610"
+     width="430"
+     height="150"
+     class="note"
+     id="rect15" />
+  <text
+     x="735"
+     y="670"
+     text-anchor="middle"
+     class="label"
+     id="text16">4. Generate Report</text>
+  <text
+     x="735"
+     y="700"
+     text-anchor="middle"
+     class="small"
+     id="text17">Summary of risks, services, host exposure, DNS, HTTP data</text>
+  <text
+     x="735"
+     y="730"
+     text-anchor="middle"
+     class="small"
+     id="text18">Decision support for the researcher</text>
+  <path
+     d="m 308.81546,174.32668 h 90"
+     class="arrow"
+     id="path18" />
+  <path
+     d="m 632.89277,175.51122 h 120"
+     class="arrow"
+     id="path19" />
+  <path
+     d="m 1015.2618,169.58853 h 150"
+     class="arrow"
+     id="path20" />
+  <path
+     d="M360 490 L360 560 L560 560"
+     class="arrow"
+     id="path21" />
+  <path
+     d="M690 490 L690 610"
+     class="arrow"
+     id="path22" />
+  <path
+     d="M1020 490 L1020 560 L950 560"
+     class="arrow"
+     id="path23" />
+  <rect
+     x="1090"
+     y="660"
+     width="260"
+     height="110"
+     class="box"
+     id="rect25" />
+  <text
+     x="1220"
+     y="705"
+     text-anchor="middle"
+     class="label"
+     id="text25">Ethical Safeguards</text>
+  <text
+     x="1220"
+     y="735"
+     text-anchor="middle"
+     class="small"
+     id="text26">Permission, rate limits, audit logs</text>
+  <path
+     d="M950 700 L1090 700"
+     class="arrow"
+     id="path26" />
 </svg>

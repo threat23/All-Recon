@@ -39,6 +39,63 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 MODULES_DIR = os.path.join(PROJECT_ROOT, "modules")
 
 
+def get_local_ips():
+    """Detect internal and external IP addresses."""
+    import socket
+    internal_ip = None
+    external_ip = None
+
+    # Get internal IP using hostname -I (same as bash script)
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["hostname", "-I"],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            # Get first IP (skip 127.0.0.1)
+            ips = result.stdout.strip().split()
+            for ip in ips:
+                if not ip.startswith("127."):
+                    internal_ip = ip
+                    break
+    except Exception:
+        pass
+
+    # Fallback to socket method if hostname -I fails
+    if not internal_ip:
+        try:
+            internal_ip = socket.gethostbyname(socket.gethostname())
+        except Exception:
+            pass
+
+    # Get external IP using curl or fallback to DNS
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["curl", "-s", "--max-time", "5", "ifconfig.me"],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            external_ip = result.stdout.strip()
+    except Exception:
+        pass
+
+    if not external_ip:
+        try:
+            import subprocess
+            result = subprocess.run(
+                ["dig", "+short", "myip.opendns.com", "@resolver1.opendns.com"],
+                capture_output=True, text=True, timeout=5
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                external_ip = result.stdout.strip()
+        except Exception:
+            pass
+
+    return internal_ip or "N/A", external_ip or "N/A"
+
+
 def module_path(name):
     return os.path.join(MODULES_DIR, name)
 
@@ -729,12 +786,19 @@ class AllReconGUI(QMainWindow):
         header.setStyleSheet("background-color: #10161d; border-bottom: 1px solid #1a222c;")
         header_layout = QHBoxLayout(header)
         header_layout.setContentsMargins(12, 10, 12, 10)
-        
+
         title = QLabel("  ALL-RECON — unified front-end for modules/*.sh")
         title.setFont(QFont("Consolas", 13, QFont.Weight.Bold))
         title.setStyleSheet("color: #39ff14;")
         header_layout.addWidget(title)
         header_layout.addStretch()
+
+        # Add IP info to header
+        internal_ip, external_ip = get_local_ips()
+        ip_label = QLabel(f"Internal: {internal_ip} | External: {external_ip}")
+        ip_label.setFont(QFont("Consolas", 10))
+        ip_label.setStyleSheet("color: #39ff14;")
+        header_layout.addWidget(ip_label)
         
         self.central_widget.layout().addWidget(header)
         
